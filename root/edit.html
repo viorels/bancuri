@@ -1,0 +1,16 @@
+[% INCLUDE inc/header.html 
+    nojs = 1 
+%]
+
+<h1>Bancuri</h1>
+<div id="banc" class="edit">
+<form method="POST">
+<textarea name="raw">[% raw %]</textarea>
+<input type="hidden" name="checksum" value="[% checksum %]" />
+<input type="submit" name="preview" value="Verifica" />
+<input type="submit" name="save" value="Salveaza" />
+<input type="submit" name="cancel" value="Anuleaza" />
+</form>
+</div>
+
+[% INCLUDE inc/footer.html %]

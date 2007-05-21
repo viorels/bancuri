@@ -30,34 +30,41 @@ sub process : Private {
 	$c->response->body('Matched Bancuri::Controller::Show');
 }
 
-sub banc : PathPart('') Chained('/') Args(1) {
-	my ( $self, $c, $node ) = @_;
+sub banc : Chained('/wiki') PathPart('') Args(0) {
+	my ( $self, $c ) = @_;
+	my $node = $c->stash->{'node'};
 	
-	my $wiki = $c->forward('retrieve', [$node]);
+	$c->forward('show', [ $node ]);
+}
+
+sub rev : Chained('/wiki') PathPart Args(1) {
+    my ( $self, $c, $version ) = @_;
+	my $node = $c->stash->{'node'};
+
+	$c->forward('show', [ $node, $version ]);
+}
+
+sub show : Private {
+	my ( $self, $c, $node, $version ) = @_;
+	my $wiki = $c->stash->{'wiki'};
 	
-	my $raw    = $wiki->retrieve_node($node);
+	my $raw    = $wiki->retrieve_node( name => $node, version => $version );
 	my $cooked = $wiki->format($raw);
 	
 	$c->stash(
-		banc => $cooked
+		text => $cooked
 	);
 	$c->stash->{template} = 'banc.html';
+}
+
+sub retrieve : Private {
+	
 }
 
 sub banc_id : Private {
     my ( $self, $c, $id ) = @_;
 
-    $c->response->body("banc id $id");
-}
-
-sub retrieve : Private {
-	my ( $self, $c, $title ) = @_;
-	
-	my $dbh = $c->model('DBI')->dbh;
-	my $store  = Wiki::Toolkit::Store::Pg->new( dbh => $dbh, charset => 'utf-8' );
-	my $search = Wiki::Toolkit::Search::Plucene->new( path => "plucene" );
-	my $wiki   = Wiki::Toolkit->new( store => $store, search => $search );
-	return $wiki;
+    $c->response->body("banc id $id"); # TODO redirect to name
 }
 
 

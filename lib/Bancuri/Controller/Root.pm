@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
+use Wiki::Toolkit::Formatter::Default;
+
 __PACKAGE__->config->{namespace} = '';
 
 =head1 NAME
@@ -17,6 +19,11 @@ Catalyst Controller.
 =head1 METHODS
 
 =cut
+
+sub auto : Private {
+	my ( $self, $c ) = @_;
+	$c->stash->{'wiki'} = $c->forward('toolkit');
+};
 
 sub default : Path('') {
 	my ( $self, $c ) = @_;
@@ -38,33 +45,35 @@ sub index : Private {
     	$c->forward(qw/Bancuri::Controller::Show banc_id/, [$id]);
 	}
 	else {
-		$c->forward('Bancuri::Controller::Show');
+		$c->forward('Bancuri::Controller::Show'); # show the best ?
 	}
 }
 
+sub wiki : Chained PathPart('') CaptureArgs(1) {
+	my ( $self, $c, $node ) = @_;
+	$c->stash->{'node'} = $node;
+}
 
-
-  sub wiki : PathPart('') Chained('/') CaptureArgs(1) {
-      my ( $self, $c, $page_name ) = @_;
-      #  load the page named $page_name and put the object
-      #  into the stash
-  }
-
-  sub rev : PathPart('rev') Chained('wiki') Args(1) {
-      my ( $self, $c, $revision_id ) = @_;
-      #  use the page object in the stash to get at its
-      #  revision with number $revision_id
-      $c->response->body($revision_id);
-  }
-#
-#  sub view : PathPart Chained('rev') Args(0) {
-#      my ( $self, $c ) = @_;
-#      #  display the revision in our stash. Another option
-#      #  would be to forward a compatible object to the action
-#      #  that displays the default wiki pages, unless we want
-#      #  a different interface here, for example restore
-#      #  functionality.
-#  }
+sub toolkit : Private {
+	my ( $self, $c, $title ) = @_;
+	
+	my $dbh = $c->model('DBI')->dbh;
+	my $store  = Wiki::Toolkit::Store::Pg->new( dbh => $dbh, charset => 'utf-8' );
+	my $search = Wiki::Toolkit::Search::Plucene->new( path => "plucene" );
+	my $formatter = Wiki::Toolkit::Formatter::Default->new(
+    	extended_links  => 0,
+        implicit_links  => 0,
+        allowed_tags    => [qw(b i)],
+        macros          => {},
+        node_prefix     => ''
+	);
+	my $wiki   = Wiki::Toolkit->new(
+		store => $store, 
+		search => $search, 
+		formatter => $formatter 
+	);
+	return $wiki;
+}
   
 sub end : ActionClass('RenderView') {
 	my ( $self, $c ) = @_;
