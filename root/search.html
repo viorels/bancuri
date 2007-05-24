@@ -1,0 +1,10 @@
+[% INCLUDE inc/header.html %]
+
+<h1>Bancuri</h1>
+<div id="results">
+[% FOR res IN results %]
+<a href="/[% res %]">[% res %]</a><br>
+[% END %]
+</div>
+
+[% INCLUDE inc/footer.html %]

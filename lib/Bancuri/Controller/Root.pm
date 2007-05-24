@@ -4,7 +4,10 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
-use Wiki::Toolkit::Formatter::Default;
+require Wiki::Toolkit;
+require Wiki::Toolkit::Store::Pg;
+require Wiki::Toolkit::Search::Plucene;
+require Wiki::Toolkit::Formatter::Default;
 
 __PACKAGE__->config->{namespace} = '';
 

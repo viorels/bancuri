@@ -9,6 +9,7 @@ use Catalyst qw/Dumper StackTrace
 				Session
 				Session::Store::FastMmap
 				Session::State::Cookie
+				Unicode
 				/;
 
 our $VERSION = '0.01';

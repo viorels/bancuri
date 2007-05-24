@@ -3,14 +3,32 @@
 %]
 
 <h1>Bancuri</h1>
-<div id="banc" class="edit">
 <form method="POST">
+<div id="banc" class="edit">
 <textarea name="raw">[% raw %]</textarea>
+</div>
+<div id="ctrl">
 <input type="hidden" name="checksum" value="[% checksum %]" />
 <input type="submit" name="preview" value="Verifica" />
 <input type="submit" name="save" value="Salveaza" />
 <input type="submit" name="cancel" value="Anuleaza" />
-</form>
 </div>
+<div id="info">
+<h2>Info</h2>
+last_modified [% last_modified %]<br />
+version [% version %]<br />
+metadata [% metadata %]<br />
+</div>
+<div id="moderate">
+<h2>Recent</h2>
+[% FOR change IN recent %]
+<a href="/[% change.name %]/rev/[% change.version %]">[% change.name %] versiunea [% change.version %]</a><br>
+[% END %]
+<h2>Unmoderated</h2>
+[% FOR node IN unmoderated %]
+<a href="/[% node.name %]">[% node.node_id %]. [% node.name %]</a><br>
+[% END %]
+</div>
+</form>
 
 [% INCLUDE inc/footer.html %]

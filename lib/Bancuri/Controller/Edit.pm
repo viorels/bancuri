@@ -4,6 +4,9 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
+use Data::Dumper;
+use constant REQUIRES_MODERATION => 1;
+
 =head1 NAME
 
 Bancuri::Controller::Edit - Catalyst Controller
@@ -28,18 +31,22 @@ sub edit : Chained('/wiki') PathPart('edit') Args(0) {
 	if ( $c->req->method() eq 'GET' ) {
 		$c->stash->{'template'} = 'edit.html';
 		my %node_data = $wiki->retrieve_node($node);
-		
+
 		$c->stash(
 			title => 'Editeaza banc',
 			raw => $node_data{'content'},
 			checksum => $node_data{'checksum'},
+			last_modified => $node_data{'last_modified'},
+			version => $node_data{'version'},
+			metadata => Dumper $node_data{'metadata'},
 		);
+		$c->forward(qw/Bancuri::Controller::Moderate/);
 	}
 	elsif ( $c->req->method() eq 'POST' ) {
 		my %actions = (
 			preview => 'preview',
 			save 	=> 'save',
-			cancel 	=> 'redirect_show',
+			cancel 	=> 'redir_show',
 		);
 		for my $a ( keys %actions ) {
 			$c->forward($actions{$a}) if $c->req->params->{$a};
@@ -54,7 +61,7 @@ sub preview : Private {
 	$c->stash->{'template'} = 'preview.html';
     my $raw = $c->req->params->{'raw'};
     my $cooked = $wiki->format($raw);
-    # verify_checksum ?
+	# my $ok = $wiki->verify_checksum($node, $checksum);
     $c->stash( 
     	raw => $raw, 
     	text => $cooked,
@@ -69,16 +76,16 @@ sub save : Private {
 
 	my $raw = $c->req->params->{'raw'};
 	my $checksum = $c->req->params->{'checksum'};
-	my $written = $wiki->write_node($node, $raw, $checksum);
+	my $written = $wiki->write_node($node, $raw, $checksum, { username => 'vio' }, 1 );
 	if ( $written ) {
-		$c->forward('redirect_show');
+		$c->forward('redir_show');
 	}
 	else {
 		$c->log->info("CONFLICT!!!");
 	}
 }
 
-sub redirect_show : Private {
+sub redir_show : Private {
 	my ( $self, $c ) = @_;
 	my $node = $c->stash->{'node'};
 	$c->response->redirect( q{/} . $node, 303 );

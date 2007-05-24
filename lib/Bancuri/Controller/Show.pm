@@ -4,9 +4,7 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
-use Wiki::Toolkit;
-use Wiki::Toolkit::Store::Pg;
-use Wiki::Toolkit::Search::Plucene;
+use Data::Dumper;
 
 =head1 NAME
 
@@ -34,6 +32,8 @@ sub banc : Chained('/wiki') PathPart('') Args(0) {
 	my ( $self, $c ) = @_;
 	my $node = $c->stash->{'node'};
 	
+	# node_exists ?
+	# node_required_moderation
 	$c->forward('show', [ $node ]);
 }
 
@@ -48,17 +48,16 @@ sub show : Private {
 	my ( $self, $c, $node, $version ) = @_;
 	my $wiki = $c->stash->{'wiki'};
 	
-	my $raw    = $wiki->retrieve_node( name => $node, version => $version );
-	my $cooked = $wiki->format($raw);
+	my %node_data = $wiki->retrieve_node( name => $node, version => $version );
+	my $cooked = $wiki->format($node_data{'content'});
 	
 	$c->stash(
-		text => $cooked
+		text => $cooked,
+		last_modified => $node_data{'last_modified'},
+		version => $node_data{'version'},
+		metadata => Dumper $node_data{'metadata'},		
 	);
 	$c->stash->{template} = 'banc.html';
-}
-
-sub retrieve : Private {
-	
 }
 
 sub banc_id : Private {
