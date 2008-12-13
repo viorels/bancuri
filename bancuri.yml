@@ -4,7 +4,7 @@ default_view: Bancuri::View::TT
 Model::DBI:
     dsn: dbi:Pg:dbname=bancuri;host=localhost
     user: bancuri
-    password: bdfab290 
+    password: gSj0wGSH
     options:
         AutoCommit: 1
         RaiseError: 1
