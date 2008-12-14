@@ -14,13 +14,15 @@ ALTER TABLE ONLY public.joke_version DROP CONSTRAINT joke_version_joke_id_fkey;
 ALTER TABLE ONLY public.joke DROP CONSTRAINT joke_pkey;
 DROP TABLE public.joke_version;
 DROP TABLE public.joke;
+DROP TABLE public.useragent;
+DROP TABLE public.users;
 DROP SEQUENCE public.joke_seq;
-DROP SCHEMA public;
+
+-- DROP SCHEMA public;
 --
 -- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
 --
-
-CREATE SCHEMA public;
+-- CREATE SCHEMA public;
 
 
 ALTER SCHEMA public OWNER TO postgres;
@@ -54,9 +56,9 @@ ALTER TABLE public.joke_seq OWNER TO bancuri;
 
 CREATE TABLE joke (
     id integer DEFAULT nextval('joke_seq'::regclass) NOT NULL,
-    version integer DEFAULT 0 NOT NULL,
+    version integer DEFAULT 1 NOT NULL,
     link character varying(64) DEFAULT ''::character varying NOT NULL,
-    modified timestamp without time zone,
+    modified timestamp without time zone default current_timestamp,
     verified timestamp without time zone,
     deleted boolean DEFAULT false NOT NULL
 );
@@ -65,24 +67,53 @@ CREATE TABLE joke (
 ALTER TABLE public.joke OWNER TO bancuri;
 
 CREATE TABLE joke_version (
-    joke_id integer
+    joke_id integer NOT NULL,
+    version integer DEFAULT 1 NOT NULL,
+    text text NOT NULL,
+    short varchar(64),
+    comment varchar(255),
+    created timestamp without time zone default current_timestamp,
+    parent_ver integer not null,
+    user_id integer not null,
+--    browser_id integer NOT NULL,
+    ip inet NOT NULL,
+    useragent_id integer not null,
+    stars real,
+    votes integer default 0 not null,
+    views integer default 0 not null,
+    banned boolean DEFAULT false NOT NULL
 );
 
 ALTER TABLE public.joke_version OWNER TO bancuri;
 
+CREATE TABLE useragent (
+    id SERIAL PRIMARY KEY,
+    name varchar(255)
+);
+
+ALTER TABLE public.useragent OWNER TO bancuri;
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name varchar(64) not null,
+    email varchar(255) not null,
+    password varchar(255),
+    comment text default ''
+);
+
+ALTER TABLE public.users OWNER TO bancuri;
+
 --
--- Name: joke_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
+-- CONSTRAINTS
 --
 
 ALTER TABLE ONLY joke
     ADD CONSTRAINT joke_pkey PRIMARY KEY (id);
 
---
--- Name: joke_version_joke_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
---
-
 ALTER TABLE ONLY joke_version
+    ADD CONSTRAINT joke_version_pkey PRIMARY KEY (joke_id, version),
     ADD CONSTRAINT joke_version_joke_id_fkey FOREIGN KEY (joke_id) REFERENCES joke(id);
+
 
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
