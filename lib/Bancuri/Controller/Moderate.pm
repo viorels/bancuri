@@ -56,7 +56,6 @@ sub node_all_versions : Private {
 		with_content => 1,
 		with_metadata => 1
 	);
-	$c->log->dumper(\@versions);
 }
 
 =head1 AUTHOR

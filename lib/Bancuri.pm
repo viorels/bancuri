@@ -3,13 +3,13 @@ package Bancuri;
 use strict;
 use warnings;
 
-use Catalyst qw/Dumper StackTrace
-				ConfigLoader
+use Catalyst qw/ConfigLoader
 				Static::Simple
 				Session
 				Session::Store::FastMmap
 				Session::State::Cookie
 				Unicode
+                StackTrace
 				/;
 
 our $VERSION = '0.01';
