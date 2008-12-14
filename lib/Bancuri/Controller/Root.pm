@@ -62,6 +62,7 @@ sub toolkit : Private {
 	
 	my $dbh = $c->model('DBI')->dbh;
 	my $store  = Wiki::Toolkit::Store::Pg->new( dbh => $dbh, charset => 'utf-8' );
+    $store->{_charset} = 'utf-8'; # Workaround for bug http://www.wiki-toolkit.org/ticket/24
 	my $search = Wiki::Toolkit::Search::Plucene->new( path => "plucene" );
 	my $formatter = Wiki::Toolkit::Formatter::Default->new(
     	extended_links  => 0,
