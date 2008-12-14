@@ -14,23 +14,72 @@ SET default_tablespace = '';
 
 SET default_with_oids = false;
 
+-- ALTER TABLE ONLY public.content DROP CONSTRAINT fk_node_id;
+-- DROP INDEX public.node_name;
+-- ALTER TABLE ONLY public.node DROP CONSTRAINT pk_id;
+DROP TABLE public.joke CASCADE;
+DROP TABLE public.joke_version CASCADE;
+DROP SEQUENCE public.joke_seq;
+
 --
--- Name: content; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
 --
 
-CREATE TABLE content (
-    node_id integer NOT NULL,
+CREATE SEQUENCE joke_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.joke_seq OWNER TO bancuri;
+
+--
+-- Name: joke; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+--
+
+CREATE TABLE joke (
+    id integer DEFAULT nextval('joke_seq') PRIMARY KEY NOT NULL,
     version integer DEFAULT 0 NOT NULL,
-    text text DEFAULT ''::text NOT NULL,
+    link varchar(64) DEFAULT '' NOT NULL,
     modified timestamp without time zone,
-    comment text DEFAULT ''::text NOT NULL,
-    moderated boolean DEFAULT true NOT NULL,
     verified timestamp without time zone,
-    verified_info text DEFAULT ''::text NOT NULL
+    deleted boolean DEFAULT false NOT NULL
 );
 
+ALTER TABLE public.joke OWNER TO bancuri;
 
-ALTER TABLE public.content OWNER TO bancuri;
+CREATE TABLE joke_version (
+    joke_id integer REFERENCES joke(id)
+);
+
+ALTER TABLE public.joke_version OWNER TO bancuri;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- EOF !!! --
+
+\q
 
 --
 -- Name: internal_links; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
@@ -58,18 +107,6 @@ CREATE TABLE metadata (
 
 ALTER TABLE public.metadata OWNER TO bancuri;
 
---
--- Name: node_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
---
-
-CREATE SEQUENCE node_seq
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.node_seq OWNER TO bancuri;
 
 --
 -- Name: node_seq; Type: SEQUENCE SET; Schema: public; Owner: bancuri
