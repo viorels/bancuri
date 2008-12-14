@@ -10,22 +10,40 @@ SET escape_string_warning = off;
 
 SET search_path = public, pg_catalog;
 
+ALTER TABLE ONLY public.joke_version DROP CONSTRAINT joke_version_joke_id_fkey;
+ALTER TABLE ONLY public.joke DROP CONSTRAINT joke_pkey;
+DROP TABLE public.joke_version;
+DROP TABLE public.joke;
+DROP SEQUENCE public.joke_seq;
+DROP SCHEMA public;
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+SET search_path = public, pg_catalog;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
--- ALTER TABLE ONLY public.content DROP CONSTRAINT fk_node_id;
--- DROP INDEX public.node_name;
--- ALTER TABLE ONLY public.node DROP CONSTRAINT pk_id;
-DROP TABLE public.joke CASCADE;
-DROP TABLE public.joke_version CASCADE;
-DROP SEQUENCE public.joke_seq;
-
 --
--- Name: joke_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
+-- TABLES AND SEQUENCES
 --
 
 CREATE SEQUENCE joke_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -34,214 +52,37 @@ CREATE SEQUENCE joke_seq
 
 ALTER TABLE public.joke_seq OWNER TO bancuri;
 
---
--- Name: joke; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
---
-
 CREATE TABLE joke (
-    id integer DEFAULT nextval('joke_seq') PRIMARY KEY NOT NULL,
+    id integer DEFAULT nextval('joke_seq'::regclass) NOT NULL,
     version integer DEFAULT 0 NOT NULL,
-    link varchar(64) DEFAULT '' NOT NULL,
+    link character varying(64) DEFAULT ''::character varying NOT NULL,
     modified timestamp without time zone,
     verified timestamp without time zone,
     deleted boolean DEFAULT false NOT NULL
 );
 
+
 ALTER TABLE public.joke OWNER TO bancuri;
 
 CREATE TABLE joke_version (
-    joke_id integer REFERENCES joke(id)
+    joke_id integer
 );
 
 ALTER TABLE public.joke_version OWNER TO bancuri;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- EOF !!! --
-
-\q
-
 --
--- Name: internal_links; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-CREATE TABLE internal_links (
-    link_from character varying(200) DEFAULT ''::character varying NOT NULL,
-    link_to character varying(200) DEFAULT ''::character varying NOT NULL
-);
-
-
-ALTER TABLE public.internal_links OWNER TO bancuri;
+ALTER TABLE ONLY joke
+    ADD CONSTRAINT joke_pkey PRIMARY KEY (id);
 
 --
--- Name: metadata; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke_version_joke_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
 --
 
-CREATE TABLE metadata (
-    node_id integer NOT NULL,
-    version integer DEFAULT 0 NOT NULL,
-    metadata_type character varying(200) DEFAULT ''::character varying NOT NULL,
-    metadata_value text DEFAULT ''::text NOT NULL
-);
-
-
-ALTER TABLE public.metadata OWNER TO bancuri;
-
-
---
--- Name: node_seq; Type: SEQUENCE SET; Schema: public; Owner: bancuri
---
-
-SELECT pg_catalog.setval('node_seq', 1, true);
-
-
---
--- Name: node; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
---
-
-CREATE TABLE node (
-    id integer DEFAULT nextval('node_seq'::regclass) NOT NULL,
-    name character varying(200) DEFAULT ''::character varying NOT NULL,
-    version integer DEFAULT 0 NOT NULL,
-    text text DEFAULT ''::text NOT NULL,
-    modified timestamp without time zone,
-    moderate boolean DEFAULT false NOT NULL
-);
-
-
-ALTER TABLE public.node OWNER TO bancuri;
-
---
--- Name: schema_info; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
---
-
-CREATE TABLE schema_info (
-    version integer DEFAULT 0 NOT NULL
-);
-
-
-ALTER TABLE public.schema_info OWNER TO bancuri;
-
---
--- Data for Name: content; Type: TABLE DATA; Schema: public; Owner: bancuri
---
-
-COPY content (node_id, version, text, modified, comment, moderated, verified, verified_info) FROM stdin;
-1	1	acesta este primul banc ...	2008-12-14 16:06:25		f	\N	
-1	2	=== This page has yet to be moderated. ===	2008-12-14 16:18:20		f	\N	
-1	3	aaaaaaaaaaaaaaa	2008-12-14 16:18:34		f	\N	
-\.
-
-
---
--- Data for Name: internal_links; Type: TABLE DATA; Schema: public; Owner: bancuri
---
-
-COPY internal_links (link_from, link_to) FROM stdin;
-\.
-
-
---
--- Data for Name: metadata; Type: TABLE DATA; Schema: public; Owner: bancuri
---
-
-COPY metadata (node_id, version, metadata_type, metadata_value) FROM stdin;
-1	1	username	vio
-1	2	username	vio
-1	3	username	vio
-\.
-
-
---
--- Data for Name: node; Type: TABLE DATA; Schema: public; Owner: bancuri
---
-
-COPY node (id, name, version, text, modified, moderate) FROM stdin;
-1	1	1	=== This page has yet to be moderated. ===	2008-12-14 16:06:25	t
-\.
-
-
---
--- Data for Name: schema_info; Type: TABLE DATA; Schema: public; Owner: bancuri
---
-
-COPY schema_info (version) FROM stdin;
-10
-\.
-
-
---
--- Name: pk_id; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
---
-
-ALTER TABLE ONLY node
-    ADD CONSTRAINT pk_id PRIMARY KEY (id);
-
-
---
--- Name: pk_node_id; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
---
-
-ALTER TABLE ONLY content
-    ADD CONSTRAINT pk_node_id PRIMARY KEY (node_id, version);
-
-
---
--- Name: internal_links_pkey; Type: INDEX; Schema: public; Owner: bancuri; Tablespace: 
---
-
-CREATE UNIQUE INDEX internal_links_pkey ON internal_links USING btree (link_from, link_to);
-
-
---
--- Name: metadata_index; Type: INDEX; Schema: public; Owner: bancuri; Tablespace: 
---
-
-CREATE INDEX metadata_index ON metadata USING btree (node_id, version, metadata_type, metadata_value);
-
-
---
--- Name: node_name; Type: INDEX; Schema: public; Owner: bancuri; Tablespace: 
---
-
-CREATE UNIQUE INDEX node_name ON node USING btree (name);
-
-
---
--- Name: fk_node_id; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
---
-
-ALTER TABLE ONLY metadata
-    ADD CONSTRAINT fk_node_id FOREIGN KEY (node_id) REFERENCES node(id);
-
-
---
--- Name: fk_node_id; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
---
-
-ALTER TABLE ONLY content
-    ADD CONSTRAINT fk_node_id FOREIGN KEY (node_id) REFERENCES node(id);
-
+ALTER TABLE ONLY joke_version
+    ADD CONSTRAINT joke_version_joke_id_fkey FOREIGN KEY (joke_id) REFERENCES joke(id);
 
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
@@ -251,7 +92,6 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
-
 
 --
 -- PostgreSQL database dump complete
