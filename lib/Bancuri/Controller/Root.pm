@@ -4,11 +4,6 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
-require Wiki::Toolkit;
-require Wiki::Toolkit::Store::Pg;
-require Wiki::Toolkit::Search::Plucene;
-require Wiki::Toolkit::Formatter::Default;
-
 __PACKAGE__->config->{namespace} = '';
 
 =head1 NAME
@@ -25,7 +20,8 @@ Catalyst Controller.
 
 sub auto : Private {
 	my ( $self, $c ) = @_;
-	$c->stash->{'wiki'} = $c->forward('toolkit');
+
+    return 1;
 };
 
 sub default : Path('') {
@@ -42,43 +38,27 @@ sub default : Path('') {
 
 sub index : Private {
     my ( $self, $c ) = @_;
-    my $id = $c->request->params->{id};
 
-	if ($id) {
-    	$c->forward(qw/Bancuri::Controller::Show banc_id/, [$id]);
+	if ( my $id = $c->request->params->{id} ) {
+        $c->stash->{'joke_link'} = $id;
+        $c->forward(qw/Bancuri::Controller::Show current/);
 	}
 	else {
-		$c->forward('Bancuri::Controller::Show'); # show the best ?
+        # / arata bancul zilei
+		$c->forward('Bancuri::Controller::Show');
 	}
 }
 
-sub wiki : Chained PathPart('') CaptureArgs(1) {
-	my ( $self, $c, $node ) = @_;
-	$c->stash->{'node'} = $node;
+sub joke : Chained PathPart('') CaptureArgs(1) {
+	my ( $self, $c, $joke_link ) = @_;
+	$c->stash->{'joke_link'} = $joke_link;
 }
 
-sub toolkit : Private {
-	my ( $self, $c, $title ) = @_;
-	
-	my $dbh = $c->model('DBI')->dbh;
-	my $store  = Wiki::Toolkit::Store::Pg->new( dbh => $dbh, charset => 'utf-8' );
-    $store->{_charset} = 'utf-8'; # Workaround for bug http://www.wiki-toolkit.org/ticket/24
-	my $search = Wiki::Toolkit::Search::Plucene->new( path => "plucene" );
-	my $formatter = Wiki::Toolkit::Formatter::Default->new(
-    	extended_links  => 0,
-        implicit_links  => 0,
-        allowed_tags    => [qw(b i)],
-        macros          => {},
-        node_prefix     => ''
-	);
-	my $wiki   = Wiki::Toolkit->new(
-		store => $store, 
-		search => $search, 
-		formatter => $formatter 
-	);
-	return $wiki;
+sub blog : Global {
+    my ( $self, $c ) = @_;
+    $c->response->body("BLOG");
 }
-  
+
 sub end : ActionClass('RenderView') {
 	my ( $self, $c ) = @_;
     # do stuff here; the RenderView action is called afterwards

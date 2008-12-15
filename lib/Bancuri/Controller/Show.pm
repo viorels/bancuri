@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
-use Data::Dumper;
-
 =head1 NAME
 
 Bancuri::Controller::Show - Catalyst Controller
@@ -25,42 +23,49 @@ Catalyst Controller.
 
 sub process : Private {
 	my ( $self, $c ) = @_;
+
+	# / arata bancul zilei
 	$c->response->body('Matched Bancuri::Controller::Show');
+    
+#   Fetch the joke for today and show it's current version
+	$c->stash->{'joke_link'} = 'pe-titanic-vine-capitanul-si-spune';
+	$c->forward('current');
 }
 
-sub banc : Chained('/wiki') PathPart('') Args(0) {
+sub current : Chained('/joke') PathPart('') Args(0) {
 	my ( $self, $c ) = @_;
-	my $node = $c->stash->{'node'};
-	
-	# node_exists ?
-	# node_required_moderation
-	$c->forward('show', [ $node ]);
+	my $joke_link = $c->stash->{'joke_link'};
+
+	# TODO determine current version
+	my $version = 1;
+	$c->forward('show', [ $joke_link, $version ]);
 }
 
-sub rev : Chained('/wiki') PathPart Args(1) {
+sub ver : Chained('/joke') PathPart Args(1) {
     my ( $self, $c, $version ) = @_;
-	my $node = $c->stash->{'node'};
+	my $joke_link = $c->stash->{'joke_link'};
 
-	$c->forward('show', [ $node, $version ]);
+	$c->forward('show', [ $joke_link, $version ]);
 }
 
 sub show : Private {
-	my ( $self, $c, $node, $version ) = @_;
-	my $wiki = $c->stash->{'wiki'};
+	my ( $self, $c, $joke_link, $version ) = @_;
 	
-	my %node_data = $wiki->retrieve_node( name => $node, version => $version );
-	my $cooked = $wiki->format($node_data{'content'});
+	my $joke_data = $c->model('BancuriDB::Joke')
+		->find({ link => $joke_link, version => $version });
+	# prefetch
 	
-	$c->stash(
-		text => $cooked,
-		last_modified => $node_data{'last_modified'},
-		version => $node_data{'version'},
-		metadata => Dumper $node_data{'metadata'},		
-	);
+	# node_exists ? try redirection ... else show it
+    # node is not deleted ?
+	# node_required_moderation
+
+#	my $cooked = $wiki->format($node_data{'content'});
+	
+	$c->stash->{joke} = $joke_data;
 	$c->stash->{template} = 'banc.html';
 }
 
-sub banc_id : Private {
+sub redirect : Private {
     my ( $self, $c, $id ) = @_;
 
     $c->response->body("banc id $id"); # TODO redirect to name

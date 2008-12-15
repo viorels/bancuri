@@ -33,8 +33,8 @@
 				<img src="images/pic.gif" class="floatTL" alt="Something scenic" />
 
 <div id="banc" class="edit">
-  <a href="/[% node %]/edit">
-    [% text || '+' %]
+  <a href="/[% joke.link %]/edit">
+    [% joke.current_version.text || '+' %]
   </a>
 </div>
 
@@ -107,9 +107,8 @@
 
 				<h4><span>detalii</span> banc</h4>
 <div id="info">
-<strong>last_modified</strong> [% last_modified %]<br />
-<strong>version</strong> [% version %]<br />
-<strong>metadata</strong> [% metadata %]<br />
+<strong>last_modified</strong> [% joke.modified %]<br />
+<strong>version</strong> [% joke.version %]<br />
 </div>
 
 	
