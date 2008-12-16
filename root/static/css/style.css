@@ -1,12 +1,14 @@
 #banc {
-	width: 400px; /* wass #e7eefc */
-	min-height: 400px; /* fails in IE */
-	background-color: #F9F9F9;
+	font-size: 1.3em;
 }
 
-#banc a {
-	text-decoration: none;
+#banc img {
+	border: none;
 }
+
+#banc .columnLeftQuote { vertical-align: top }
+#banc .columnRightQuote { vertical-align: bottom }
+#banc .columnText { padding: 6px 0 }
 
 .edit textarea {
 	width: 100%;
