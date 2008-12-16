@@ -29,7 +29,7 @@ sub default : Path('') {
 	
 	$c->response->status(404);
 	$c->response->body("404 Not Found");
-	$c->request->action(undef);	
+	$c->request->action(undef);
 };
 
 =head2 index 

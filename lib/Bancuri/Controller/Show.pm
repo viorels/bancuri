@@ -52,6 +52,10 @@ sub show : Private {
 	my ( $self, $c, $joke_link, $version ) = @_;
 	
 	my $joke = $c->model('BancuriDB::Joke')->find({ link => $joke_link });
+	unless ( $joke ) {
+		$c->forward('redirect', [ $joke_link ]);
+	}
+
 	my $joke_ver = $c->model('BancuriDB::JokeVersion')
 		->find({ joke_id => $joke->id, version => $version });
 	
@@ -67,9 +71,26 @@ sub show : Private {
 }
 
 sub redirect : Private {
-    my ( $self, $c, $id ) = @_;
+    my ( $self, $c, $joke_link ) = @_;
 
-    $c->response->body("banc id $id"); # TODO redirect to name
+	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
+	if ( $redirect ) {
+		my $new_url = $c->uri_for( q{/} . $redirect->new_link );
+		my $permanent = 301;
+		$c->response->redirect( $new_url, $permanent );
+		$c->detach();
+	}
+	else {
+		$c->forward('notfound');
+	}
+}
+
+sub notfound : Private {
+    my ( $self, $c, $joke_link ) = @_;
+	
+	$c->response->status(404);
+	$c->response->body("404 joke not found");
+	$c->detach();
 }
 
 
