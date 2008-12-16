@@ -1,4 +1,6 @@
+[% title = 'Enciclopedia de bancuri - '_ joke_ver.title %]
 [% INCLUDE inc/header.html %]
+
 
 
 <div id="header">
@@ -30,11 +32,11 @@
 
 			<div id="columnA_3columns">
 		
-				<h3>Ion si Maria veneau de la camp ...</h3>
+				<h3>[% joke_ver.title %]</h3>
 
 <div id="banc" class="edit">
-  <a href="/[% node %]/edit">
-    [% text || '+' %]
+  <a href="/[% joke.link %]/edit">
+    [% joke_ver.text || '+' %]
   </a>
 </div>
 
@@ -107,9 +109,9 @@
 
 				<h4><span>detalii</span> banc</h4>
 <div id="info">
-<strong>last_modified</strong> [% last_modified %]<br />
-<strong>version</strong> [% version %]<br />
-<strong>metadata</strong> [% metadata %]<br />
+<strong>modified</strong> [% joke.modified %]<br />
+<strong>current ver</strong> [% joke.version %]<br />
+<strong>shown ver</strong> [% joke_ver.version %]<br />
 </div>
 
 	

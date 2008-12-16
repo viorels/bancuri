@@ -1,10 +1,8 @@
 ---
-name: Bancuri
 default_view: Bancuri::View::TT
-Model::DBI:
-    dsn: dbi:Pg:dbname=bancuri;host=localhost
-    user: bancuri
-    password: gSj0wGSH
-    options:
-        AutoCommit: 1
-        RaiseError: 1
+Model::BancuriDB:
+    connect_info:
+        - dbi:Pg:dbname=bancuri;host=localhost
+        - bancuri
+        - gSj0wGSH
+

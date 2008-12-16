@@ -4,9 +4,6 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
-use Data::Dumper;
-use constant REQUIRES_MODERATION => 1;
-
 =head1 NAME
 
 Bancuri::Controller::Edit - Catalyst Controller
@@ -23,24 +20,14 @@ Catalyst Controller.
 
 =cut
 
-sub edit : Chained('/wiki') PathPart('edit') Args(0) {
+sub edit : Chained('/joke') PathPart('edit') Args(0) {
 	my ( $self, $c ) = @_;
-	my $wiki = $c->stash->{'wiki'};
-	my $node = $c->stash->{'node'};
+	my $joke= $c->stash->{'joke'};
 
 	if ( $c->req->method() eq 'GET' ) {
 		$c->stash->{'template'} = 'edit.html';
-		my %node_data = $wiki->retrieve_node($node);
+		my $joke_data = $c->model('BancuriDB::Joke')->retrieve($joke);
 
-		$c->stash(
-			title => 'Editeaza banc',
-			raw => $node_data{'content'},
-			checksum => $node_data{'checksum'},
-			last_modified => $node_data{'last_modified'},
-			version => $node_data{'version'},
-			metadata => Dumper $node_data{'metadata'},
-		);
-		$c->forward(qw/Bancuri::Controller::Moderate/);
 	}
 	elsif ( $c->req->method() eq 'POST' ) {
 		my %actions = (
