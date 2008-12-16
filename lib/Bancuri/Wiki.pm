@@ -7,6 +7,7 @@ our $VERSION = '0.01';
 
 sub new {
 	my ($class, %args) = @_;	
+    warn "@_\n";
 
 	my $self = {};
 	bless $self, $class;

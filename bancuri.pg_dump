@@ -10,53 +10,146 @@ SET escape_string_warning = off;
 
 SET search_path = public, pg_catalog;
 
+ALTER TABLE ONLY public.joke_version DROP CONSTRAINT joke_version_joke_id_fkey;
+ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
+ALTER TABLE ONLY public.useragent DROP CONSTRAINT useragent_pkey;
+ALTER TABLE ONLY public.redirect DROP CONSTRAINT redirect_pkey;
+ALTER TABLE ONLY public.joke_version DROP CONSTRAINT joke_version_pkey;
+ALTER TABLE ONLY public.joke DROP CONSTRAINT joke_pkey;
+ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.useragent ALTER COLUMN id DROP DEFAULT;
+DROP SEQUENCE public.users_id_seq;
+DROP SEQUENCE public.useragent_id_seq;
+DROP SEQUENCE public.node_seq;
+DROP TABLE public.users;
+DROP TABLE public.useragent;
+DROP TABLE public.redirect;
+DROP TABLE public.joke_version;
+DROP TABLE public.joke;
+DROP SEQUENCE public.joke_seq;
+DROP SCHEMA public;
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: joke_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
+--
+
+CREATE SEQUENCE joke_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.joke_seq OWNER TO bancuri;
+
+--
+-- Name: joke_seq; Type: SEQUENCE SET; Schema: public; Owner: bancuri
+--
+
+SELECT pg_catalog.setval('joke_seq', 1, true);
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: content; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-CREATE TABLE content (
-    node_id integer NOT NULL,
-    version integer DEFAULT 0 NOT NULL,
-    text text DEFAULT ''::text NOT NULL,
-    modified timestamp without time zone,
-    comment text DEFAULT ''::text NOT NULL,
-    moderated boolean DEFAULT true NOT NULL,
+CREATE TABLE joke (
+    id integer DEFAULT nextval('joke_seq'::regclass) NOT NULL,
+    version integer DEFAULT 1 NOT NULL,
+    link character varying(64) DEFAULT ''::character varying NOT NULL,
+    modified timestamp without time zone DEFAULT now(),
     verified timestamp without time zone,
-    verified_info text DEFAULT ''::text NOT NULL
+    deleted boolean DEFAULT false NOT NULL
 );
 
 
-ALTER TABLE public.content OWNER TO bancuri;
+ALTER TABLE public.joke OWNER TO bancuri;
 
 --
--- Name: internal_links; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke_version; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-CREATE TABLE internal_links (
-    link_from character varying(200) DEFAULT ''::character varying NOT NULL,
-    link_to character varying(200) DEFAULT ''::character varying NOT NULL
+CREATE TABLE joke_version (
+    joke_id integer NOT NULL,
+    version integer DEFAULT 1 NOT NULL,
+    text text NOT NULL,
+    title character varying(64),
+    comment character varying(255),
+    created timestamp without time zone DEFAULT now(),
+    parent_ver integer,
+    user_id integer NOT NULL,
+    ip inet NOT NULL,
+    useragent_id integer NOT NULL,
+    stars real,
+    votes integer DEFAULT 0 NOT NULL,
+    views integer DEFAULT 0 NOT NULL,
+    banned boolean DEFAULT false NOT NULL
 );
 
 
-ALTER TABLE public.internal_links OWNER TO bancuri;
+ALTER TABLE public.joke_version OWNER TO bancuri;
 
 --
--- Name: metadata; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: redirect; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-CREATE TABLE metadata (
-    node_id integer NOT NULL,
-    version integer DEFAULT 0 NOT NULL,
-    metadata_type character varying(200) DEFAULT ''::character varying NOT NULL,
-    metadata_value text DEFAULT ''::text NOT NULL
+CREATE TABLE redirect (
+    old_link character varying(64) DEFAULT ''::character varying NOT NULL,
+    new_link character varying(64) DEFAULT ''::character varying NOT NULL,
+    created timestamp without time zone DEFAULT now(),
+    last_used timestamp without time zone
 );
 
 
-ALTER TABLE public.metadata OWNER TO bancuri;
+ALTER TABLE public.redirect OWNER TO bancuri;
+
+--
+-- Name: useragent; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+--
+
+CREATE TABLE useragent (
+    id integer NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.useragent OWNER TO bancuri;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    email character varying(255) NOT NULL,
+    password character varying(255),
+    comment text DEFAULT ''::text
+);
+
+
+ALTER TABLE public.users OWNER TO bancuri;
 
 --
 -- Name: node_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
@@ -79,131 +172,165 @@ SELECT pg_catalog.setval('node_seq', 1, true);
 
 
 --
--- Name: node; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: useragent_id_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
 --
 
-CREATE TABLE node (
-    id integer DEFAULT nextval('node_seq'::regclass) NOT NULL,
-    name character varying(200) DEFAULT ''::character varying NOT NULL,
-    version integer DEFAULT 0 NOT NULL,
-    text text DEFAULT ''::text NOT NULL,
-    modified timestamp without time zone,
-    moderate boolean DEFAULT false NOT NULL
-);
+CREATE SEQUENCE useragent_id_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
 
 
-ALTER TABLE public.node OWNER TO bancuri;
+ALTER TABLE public.useragent_id_seq OWNER TO bancuri;
 
 --
--- Name: schema_info; Type: TABLE; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: useragent_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: bancuri
 --
 
-CREATE TABLE schema_info (
-    version integer DEFAULT 0 NOT NULL
-);
+ALTER SEQUENCE useragent_id_seq OWNED BY useragent.id;
 
-
-ALTER TABLE public.schema_info OWNER TO bancuri;
 
 --
--- Data for Name: content; Type: TABLE DATA; Schema: public; Owner: bancuri
+-- Name: useragent_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bancuri
 --
 
-COPY content (node_id, version, text, modified, comment, moderated, verified, verified_info) FROM stdin;
-1	1	acesta este primul banc ...	2008-12-14 16:06:25		f	\N	
-1	2	=== This page has yet to be moderated. ===	2008-12-14 16:18:20		f	\N	
-1	3	aaaaaaaaaaaaaaa	2008-12-14 16:18:34		f	\N	
+SELECT pg_catalog.setval('useragent_id_seq', 1, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: bancuri
+--
+
+CREATE SEQUENCE users_id_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO bancuri;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: bancuri
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bancuri
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1, true);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: bancuri
+--
+
+ALTER TABLE useragent ALTER COLUMN id SET DEFAULT nextval('useragent_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: bancuri
+--
+
+ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: joke; Type: TABLE DATA; Schema: public; Owner: bancuri
+--
+
+COPY joke (id, version, link, modified, verified, deleted) FROM stdin;
+1	1	pe-titanic-vine-capitanul-si-spune	2008-12-15 16:29:49.691533	\N	f
 \.
 
 
 --
--- Data for Name: internal_links; Type: TABLE DATA; Schema: public; Owner: bancuri
+-- Data for Name: joke_version; Type: TABLE DATA; Schema: public; Owner: bancuri
 --
 
-COPY internal_links (link_from, link_to) FROM stdin;
+COPY joke_version (joke_id, version, text, title, comment, created, parent_ver, user_id, ip, useragent_id, stars, votes, views, banned) FROM stdin;
+1	1	Pe Titanic, vine capitanul si spune:\n-Am o veste buna si una rea.\nPasagerii:-Incepe cu aia rea.\nCapitanul:-In doua minute de lovim de un iceberg!\nPasagerii:-Si aia buna?\nCapitanul:-Vom lua 11 OSCAR-uri pentru asta.	banc cu titanic	prima versiune, beta	2008-12-15 16:34:41.713614	\N	1	192.168.0.2	1	\N	0	0	f
+1	2	am sters bancul	am sters titlul	a 2-a versiune, naspa	2008-12-15 16:54:38.339435	1	1	192.168.0.2	1	\N	0	0	f
 \.
 
 
 --
--- Data for Name: metadata; Type: TABLE DATA; Schema: public; Owner: bancuri
+-- Data for Name: redirect; Type: TABLE DATA; Schema: public; Owner: bancuri
 --
 
-COPY metadata (node_id, version, metadata_type, metadata_value) FROM stdin;
-1	1	username	vio
-1	2	username	vio
-1	3	username	vio
+COPY redirect (old_link, new_link, created, last_used) FROM stdin;
+1	pe-titanic-vine-capitanul-si-spune	2008-12-15 16:46:03.488283	\N
 \.
 
 
 --
--- Data for Name: node; Type: TABLE DATA; Schema: public; Owner: bancuri
+-- Data for Name: useragent; Type: TABLE DATA; Schema: public; Owner: bancuri
 --
 
-COPY node (id, name, version, text, modified, moderate) FROM stdin;
-1	1	1	=== This page has yet to be moderated. ===	2008-12-14 16:06:25	t
+COPY useragent (id, name) FROM stdin;
+1	
 \.
 
 
 --
--- Data for Name: schema_info; Type: TABLE DATA; Schema: public; Owner: bancuri
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: bancuri
 --
 
-COPY schema_info (version) FROM stdin;
-10
+COPY users (id, name, email, password, comment) FROM stdin;
+1	Bula	bula@bancuri.com	asdf123	Admin
 \.
 
 
 --
--- Name: pk_id; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-ALTER TABLE ONLY node
-    ADD CONSTRAINT pk_id PRIMARY KEY (id);
-
-
---
--- Name: pk_node_id; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
---
-
-ALTER TABLE ONLY content
-    ADD CONSTRAINT pk_node_id PRIMARY KEY (node_id, version);
+ALTER TABLE ONLY joke
+    ADD CONSTRAINT joke_pkey PRIMARY KEY (id);
 
 
 --
--- Name: internal_links_pkey; Type: INDEX; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: joke_version_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-CREATE UNIQUE INDEX internal_links_pkey ON internal_links USING btree (link_from, link_to);
-
-
---
--- Name: metadata_index; Type: INDEX; Schema: public; Owner: bancuri; Tablespace: 
---
-
-CREATE INDEX metadata_index ON metadata USING btree (node_id, version, metadata_type, metadata_value);
+ALTER TABLE ONLY joke_version
+    ADD CONSTRAINT joke_version_pkey PRIMARY KEY (joke_id, version);
 
 
 --
--- Name: node_name; Type: INDEX; Schema: public; Owner: bancuri; Tablespace: 
+-- Name: redirect_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-CREATE UNIQUE INDEX node_name ON node USING btree (name);
-
-
---
--- Name: fk_node_id; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
---
-
-ALTER TABLE ONLY metadata
-    ADD CONSTRAINT fk_node_id FOREIGN KEY (node_id) REFERENCES node(id);
+ALTER TABLE ONLY redirect
+    ADD CONSTRAINT redirect_pkey PRIMARY KEY (old_link);
 
 
 --
--- Name: fk_node_id; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
+-- Name: useragent_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
 --
 
-ALTER TABLE ONLY content
-    ADD CONSTRAINT fk_node_id FOREIGN KEY (node_id) REFERENCES node(id);
+ALTER TABLE ONLY useragent
+    ADD CONSTRAINT useragent_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: bancuri; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: joke_version_joke_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: bancuri
+--
+
+ALTER TABLE ONLY joke_version
+    ADD CONSTRAINT joke_version_joke_id_fkey FOREIGN KEY (joke_id) REFERENCES joke(id);
 
 
 --
