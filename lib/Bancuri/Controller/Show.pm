@@ -57,7 +57,7 @@ sub show : Private {
 	}
 
 	my $joke_ver = $c->model('BancuriDB::JokeVersion')
-		->find({ joke_id => $joke->id, version => $version });
+		->find( $joke->id, $version, { key => 'joke_version_pkey' } );
 	
 	# node_exists ? try redirection ... else show it
     # node is not deleted ?
