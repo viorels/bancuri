@@ -34,7 +34,7 @@
 
 <div id="banc" class="edit">
   <a href="/[% joke.link %]/edit">
-    [% joke.current_version.text || '+' %]
+    [% joke_ver.text || '+' %]
   </a>
 </div>
 
@@ -107,8 +107,9 @@
 
 				<h4><span>detalii</span> banc</h4>
 <div id="info">
-<strong>last_modified</strong> [% joke.modified %]<br />
-<strong>version</strong> [% joke.version %]<br />
+<strong>modified</strong> [% joke.modified %]<br />
+<strong>current ver</strong> [% joke.version %]<br />
+<strong>shown ver</strong> [% joke_ver.version %]<br />
 </div>
 
 	

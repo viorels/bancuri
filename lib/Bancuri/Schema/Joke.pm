@@ -58,12 +58,29 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-15 22:32:04
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kK6mEebP561s/MDKrCyoOg
 
-__PACKAGE__->has_one(
-  "current_version",
-  "Bancuri::Schema::JokeVersion",
-  { "foreign.joke_id" => "self.id",
-  	"foreign.version" => "self.version" },
-);
+#__PACKAGE__->has_one(
+#  "current_version",
+#  "Bancuri::Schema::JokeVersion",
+#  { "foreign.joke_id" => "self.id",
+#  	"foreign.version" => "self.version" },
+#);
+
+# TODO move methods for Resultset BELOW to a ResultSet (not result) ...
+
+sub get {
+	my ($self, $link, $version) = @_;
+	
+	return $self->find({ link => $link, version => $version });
+}
+
+sub add {
+	my ($self) = @_;
+	
+	# $schema->txn_do($coderef);
+	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Storage.pm#txn_do
+	# add a joke ...
+	# return $self->price * $self->currency->rate; (use related tables)
+}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

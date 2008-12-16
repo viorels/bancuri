@@ -51,9 +51,9 @@ sub ver : Chained('/joke') PathPart Args(1) {
 sub show : Private {
 	my ( $self, $c, $joke_link, $version ) = @_;
 	
-	my $joke_data = $c->model('BancuriDB::Joke')
-		->find({ link => $joke_link, version => $version });
-	# prefetch
+	my $joke = $c->model('BancuriDB::Joke')->find({ link => $joke_link });
+	my $joke_ver = $c->model('BancuriDB::JokeVersion')
+		->find({ joke_id => $joke->id, version => $version });
 	
 	# node_exists ? try redirection ... else show it
     # node is not deleted ?
@@ -61,7 +61,8 @@ sub show : Private {
 
 #	my $cooked = $wiki->format($node_data{'content'});
 	
-	$c->stash->{joke} = $joke_data;
+	$c->stash->{joke} = $joke;
+	$c->stash->{joke_ver} = $joke_ver;
 	$c->stash->{template} = 'banc.html';
 }
 
