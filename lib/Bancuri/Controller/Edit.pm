@@ -24,6 +24,8 @@ sub edit : Chained('/joke') PathPart('edit') Args(0) {
 	my ( $self, $c ) = @_;
 	my $joke= $c->stash->{'joke'};
 
+	# TODO cook joke content before setting it into <textarea>content<textarea> to avoid "</textarea>"
+
 	if ( $c->req->method() eq 'GET' ) {
 		$c->stash->{'template'} = 'edit.html';
 		my $joke_data = $c->model('BancuriDB::Joke')->retrieve($joke);

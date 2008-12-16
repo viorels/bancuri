@@ -56,13 +56,17 @@ sub show : Private {
 		$c->forward('redirect', [ $joke_link ]);
 	}
 
-	# TODO check if there are 0 records !
-	my $joke_ver = $joke->search_related('joke_versions', { version => $version })->first;
+	my $joke_ver;
+	if ( $joke->version == $version ) {
+		$joke_ver = $joke->current_version;
+	}
+	else {
+		# TODO check if there are no records !
+		$joke_ver = $joke->search_related('joke_versions', { version => $version })->first;
+#		$joke_ver = $c->model('BancuriDB::JokeVersion')
+#			->find( $joke->id, $version, { key => 'joke_version_pkey' } );
+	}
 	
-#	my $joke_ver = $c->model('BancuriDB::JokeVersion')
-#		->find( $joke->id, $version, { key => 'joke_version_pkey' } );
-	
-	# node_exists ? try redirection ... else show it
     # node is not deleted ?
 	# node_required_moderation
 
