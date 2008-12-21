@@ -24,11 +24,16 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("id");
-__PACKAGE__->add_unique_constraint("useragent_pkey", ["id"]);
+__PACKAGE__->add_unique_constraint("pk_useragent", ["id"]);
+__PACKAGE__->has_many(
+  "browsers",
+  "Bancuri::Schema::Browser",
+  { "foreign.useragent_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-15 22:32:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7qyqrWu6xzSEYUFqElc1cQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QlXKnD0DlSU3o/qxmjbC/g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

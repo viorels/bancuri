@@ -1,4 +1,4 @@
-package Bancuri::Schema::JokeVersion;
+package Bancuri::Schema::JokeCurrent;
 
 use strict;
 use warnings;
@@ -6,12 +6,33 @@ use warnings;
 use base 'DBIx::Class';
 
 __PACKAGE__->load_components("Core");
-__PACKAGE__->table("joke_version");
+__PACKAGE__->table("joke_current");
 __PACKAGE__->add_columns(
-  "joke_id",
-  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  "id",
+  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "version",
-  { data_type => "smallint", default_value => 1, is_nullable => 0, size => 2 },
+  {
+    data_type => "smallint",
+    default_value => undef,
+    is_nullable => 1,
+    size => 2,
+  },
+  "link",
+  {
+    data_type => "character varying",
+    default_value => undef,
+    is_nullable => 1,
+    size => 64,
+  },
+  "changed",
+  {
+    data_type => "timestamp without time zone",
+    default_value => undef,
+    is_nullable => 1,
+    size => 8,
+  },
+  "deleted",
+  { data_type => "boolean", default_value => undef, is_nullable => 1, size => 1 },
   "text",
   {
     data_type => "text",
@@ -36,7 +57,7 @@ __PACKAGE__->add_columns(
   "created",
   {
     data_type => "timestamp without time zone",
-    default_value => "now()",
+    default_value => undef,
     is_nullable => 1,
     size => 8,
   },
@@ -53,29 +74,12 @@ __PACKAGE__->add_columns(
   "views",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "banned",
-  {
-    data_type => "boolean",
-    default_value => "false",
-    is_nullable => 1,
-    size => 1,
-  },
-);
-__PACKAGE__->set_primary_key("joke_id", "version");
-__PACKAGE__->add_unique_constraint("pk_joke_version", ["joke_id", "version"]);
-__PACKAGE__->belongs_to("user_id", "Bancuri::Schema::Users", { id => "user_id" });
-__PACKAGE__->belongs_to("joke_id", "Bancuri::Schema::Joke", { id => "joke_id" });
-__PACKAGE__->has_many(
-  "votes",
-  "Bancuri::Schema::Vote",
-  {
-    "foreign.joke_id" => "self.joke_id",
-    "foreign.version" => "self.version",
-  },
+  { data_type => "boolean", default_value => undef, is_nullable => 1, size => 1 },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oZl+wR9Pdpq2uqcB+vbSCw
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RAXyV96YLrmrDZPg0QHCxw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

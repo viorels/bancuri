@@ -1,0 +1,19 @@
+digraph g {
+node [ fontsize = "10", shape = record ];
+edge [];
+
+"joke" [shape = record, label = "{<col0> \N| id:  integer\lversion:  integer\llink:  character varying(64)\lmodified:  timestamp without time zone\lverified:  timestamp without time zone\ldeleted:  boolean\l}" ];
+
+"joke_version" [shape = record, label = "{<col0> \N| joke_id:  integer\lversion:  integer\ltext:  text\ltitle:  character varying(64)\lcomment:  character varying(255)\lcreated:  timestamp without time zone\lparent_ver:  integer\luser_id:  integer\lip:  inet\luseragent_id:  integer\lstars:  real\lvotes:  integer\lviews:  integer\lbanned:  boolean\l}" ];
+
+"redirect" [shape = record, label = "{<col0> \N| old_link:  character varying(64)\lnew_link:  character varying(64)\lcreated:  timestamp without time zone\llast_used:  timestamp without time zone\l}" ];
+
+"useragent" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(255)\l}" ];
+
+"users" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(64)\lemail:  character varying(255)\lpassword:  character varying(255)\lcomment:  text\l}" ];
+
+
+"joke_version" -> "joke" [label="joke_version_joke_id_fkey"];
+}
+
+
