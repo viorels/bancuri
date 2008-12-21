@@ -6,8 +6,7 @@ use warnings;
 our $VERSION = '0.01';
 
 sub new {
-	my ($class, %args) = @_;	
-    warn "@_\n";
+	my ($class, $args) = @_;
 
 	my $self = {};
 	bless $self, $class;

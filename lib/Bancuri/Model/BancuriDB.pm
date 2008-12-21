@@ -5,6 +5,12 @@ use base 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
     schema_class => 'Bancuri::Schema',
+    connect_info => [
+        'dbi:Pg:dbname=bancuri;host=localhost',
+        'bancuri',
+        'gSj0wGSH',
+        
+    ],
 );
 
 =head1 NAME
