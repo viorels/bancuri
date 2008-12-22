@@ -21,67 +21,115 @@
 use strict;
 use warnings;
 
+use Encode;
+use HTML::Entities;
 use Data::Dumper;
 
 use Bancuri::Model::BancuriDB;
 
-my $db_schema = new Bancuri::Model::BancuriDB;
+my $new_schema = new Bancuri::Model::BancuriDB;
 
-
-# TRY Bancuri1::Schema
-
-#my $old_schema = Bancuri1::Schema->connect(
-#  "dbi:mysql:host=dmz",
-#  "bancuri",
-#  "gSj0wGSH",
-#  { AutoCommit => 0 },
-#);
-
-# fetch objects using Library::Schema::DVD
-#my $resultset = $old_schema->resultset('Banc')->find( id=>1 );
-
-#print Dumper $resultset;
-
-# TRY My::Schema (autoload)
-
-my $schema1 = My::Schema->connect( 
+my $old_schema = My::Schema->connect( 
   "dbi:mysql:dbname=bancuri;host=dmz",
   "bancuri",
   "gSj0wGSH",
   { AutoCommit => 0 },
 );
 
-my $rs = $schema1->resultset('Bancuri')->find({id=>1});
-print $rs->banc();
+# LOAD tags
 
-#=================
+my %tags;
+my $categorii = $old_schema->resultset('Categorii')->search({sectiune=>1});
+while ( my $cat = $categorii->next ) {
+	$tags{$cat->id} = tags_from_cat($cat->nume);
+};
+
+#print Dumper \%tags;
+
+# LOAD banc_cat
+
+my %banc_tag;
+my $banc_cat = $old_schema->resultset('BancCat')->search();
+while ( my $cat = $banc_cat->next ) {
+	$banc_tag{$cat->banc_id} = $cat->cat_id;
+};
+
+# LOAD bancuri
+
+my $bancuri = $old_schema->resultset('Bancuri')->search();
+
+my $joke = $new_schema->resultset('Joke');
+while ( my $banc = $bancuri->next ) {
+	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
+	
+	# TODO add tags
+	print $banc->id, " @tags\n";
+
+#	next if $banc->id < 4540;
+	
+	my $banc_text = encode( "UTF-8", decode_entities($banc->banc) );
+	
+#	if ( $banc->id > 13 ) {
+#		#print encode("utf8",decode("windows-1250", $banc->banc));
+#		print decode("windows-1250", $banc->banc);
+#		last;
+#	}
+	
+	
+	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Manual/Cookbook.pod#Getting_the_value_of_the_primary_key_for_the_last_database_insert
+	
+	$joke->create({
+		# TODO create a nice link, redirect and title !!!
+		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
+
+		'link' => $banc->id,
+		joke_versions => [{
+			version => 1,
+			#text => encode("utf8",decode("windows-1250", $banc->banc)),
+			text => $banc_text,
+			created => $banc->data,
+			user_id => $banc->user,
+			stars => $banc->nota/2,
+			votes => $banc->voturi,
+			views => $banc->vizite,
+		}]
+	});
+	
+	
+}
 
 
-#package Bancuri1::Schema;
-#use base qw/DBIx::Class::Schema/;
-#
-## load Library::Schema::bancuri, Library::Schema::Book, Library::Schema::DVD
-#__PACKAGE__->load_classes(qw/Banc Categorie BanCat/);
-#
-#1;
-#
-#package Bancuri1::Schema::Banc;
-#use base qw/DBIx::Class/;
-#__PACKAGE__->load_components(qw/PK::Auto Core/); # for example
-#__PACKAGE__->table('bancuri');
-#__PACKAGE__->source_name('Banc');
-#
-#1;
-#
-#package Bancuri1::Schema::Categorie;
 
+1;
 
-#================
+sub tags_from_cat {
+	my $cat = shift;
+
+	my %transform = (
+		'Seci' => ['sec'],
+		'Elefant si furnica' => [qw(elefant furnica)],
+		'Sir si John' => [qw(sir john)],
+		'Elefant si soarece' => [qw(elefant soarece)],
+		'Ion si Maria' => [qw(ion maria)],
+		'Spermatozoizi' => [qw(spermatozoizi obscen)],
+		'Homosexuali' => [qw(homosexuali obscen)],
+		'Diverse' => [],
+	);
+	
+	return $transform{$cat} if exists $transform{$cat};
+
+	my $tag = lc $cat ;
+	$tag =~ s/\s//g;
+
+	return [ $tag ];
+}
+
 package My::Schema;
 use base qw/DBIx::Class::Schema::Loader/;
 
 __PACKAGE__->loader_options(
-    debug                 => 1,
+	constraint	=> '^(bancuri|categorii|banc_cat)$',
+    debug		=> 1,
 );
 
 

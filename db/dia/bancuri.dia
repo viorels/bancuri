@@ -651,7 +651,7 @@
             <dia:string>#real#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
-            <dia:string>##</dia:string>
+            <dia:string>#0#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -674,7 +674,7 @@
             <dia:string>#integer#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
-            <dia:string>##</dia:string>
+            <dia:string>#0#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -697,7 +697,7 @@
             <dia:string>#integer#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
-            <dia:string>##</dia:string>
+            <dia:string>#0#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -2904,7 +2904,7 @@
         <dia:point val="46.3501,-17.4"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="46.3001,-17.45;72.1001,-1.94999"/>
+        <dia:rectangle val="46.3001,-17.45;72.1001,-1.95"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
         <dia:point val="46.3501,-17.4"/>
@@ -3912,16 +3912,16 @@
     </dia:object>
     <dia:object type="UML - Component" version="0" id="O19">
       <dia:attribute name="obj_pos">
-        <dia:point val="15.2002,51.9493"/>
+        <dia:point val="3.65,63.5619"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="15.1502,51.8993;23.5977,56.2993"/>
+        <dia:rectangle val="3.6,63.5119;26.43,67.9119"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="15.2002,51.9493"/>
+        <dia:point val="3.65,63.5619"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="8.3475000000000001"/>
+        <dia:real val="22.73"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="4.2999999999999998"/>
@@ -3933,13 +3933,12 @@
         <dia:color val="#ffffff"/>
       </dia:attribute>
       <dia:attribute name="stereotype">
-        <dia:string>#joke (id,link)#</dia:string>
+        <dia:string>#users (id, name, email, password, birth, karma, comment)#</dia:string>
       </dia:attribute>
       <dia:attribute name="text">
         <dia:composite type="text">
           <dia:attribute name="string">
-            <dia:string>#1, 'titanic'
-2, 'test'#</dia:string>
+            <dia:string>#1, 'Bula', 'bula@bancuri.com', 'killME', '19810514', 666, 'adica eu ...'#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="0" name="Helvetica"/>
@@ -3948,57 +3947,7 @@
             <dia:real val="0.80000000000000004"/>
           </dia:attribute>
           <dia:attribute name="pos">
-            <dia:point val="17.6002,53.9918"/>
-          </dia:attribute>
-          <dia:attribute name="color">
-            <dia:color val="#000000"/>
-          </dia:attribute>
-          <dia:attribute name="alignment">
-            <dia:enum val="0"/>
-          </dia:attribute>
-        </dia:composite>
-      </dia:attribute>
-    </dia:object>
-    <dia:object type="UML - Component" version="0" id="O20">
-      <dia:attribute name="obj_pos">
-        <dia:point val="28.0002,51.7993"/>
-      </dia:attribute>
-      <dia:attribute name="obj_bb">
-        <dia:rectangle val="27.9502,51.7493;43.1327,56.1493"/>
-      </dia:attribute>
-      <dia:attribute name="elem_corner">
-        <dia:point val="28.0002,51.7993"/>
-      </dia:attribute>
-      <dia:attribute name="elem_width">
-        <dia:real val="15.082500000000001"/>
-      </dia:attribute>
-      <dia:attribute name="elem_height">
-        <dia:real val="4.2999999999999998"/>
-      </dia:attribute>
-      <dia:attribute name="line_colour">
-        <dia:color val="#000000"/>
-      </dia:attribute>
-      <dia:attribute name="fill_colour">
-        <dia:color val="#ffffff"/>
-      </dia:attribute>
-      <dia:attribute name="stereotype">
-        <dia:string>#joke_version (joke_id, version, text)#</dia:string>
-      </dia:attribute>
-      <dia:attribute name="text">
-        <dia:composite type="text">
-          <dia:attribute name="string">
-            <dia:string>#1,1,'titanic varianta 1'
-1,2,'titanic varianta 2'
-2,1,'test'#</dia:string>
-          </dia:attribute>
-          <dia:attribute name="font">
-            <dia:font family="sans" style="0" name="Helvetica"/>
-          </dia:attribute>
-          <dia:attribute name="height">
-            <dia:real val="0.80000000000000004"/>
-          </dia:attribute>
-          <dia:attribute name="pos">
-            <dia:point val="30.4002,53.8418"/>
+            <dia:point val="6.05,65.6044"/>
           </dia:attribute>
           <dia:attribute name="color">
             <dia:color val="#000000"/>

@@ -79,6 +79,8 @@ sub show : Private {
 
 sub redirect : Private {
     my ( $self, $c, $joke_link ) = @_;
+    
+    # TODO update last_used
 
 	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
 	if ( $redirect ) {

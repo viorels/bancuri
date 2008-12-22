@@ -9,8 +9,8 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Dec 21 02:48:02 2008
---   Input Files:       bancuri.dia
+--   Generated at:      Sun Dec 21 17:27:30 2008
+--   Input Files:       dia/bancuri.dia
 -- 
 -- ================================================================================
 
@@ -20,8 +20,8 @@
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 drop index idx_joke_link;
 drop index idx_joke_version_stars;
@@ -41,8 +41,8 @@ drop index idx_tag_tag;
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 
 
@@ -51,8 +51,8 @@ drop index idx_tag_tag;
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 drop view joke_current cascade ;
 
@@ -61,8 +61,8 @@ drop view joke_current cascade ;
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 drop table joke cascade ;
 drop table joke_version cascade ;
@@ -81,8 +81,8 @@ drop table change_vote cascade ;
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 
 -- joke
@@ -217,8 +217,8 @@ create table change_vote (
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 
 -- joke_current
@@ -237,8 +237,8 @@ create view joke_current as
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 
 
@@ -246,26 +246,20 @@ create view joke_current as
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 
--- inserts for joke (id,link)
-insert into joke (id,link) values ( 1, 'titanic' ) ;
-insert into joke (id,link) values ( 2, 'test' ) ;
-
--- inserts for joke_version (joke_id, version, text)
-insert into joke_version (joke_id, version, text) values ( 1,1,'titanic varianta 1' ) ;
-insert into joke_version (joke_id, version, text) values ( 1,2,'titanic varianta 2' ) ;
-insert into joke_version (joke_id, version, text) values ( 2,1,'test' ) ;
+-- inserts for users (id, name, email, password, birth, karma, comment)
+insert into users (id, name, email, password, birth, karma, comment) values ( 1, 'Bula', 'bula@bancuri.com', 'killME', '19810514', 666, 'adica eu ...' ) ;
 
 
 -- Generated SQL Constraints
 -- --------------------------------------------------------------------
 --     Target Database:   postgres
 --     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 02:48:01 2008
---     Input Files:       bancuri.dia
+--     Generated at:      Sun Dec 21 17:27:29 2008
+--     Input Files:       dia/bancuri.dia
 
 create unique index idx_joke_link on joke  (link) ;
 create index idx_joke_version_stars on joke_version  (stars) ;

@@ -57,6 +57,8 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TPZH2CLbulCwkkdAqVwHrA
 
+#__PACKAGE__->load_components(qw/PK::Auto Core/);
+
 __PACKAGE__->has_one(
   "current_version",
   "Bancuri::Schema::JokeVersion",
@@ -74,6 +76,9 @@ sub get {
 
 sub add {
 	my ($self) = @_;
+	
+	# add trebuie sa fie in resultset nu in joke class
+	# http://www.gossamer-threads.com/lists/catalyst/users/18185#18185
 	
 	# $schema->txn_do($coderef);
 	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Storage.pm#txn_do
