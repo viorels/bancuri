@@ -59,6 +59,8 @@ __PACKAGE__->has_many(
 
 #__PACKAGE__->load_components(qw/PK::Auto Core/);
 
+__PACKAGE__->resultset_class('Bancuri::Model::Joke');
+
 __PACKAGE__->has_one(
   "current_version",
   "Bancuri::Schema::JokeVersion",

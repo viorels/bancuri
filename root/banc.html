@@ -32,16 +32,37 @@
 		
 				<h3>[% joke_ver.title | html_entity %]</h3>
 
-<div id="banc" class="edit">
-	<table><tbody><tr>
-	  <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
-	  <td class="columnText">[% joke_ver.text | html_entity | html_line_break %]</td>
-	  <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
-	</tr></tbody></table>
-</div>
+                <div id="banc" class="banc edit">
+                    <table><tbody><tr>
+                      <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+                      <td class="columnText">[% joke_ver.text | html_entity | html_line_break %]</td>
+                      <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+                    </tr></tbody></table>
+                </div>
+
+                <div>
+                    Nota [% joke_ver.stars %] : X *****<br>
+                </div>
 
 				<br class="clear" />
 			
+				<div id="alternatives">
+                    <h3><a href="#">Alternative</a></h3>
+
+				</div>
+
+                <div id="teaser" class="banc">
+                    <h3>[% next_joke.title || "Urmatorul banc" | html_entity %]</h3>
+
+                    <table><tbody><tr>
+                        <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+                        <td class="columnText"><a href="[% c.uri_for('/' _ next_joke.link) %]">
+                            [% next_joke.current_version.text_teaser | html_entity | html_line_break %]
+                        </a></td>
+                        <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+                    </tr></tbody></table>
+                </div>
+
 			</div>
 	
 		</div>

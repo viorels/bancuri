@@ -77,6 +77,14 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oZl+wR9Pdpq2uqcB+vbSCw
 
+sub text_teaser {
+    my ($self) = @_;
+
+    my $text = $self->text;
+    $text = substr($text, 0, length($text)/2) . " ...";
+
+    return $text;
+};
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

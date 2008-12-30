@@ -56,7 +56,7 @@ sub joke : Chained PathPart('') CaptureArgs(1) {
 
 sub blog : Global {
     my ( $self, $c ) = @_;
-    $c->response->body("BLOG");
+    $c->stash->{'template'} = 'blog.html';
 }
 
 sub end : ActionClass('RenderView') {

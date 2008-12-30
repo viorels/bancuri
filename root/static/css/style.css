@@ -2,22 +2,29 @@
 	font-size: 1.3em;
 }
 
-#banc img {
+.banc img {
 	border: none;
 }
 
-#banc .columnLeftQuote { vertical-align: top }
-#banc .columnRightQuote { vertical-align: bottom }
-#banc .columnText { padding: 6px 0 }
+.banc .columnLeftQuote { vertical-align: top }
+.banc .columnRightQuote { vertical-align: bottom }
+.banc .columnText { 
+    padding: 6px 0;
+    text-align: justify;
+}
 
-.edit textarea {
+p.alternative {
+    white-space: pre;
+}
+
+textarea.edit {
 	width: 100%;
-	height: 400px;
-	background-color: #F9F9F9;
-	background-attachment: fixed;
+	min-height: 100px;
+/*	background-color: #F9F9F9;
+	background-attachment: fixed;*/
 	overflow: auto;
-	scrollbar-base-color:#e7eefc;
+/*	scrollbar-base-color:#e7eefc;
 	scrollbar-arrow-color:#e7eefc;
 	border:0px;
-	border-collapse:collapse; 
+	border-collapse:collapse; */
 }
