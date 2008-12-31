@@ -17,14 +17,25 @@ function finishEdit(me) {
 */
 
 $(document).ready(function() {
-    $.getJSON('/pe-titanic-vine-capitanul/v/all', function(data) {
+    get_alternatives();
+});
+
+function joke_link() {
+    var path = document.location.pathname;
+    var path_parts = path.split('/');
+    var link = path_parts[1];
+    return link;
+}
+
+function get_alternatives() {
+    $.getJSON(joke_link()+'/v/all', function(data) {
         var alternatives = $("#alternatives");
         $.each(data["json_joke_versions"], function(i, alternative) {
             alternatives.append( build_alternative(alternative) );
         });
 
     });
-});
+}
 
 function build_alternative(alt) {
     var html = $("<div>").addClass("post");
