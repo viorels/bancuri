@@ -58,7 +58,12 @@ while ( my $cat = $banc_cat->next ) {
 
 my $bancuri = $old_schema->resultset('Bancuri')->search();
 
+# Remove all jokes and versions
+$new_schema->resultset('JokeVersion')->delete();
+
 my $joke = $new_schema->resultset('Joke');
+$joke->delete();
+
 while ( my $banc = $bancuri->next ) {
 	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
 	
@@ -67,16 +72,11 @@ while ( my $banc = $bancuri->next ) {
 
 #	next if $banc->id < 4540;
 	
+    # Fix encoding
 	my $banc_text = encode( "UTF-8", decode_entities($banc->banc) );
-	
-#	if ( $banc->id > 13 ) {
-#		#print encode("utf8",decode("windows-1250", $banc->banc));
-#		print decode("windows-1250", $banc->banc);
-#		last;
-#	}
-	
-	
-	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Manual/Cookbook.pod#Getting_the_value_of_the_primary_key_for_the_last_database_insert
+
+    # Fix line terminators
+    $banc_text =~ s/\n\r/\n/g;
 	
 	$joke->create({
 		# TODO create a nice link, redirect and title !!!
@@ -94,7 +94,6 @@ while ( my $banc = $bancuri->next ) {
 			views => $banc->vizite,
 		}]
 	});
-	
 	
 }
 
