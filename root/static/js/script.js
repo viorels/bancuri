@@ -17,10 +17,22 @@ function finishEdit(me) {
 */
 
 $(document).ready(function() {
+    update_location_hash();
     get_alternatives();
 });
 
+function update_location_hash() {
+    document.location.hash = joke_id();
+};
+
+function joke_id() {
+    return _joke_id;
+}
+
 function joke_link() {
+    if (_joke_link) {
+        return _joke_link;
+    };
     var path = document.location.pathname;
     var path_parts = path.split('/');
     var link = path_parts[1];
