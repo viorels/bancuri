@@ -1,5 +1,4 @@
 ---
-default_view: Bancuri::View::TT
 Model::BancuriDB:
     connect_info:
         - dbi:Pg:dbname=bancuri;host=localhost

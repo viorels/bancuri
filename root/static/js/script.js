@@ -16,9 +16,26 @@ function finishEdit(me) {
 }
 */
 
+// TODO expand textarea in FF
+// http://www.webdeveloper.com/forum/archive/index.php/t-61552.html
+
 $(document).ready(function() {
     update_location_hash();
-    get_alternatives();
+    var got_alternatives = false;
+    $("#btn_alternatives").toggle(
+        function() {
+            if (got_alternatives) {
+                $("#alternatives").slideDown();
+            }
+            else {
+                get_alternatives();
+                got_alternatives = true;
+            }
+        },
+        function() {
+            $("#alternatives").slideUp();
+        }
+    );
 });
 
 function update_location_hash() {
@@ -45,7 +62,7 @@ function get_alternatives() {
         $.each(data["json_joke_versions"], function(i, alternative) {
             alternatives.append( build_alternative(alternative) );
         });
-
+        $("#alternatives").slideDown();
     });
 }
 

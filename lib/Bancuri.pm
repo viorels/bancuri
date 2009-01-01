@@ -17,7 +17,10 @@ our $VERSION = '0.01';
 #
 # Configure the application
 #
-__PACKAGE__->config( name => 'Bancuri' );
+__PACKAGE__->config( 
+    name => 'Bancuri',
+    default_view => 'Bancuri::View::TT',
+);
 
 #
 # Start the application
