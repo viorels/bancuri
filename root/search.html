@@ -2,8 +2,8 @@
 
 <h1>Bancuri</h1>
 <div id="results">
-[% FOR res IN results %]
-<a href="/[% res %]">[% res %]</a><br>
+[% FOR joke = results %]
+<a href="/[% joke.link %]">[% joke.link %]</a><br>
 [% END %]
 </div>
 

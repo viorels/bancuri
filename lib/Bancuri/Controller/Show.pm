@@ -90,11 +90,11 @@ sub show : Private {
 
     # TODO rename 'title' to 'subject'
 
-	$c->stash({
+	$c->stash(
         joke => $joke,
         joke_ver => $joke_ver,
         next_joke => $next_joke,
-    });
+    );
 
 	$c->stash->{template} = 'banc.html';
 }

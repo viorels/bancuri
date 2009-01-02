@@ -20,7 +20,6 @@ function finishEdit(me) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-61552.html
 
 $(document).ready(function() {
-    update_location_hash();
     var got_alternatives = false;
     $("#btn_alternatives").toggle(
         function() {
@@ -37,10 +36,6 @@ $(document).ready(function() {
         }
     );
 });
-
-function update_location_hash() {
-    document.location.hash = joke_id();
-};
 
 function joke_id() {
     return _joke_id;

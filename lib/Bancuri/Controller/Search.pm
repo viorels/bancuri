@@ -20,13 +20,40 @@ Catalyst Controller.
 
 =cut
 
+sub index : Private {
+    my ( $self, $c ) = @_;
+    
+    my $it = $c->model('Xapian')->search(
+        $c->req->param('q'),
+        $c->req->param('page') || 0,
+        $c->req->param('itemsperpage') || 0
+    );
+    
+    use Data::Dumper;
+    $c->log->debug(Dumper $it->hits);
+    
+    # TODO highlight 
+    # http://dev.swish-e.org/browser/libswish3/trunk/perl/xsearch.pl
+    # http://www.google.com/codesearch/p?hl=en#AXv3X_0il7U/lemur.sei/src/lemur/xapian/highlight.py&q=highlight%20package:xapian
+    
+    # Search::Xapian::Enquire::get_matching_terms_begin
+    
+    $c->stash->{results} = $it->hits;
+    $c->stash->{template} = 'search.html';
+}
+
 sub all : Chained('/') PathPart('all') Args(0) {
     my ( $self, $c ) = @_;
-	my $wiki = $c->stash->{'wiki'};
     
+    my $jokes;
     $c->stash->{'template'} = 'search.html';
-    my @nodes = $wiki->list_all_nodes;
-    $c->stash( results => @nodes );
+    $c->stash( all => $jokes );
+}
+
+sub update_index : Private {
+    my ( $self, $c ) = @_;
+    
+    
 }
 
 =head1 AUTHOR
