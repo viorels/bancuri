@@ -4,13 +4,15 @@ use strict;
 use warnings;
 
 use Catalyst qw/ConfigLoader
-				Static::Simple
-				Session
-				Session::Store::FastMmap
-				Session::State::Cookie
-				Unicode
-                StackTrace
+                Log::Colorful
 				/;
+
+#               Unicode
+#				Session
+#				Session::Store::FastMmap
+#				Session::State::Cookie
+#               StackTrace
+#				Static::Simple
 
 our $VERSION = '0.01';
 
@@ -20,6 +22,15 @@ our $VERSION = '0.01';
 __PACKAGE__->config( 
     name => 'Bancuri',
     default_view => 'Bancuri::View::TT',
+   	on_backward_compatibility => 1,
+    'Plugin::Log::Colorful' => {
+        color_table => {
+	        debug       => {
+	            color       => 'white',
+	            bg_color    => 'black'
+	        },
+        }
+    },
 );
 
 #
@@ -38,12 +49,6 @@ Bancuri - Catalyst based application
 =head1 DESCRIPTION
 
 Catalyst based application.
-
-=head1 METHODS
-
-=head2 default
-
-=cut
 
 =head1 AUTHOR
 

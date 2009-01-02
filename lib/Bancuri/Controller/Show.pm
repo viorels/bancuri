@@ -61,7 +61,6 @@ sub all_versions : Private {
             current => $joke->version == $version->version ? 1 : 0,
         };
     };
-    $c->forward('Bancuri::View::JSON');
 }
 
 sub show : Private {

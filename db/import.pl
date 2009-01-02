@@ -73,12 +73,15 @@ while ( my $banc = $bancuri->next ) {
 #	next if $banc->id < 4540;
 	
     # Fix encoding
+    # TODO check for double encoding !!!
 	my $banc_text = encode( "UTF-8", decode_entities($banc->banc) );
 
     # Fix line terminators
     $banc_text =~ s/\n\r/\n/g;
 	
 	$joke->create({
+        # TODO !!! SALVEAZA NUMARUL DE VIZUALIZARI LA MOMENTUL IMPORT-ULUI
+        #      ... in coloana old_views pentru a compara ulterior noua distributie neuniforma p(x) = x
 		# TODO create a nice link, redirect and title !!!
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
 

@@ -61,7 +61,14 @@ sub blog : Global {
 
 sub end : ActionClass('RenderView') {
 	my ( $self, $c ) = @_;
+	
     # do stuff here; the RenderView action is called afterwards
+    
+    # TODO test on IE
+    my $req_with = $c->request->header('X-Requested-With');
+    if ( $req_with and $req_with eq 'XMLHttpRequest' ) {
+       	$c->forward('Bancuri::View::JSON');
+    }
 }
 
 =head1 AUTHOR
