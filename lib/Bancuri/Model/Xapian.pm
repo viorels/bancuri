@@ -5,7 +5,8 @@ use base 'Catalyst::Model::Xapian';
 
 
 __PACKAGE__->config(
-    index           => 'index'
+    index           => 'index',
+    language        => 'romanian',
 );
 
 

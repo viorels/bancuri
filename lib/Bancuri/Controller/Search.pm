@@ -23,31 +23,68 @@ Catalyst Controller.
 sub index : Private {
     my ( $self, $c ) = @_;
     
-    my $it = $c->model('Xapian')->search(
-        $c->req->param('q'),
-        $c->req->param('page') || 0,
-        $c->req->param('itemsperpage') || 0
-    );
-    
+    $c->stash->{'keywords'} = $c->request->params->{'keywords'}
+        || $c->request->query_keywords;
+    $c->stash->{'page'} = $c->request->params->{'page'};
+
+    if ( defined $c->stash->{'keywords'} ) {
+        $c->forward('results');
+    }
+    else {
+        $c->forward('all');
+    }
+}
+
+sub keywords : Chained('/') PathPart('search') CaptureArgs(1) {
+    my ( $self, $c, $keywords ) = @_;
+
+    $keywords =~ s/[+-]/ /g;
+    $c->stash->{'keywords'} = $keywords;
+}
+
+sub page : Chained('keywords') PathPart('') Args(1) {
+    my ( $self, $c, $page ) = @_;
+ 
+    $c->stash->{'page'} = $page;
+    $c->forward('results');
+}
+
+sub first_page : Chained('keywords') PathPart('') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{'page'} = 1;
+    $c->forward('results');  
+} 
+
+sub results : Private {    
+    my ( $self, $c ) = @_;
+   
+    my $keywords = $c->stash->{'keywords'};
+    my $page = $c->stash->{'page'};
+    my $perpage = 10;
+
+    $c->log->debug("$keywords | $page");
+    my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
+    # hits querytime struct search pager query query_obj mset page page_size    
+
     use Data::Dumper;
-    $c->log->debug(Dumper $it->hits);
+    $c->log->debug(Dumper $result);
     
     # TODO highlight 
     # http://dev.swish-e.org/browser/libswish3/trunk/perl/xsearch.pl
     # http://www.google.com/codesearch/p?hl=en#AXv3X_0il7U/lemur.sei/src/lemur/xapian/highlight.py&q=highlight%20package:xapian
-    
+    # http://xappy.googlecode.com/svn/trunk/xappy/highlight.py
+    # http://article.gmane.org/gmane.comp.search.xapian.general/2027/match=context
     # Search::Xapian::Enquire::get_matching_terms_begin
     
-    $c->stash->{results} = $it->hits;
+    $c->stash->{results} = $result->hits;
     $c->stash->{template} = 'search.html';
 }
 
-sub all : Chained('/') PathPart('all') Args(0) {
+sub all : Private {
     my ( $self, $c ) = @_;
     
-    my $jokes;
-    $c->stash->{'template'} = 'search.html';
-    $c->stash( all => $jokes );
+    $c->response->body('ALL');
 }
 
 sub update_index : Private {
