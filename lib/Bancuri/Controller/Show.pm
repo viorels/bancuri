@@ -77,7 +77,7 @@ sub show : Private {
         next_joke => $next_joke,
     );
 
-	$c->stash->{template} = 'banc.html';
+	$c->stash->{template} = 'joke.html';
 }
 
 =head1 AUTHOR
