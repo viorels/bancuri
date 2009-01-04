@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
+use Scalar::Util qw(looks_like_number);
+
 =head1 NAME
 
 Bancuri::Controller::Show - Catalyst Controller
@@ -16,43 +18,31 @@ Catalyst Controller.
 
 =cut
 
-
-=head2 index 
-
-=cut
-
 sub process : Private {
 	my ( $self, $c ) = @_;
 
-#   Fetch the joke for today and show it's current version
-	$c->stash->{'joke_link'} = '1';
 	$c->forward('current');
 }
 
-sub current : Chained('/joke') PathPart('') Args(0) {
+sub current : Chained('/joke_link') PathPart('') Args(0) {
 	my ( $self, $c ) = @_;
-	my $joke_link = $c->stash->{'joke_link'};
 
-	$c->forward('show', [ $joke_link, undef ]);
+	$c->forward('show');
 }
 
-sub version : Chained('/joke') PathPart('v') Args(1) {
+sub version : Chained('/joke_link') PathPart('v') Args(1) {
     my ( $self, $c, $version ) = @_;
-	my $joke_link = $c->stash->{'joke_link'};
 
-    if ( $version =~ /[0-9]+/ ) {
-    	$c->forward('show', [ $joke_link, $version ]);
-    }
-    else {
-        $c->forward('all_versions', [ $joke_link ]);
-    }
+   	$c->forward('show', [ $version ]);
 }
 
-sub all_versions : Private {
-    my ( $self, $c, $joke_link ) = @_;
+sub all_versions : Chained('/joke_link') PathPart('v/all') Args(0) {
+    my ( $self, $c ) = @_;
 
-	my $joke = $c->model('BancuriDB::Joke')->find({ link => $joke_link });
+	my $joke = $c->stash->{'joke'};
 	my @joke_versions = $joke->search_related('joke_versions')->all();
+	
+	# TODO move to model
     for my $version ( @joke_versions ) {
         push @{$c->stash->{'json_joke_versions'}}, {
             text => $version->text,
@@ -64,68 +54,31 @@ sub all_versions : Private {
 }
 
 sub show : Private {
-	my ( $self, $c, $joke_link, $version ) = @_;
+	my ( $self, $c, $version ) = @_;
 	
-	my $joke = $c->model('BancuriDB::Joke')->find({ link => $joke_link });
-	unless ( $joke ) {
-		$c->forward('redirect', [ $joke_link ]);
-	}
-
-	my $joke_ver;
-	if ( not defined $version or $joke->version == $version ) {
-		$joke_ver = $joke->current_version;
-        $version = $joke_ver->version;
+    my $joke = $c->stash->{'joke'};
+    my $joke_ver;
+	if ( looks_like_number $version ) {
+	    $joke_ver = $joke->search_related('joke_versions', { version => $version })->first
 	}
 	else {
-		# TODO check if there are no records !
-		$joke_ver = $joke->search_related('joke_versions', { version => $version })->first;
-#		$joke_ver = $c->model('BancuriDB::JokeVersion')
-#			->find( $joke->id, $version, { key => 'joke_version_pkey' } );
+	    $joke_ver = $joke->current_version;
 	}
-
-    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke();
 	
+	# TODO check if there is no such version
     # node is not deleted ?
 	# node_required_moderation
 
-    # TODO rename 'title' to 'subject'
+    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke();
 
 	$c->stash(
         joke => $joke,
-        joke_ver => $joke_ver,
+        joke_ver => $joke_ver, # TODO make a nicer name, e.g. joke_v !
         next_joke => $next_joke,
     );
 
 	$c->stash->{template} = 'banc.html';
 }
-
-sub redirect : Private {
-    my ( $self, $c, $joke_link ) = @_;
-    
-	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
-	if ( $redirect ) {
-        # Update last used
-        $redirect->last_used('now()');
-        $redirect->update();
-
-		my $new_url = $c->uri_for( q{/} . $redirect->new_link );
-		my $permanent = 301;
-		$c->response->redirect( $new_url, $permanent );
-		$c->detach();
-	}
-	else {
-		$c->forward('notfound');
-	}
-}
-
-sub notfound : Private {
-    my ( $self, $c, $joke_link ) = @_;
-	
-	$c->response->status(404);
-	$c->response->body("404 joke not found");
-	$c->detach();
-}
-
 
 =head1 AUTHOR
 

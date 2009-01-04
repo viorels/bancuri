@@ -8,6 +8,7 @@ use Catalyst qw/ConfigLoader
 				Session::Store::FastMmap
 				Session::State::Cookie
                 Unicode
+                DateTime
 
                 Static::Simple
                 StackTrace

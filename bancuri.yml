@@ -1,4 +1,5 @@
 ---
+time_zone: Europe/Bucharest
 Model::BancuriDB:
     connect_info:
         - dbi:Pg:dbname=bancuri;host=localhost

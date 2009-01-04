@@ -18,43 +18,107 @@ Catalyst Controller.
 
 =cut
 
+sub begin : Private {
+    my ( $self, $c ) = @_;
+    
+    # Called at the beginning of a request, before any matching actions are called.
+    # Overrided by child controllers
+}
+
 sub auto : Private {
 	my ( $self, $c ) = @_;
 
     return 1;
 };
 
-sub default : Path('') {
+sub default : Path {
 	my ( $self, $c ) = @_;
 	
-	$c->response->status(404);
-	$c->response->body("404 Not Found");
-	$c->request->action(undef);
+	# Called when no other action matches.
 };
 
-=head2 index 
-
-=cut
-
-sub index : Private {
+sub index : Path Args(0) {
     my ( $self, $c ) = @_;
 
 	if ( my $id = $c->request->params->{id} ) {
-        $c->stash->{'joke_link'} = $id;
-        $c->forward(qw/Bancuri::Controller::Show current/);
+        $c->forward('load_joke', [ $id ]);
 	}
 	else {
-        # / arata bancul zilei
-		$c->forward('Bancuri::Controller::Show');
+	    $c->forward('joke_for_today');
 	}
 }
 
-sub joke : Chained PathPart('') CaptureArgs(1) {
-	my ( $self, $c, $joke_link ) = @_;
-	$c->stash->{'joke_link'} = $joke_link;
+sub joke_link : Chained('/') PathPart('') CaptureArgs(1) {
+	my ( $self, $c, $link ) = @_;
+	$c->forward('load_joke', [ link => $link ]);
 }
 
-sub blog : Global {
+sub joke_id : Path('id') Args(1) {
+    my ( $self, $c, $id ) = @_;
+    $c->forward('load_joke', [ id => $id ]);
+    $c->forward($c->controller('Show'));
+}
+
+sub joke_for_today : Private {
+    my ( $self, $c ) = @_;
+    my $today = $c->datetime(time_zone=>$c->config->{'time_zone'})->ymd;
+    $c->forward('load_joke', [ for_day => $today ]);
+    $c->forward('Bancuri::Controller::Show');
+}
+
+sub load_joke : Private {
+    my ( $self, $c, $field, $value ) = @_;
+    
+    my $joke;
+    if ( $field eq 'for_day' ) {
+        $joke = $c->model('BancuriDB::Joke')->find_for_day($value, '12:00');
+    }
+    else {
+        $joke = $c->model('BancuriDB::Joke')->find({ $field => $value });
+    }
+
+	unless ( $joke ) {
+	    if ( $field eq 'link' ) {
+	        $c->forward('redirect', [ $value ]);
+	    }
+	    else {
+	        $c->forward('not_found');
+	    }
+	}
+	
+	$c->stash->{'joke'} = $joke;
+}
+
+sub redirect : Private {
+    my ( $self, $c, $joke_link ) = @_;
+    
+	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
+	if ( $redirect ) {
+        # Update last used
+        $redirect->last_used('now()');
+        $redirect->update();
+
+        # TODO rebuild full link, e.g. /un-banc/edit
+		my $new_url = $c->uri_for( q{/} . $redirect->new_link );
+		my $permanent = 301;
+		$c->response->redirect( $new_url, $permanent );
+		$c->detach();
+	}
+	else {
+		$c->forward('not_found', [ $joke_link ]);
+	}
+}
+
+sub not_found : Private {
+    my ( $self, $c, $joke_link ) = @_;
+    
+	$c->response->status(404);
+	# TODO add search link with words in $joke_link
+	$c->response->body("404 Joke not found. Try searching !");
+	$c->detach();
+}
+
+sub blog : Local {
     my ( $self, $c ) = @_;
     $c->stash->{'template'} = 'blog.html';
 }

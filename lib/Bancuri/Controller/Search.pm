@@ -27,12 +27,7 @@ sub index : Private {
         || $c->request->query_keywords;
     $c->stash->{'page'} = $c->request->params->{'page'};
 
-    if ( defined $c->stash->{'keywords'} ) {
-        $c->forward('results');
-    }
-    else {
-        $c->forward('all');
-    }
+    $c->forward('results');
 }
 
 sub keywords : Chained('/') PathPart('search') CaptureArgs(1) {
@@ -60,6 +55,8 @@ sub results : Private {
     my ( $self, $c ) = @_;
    
     my $keywords = $c->stash->{'keywords'};
+    $c->detach('all') unless length $keywords;
+    
     my $page = $c->stash->{'page'};
     my $perpage = 10;
 
