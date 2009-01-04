@@ -60,12 +60,28 @@ sub results : Private {
     my $page = $c->stash->{'page'};
     my $perpage = 10;
 
-    $c->log->debug("$keywords | $page");
     my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
     # hits querytime struct search pager query query_obj mset page page_size    
 
     use Data::Dumper;
     $c->log->debug(Dumper $result);
+    
+    my @ids = map { $_->{'id'} } @{ $result->hits };
+    my $jokes;
+    if (@ids) {
+        $jokes = $c->model('BancuriDB::Joke')->search_ids(\@ids);
+        
+        my @joke_texts = map { $_->version->text } @$jokes;
+        my $joke_snippets = $c->model('Xapian')->highlight(\@joke_texts, $keywords);
+        
+        for (my $i=0; $i<@$jokes; $i++) {
+            $jokes->[$i]->text_snippet( $joke_snippets->[$i] );
+        }
+        
+        $c->stash->{results} = $jokes;
+    }
+    
+    # query->get_description, match->get_document/get_docid
     
     # TODO highlight 
     # http://dev.swish-e.org/browser/libswish3/trunk/perl/xsearch.pl
@@ -74,7 +90,6 @@ sub results : Private {
     # http://article.gmane.org/gmane.comp.search.xapian.general/2027/match=context
     # Search::Xapian::Enquire::get_matching_terms_begin
     
-    $c->stash->{results} = $result->hits;
     $c->stash->{template} = 'search.html';
 }
 

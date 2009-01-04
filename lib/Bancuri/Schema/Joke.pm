@@ -57,35 +57,23 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TPZH2CLbulCwkkdAqVwHrA
 
-#__PACKAGE__->load_components(qw/PK::Auto Core/);
-
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
 __PACKAGE__->has_one(
-  "current_version",
+  "version",
   "Bancuri::Schema::JokeVersion",
   { "foreign.joke_id" => "self.id",
   	"foreign.version" => "self.version" },
 );
 
-# TODO move methods for Resultset BELOW to a ResultSet (not result) ...
-
-sub get {
-	my ($self, $link, $version) = @_;
-	
-	return $self->find({ link => $link, version => $version });
-}
-
-sub add {
-	my ($self) = @_;
-	
-	# add trebuie sa fie in resultset nu in joke class
-	# http://www.gossamer-threads.com/lists/catalyst/users/18185#18185
-	
-	# $schema->txn_do($coderef);
-	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Storage.pm#txn_do
-	# add a joke ...
-	# return $self->price * $self->currency->rate; (use related tables)
+sub text_snippet {
+    my ($self, $snippet) = @_;
+    
+    warn "SNIPPET $snippet";
+    if ($snippet) {
+        $self->{'_text_snippet'} = $snippet;
+    }
+    return $self->{'_text_snippet'};
 }
 
 # You can replace this text with custom content, and it will be preserved on regeneration

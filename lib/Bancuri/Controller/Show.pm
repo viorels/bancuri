@@ -62,7 +62,7 @@ sub show : Private {
 	    $joke_ver = $joke->search_related('joke_versions', { version => $version })->first
 	}
 	else {
-	    $joke_ver = $joke->current_version;
+	    $joke_ver = $joke->version;
 	}
 	
 	# TODO check if there is no such version

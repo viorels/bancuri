@@ -25,4 +25,23 @@ sub search_random_joke {
     return $joke->first;
 };
 
+sub search_ids {
+    my ($self, $ids) = @_;
+    
+    # TODO version might have changed meanwhile ... 
+    my @jokes = $self->search({ id => $ids });
+    return \@jokes;
+}
+
+sub add {
+	my ($self) = @_;
+	
+	# http://www.gossamer-threads.com/lists/catalyst/users/18185#18185
+	
+	# $schema->txn_do($coderef);
+	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Storage.pm#txn_do
+	# add a joke ...
+	# return $self->price * $self->currency->rate; (use related tables)
+}
+
 1;
