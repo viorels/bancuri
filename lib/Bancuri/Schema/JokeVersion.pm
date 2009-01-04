@@ -5,7 +5,7 @@ use warnings;
 
 use base 'DBIx::Class';
 
-__PACKAGE__->load_components("Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("joke_version");
 __PACKAGE__->add_columns(
   "joke_id",
@@ -74,8 +74,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oZl+wR9Pdpq2uqcB+vbSCw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cz7yZ/z8IHD+n2eQpGbmSA
 
 sub text_teaser {
     my ($self) = @_;

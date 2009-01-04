@@ -9,8 +9,8 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Dec 21 17:27:30 2008
---   Input Files:       dia/bancuri.dia
+--   Generated at:      Sun Jan  4 21:31:48 2009
+--   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
 
@@ -18,10 +18,6 @@
 
 -- Generated SQL Constraints Drop statements
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 drop index idx_joke_link;
 drop index idx_joke_version_stars;
@@ -39,30 +35,18 @@ drop index idx_tag_tag;
 
 -- Generated Permissions Drops
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 
 
 
 -- Generated SQL View Drop Statements
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 drop view joke_current cascade ;
 
 
 -- Generated SQL Schema Drop statements
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 drop table joke cascade ;
 drop table joke_version cascade ;
@@ -79,10 +63,6 @@ drop table change_vote cascade ;
 
 -- Generated SQL Schema
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 
 -- joke
@@ -90,6 +70,7 @@ create table joke (
   id                        serial not null,
   version                   smallint default 1,
   link                      character varying(64) not null,
+  for_day                   date,
   changed                   timestamp default now(),
   deleted                   boolean default false,
   constraint pk_Joke primary key (id)
@@ -215,10 +196,6 @@ create table change_vote (
 
 -- Generated SQL Views
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 
 -- joke_current
@@ -235,19 +212,11 @@ create view joke_current as
 
 -- Generated Permissions
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 
 
 -- Generated SQL Insert statements
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 
 -- inserts for users (id, name, email, password, birth, karma, comment)
@@ -256,10 +225,6 @@ insert into users (id, name, email, password, birth, karma, comment) values ( 1,
 
 -- Generated SQL Constraints
 -- --------------------------------------------------------------------
---     Target Database:   postgres
---     SQL Generator:     tedia2sql -- v1.2.12
---     Generated at:      Sun Dec 21 17:27:29 2008
---     Input Files:       dia/bancuri.dia
 
 create unique index idx_joke_link on joke  (link) ;
 create index idx_joke_version_stars on joke_version  (stars) ;

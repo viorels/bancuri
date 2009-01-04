@@ -5,7 +5,7 @@ use warnings;
 
 use base 'DBIx::Class';
 
-__PACKAGE__->load_components("Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("joke_current");
 __PACKAGE__->add_columns(
   "id",
@@ -78,8 +78,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RAXyV96YLrmrDZPg0QHCxw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OFHH7E/EY8Y0owTizOfsBA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

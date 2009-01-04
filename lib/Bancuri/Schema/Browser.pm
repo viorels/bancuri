@@ -5,7 +5,7 @@ use warnings;
 
 use base 'DBIx::Class';
 
-__PACKAGE__->load_components("Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("browser");
 __PACKAGE__->add_columns(
   "id",
@@ -42,8 +42,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q/RkrSrrwV7aBYWv0M4g8A
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:B9qLmSNV2Jls18YVbTeYlA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

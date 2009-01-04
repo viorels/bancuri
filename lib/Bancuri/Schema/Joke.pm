@@ -5,7 +5,7 @@ use warnings;
 
 use base 'DBIx::Class';
 
-__PACKAGE__->load_components("Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("joke");
 __PACKAGE__->add_columns(
   "id",
@@ -38,6 +38,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 1,
   },
+  "for_day",
+  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_joke", ["id"]);
@@ -54,8 +56,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TPZH2CLbulCwkkdAqVwHrA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MZZfxRMDMuQz/REb+gvBQw
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 

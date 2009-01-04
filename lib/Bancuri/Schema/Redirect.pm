@@ -5,7 +5,7 @@ use warnings;
 
 use base 'DBIx::Class';
 
-__PACKAGE__->load_components("Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("redirect");
 __PACKAGE__->add_columns(
   "old_link",
@@ -31,8 +31,8 @@ __PACKAGE__->set_primary_key("old_link");
 __PACKAGE__->add_unique_constraint("pk_redirect", ["old_link"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2008-12-21 03:04:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1+YU6klE5EPrdEhTpaitEQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4rklwszKqXSluvXXDXVT6g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
