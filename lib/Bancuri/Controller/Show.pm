@@ -27,7 +27,7 @@ sub process : Private {
 sub current : Chained('/joke_link') PathPart('') Args(0) {
 	my ( $self, $c ) = @_;
 
-	$c->forward('show');
+	$c->forward('show', []);
 }
 
 sub version : Chained('/joke_link') PathPart('v') Args(1) {

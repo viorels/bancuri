@@ -63,7 +63,7 @@ sub joke_for_today : Private {
     my ( $self, $c ) = @_;
     my $today = $c->datetime(time_zone=>$c->config->{'time_zone'})->ymd;
     $c->forward('load_joke', [ for_day => $today ]);
-    $c->forward('Bancuri::Controller::Show');
+    $c->forward($c->controller('Show'));
 }
 
 sub load_joke : Private {
@@ -82,7 +82,7 @@ sub load_joke : Private {
 	        $c->forward('redirect', [ $value ]);
 	    }
 	    else {
-	        $c->forward('not_found');
+	        $c->forward('not_found', []);
 	    }
 	}
 	
@@ -131,7 +131,7 @@ sub end : ActionClass('RenderView') {
     # TODO test on IE
     my $req_with = $c->request->header('X-Requested-With');
     if ( $req_with and $req_with eq 'XMLHttpRequest' ) {
-       	$c->forward('Bancuri::View::JSON');
+       	$c->forward($c->view('JSON'));
     }
 }
 
