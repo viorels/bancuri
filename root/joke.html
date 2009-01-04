@@ -62,7 +62,7 @@ _joke_link = "[% joke.link %]";
                     <table><tbody><tr>
                         <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
                         <td class="columnText"><a href="[% c.uri_for('/' _ next_joke.link) %]">
-                            [% next_joke.version.text_teaser | html_entity | html_line_break %]
+                            [% next_joke.current.text_teaser | html_entity | html_line_break %]
                         </a></td>
                         <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
                     </tr></tbody></table>

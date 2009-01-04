@@ -63,7 +63,7 @@ __PACKAGE__->has_many(
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
 __PACKAGE__->has_one(
-  "version",
+  "current",
   "Bancuri::Schema::JokeVersion",
   { "foreign.joke_id" => "self.id",
   	"foreign.version" => "self.version" },
