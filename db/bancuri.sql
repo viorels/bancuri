@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Jan  4 21:31:48 2009
+--   Generated at:      Sun Jan  4 23:10:33 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -20,6 +20,7 @@
 -- --------------------------------------------------------------------
 
 drop index idx_joke_link;
+drop index idx_joke_for_day;
 drop index idx_joke_version_stars;
 drop index idx_users_email;
 drop index idx_browser_cookie;
@@ -227,6 +228,7 @@ insert into users (id, name, email, password, birth, karma, comment) values ( 1,
 -- --------------------------------------------------------------------
 
 create unique index idx_joke_link on joke  (link) ;
+create unique index idx_joke_for_day on joke  (for_day) ;
 create index idx_joke_version_stars on joke_version  (stars) ;
 create unique index idx_users_email on users  (email) ;
 create unique index idx_browser_cookie on browser  (cookie) ;

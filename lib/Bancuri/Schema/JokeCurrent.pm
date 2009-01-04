@@ -33,6 +33,8 @@ __PACKAGE__->add_columns(
   },
   "deleted",
   { data_type => "boolean", default_value => undef, is_nullable => 1, size => 1 },
+  "for_day",
+  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
   "text",
   {
     data_type => "text",
@@ -78,8 +80,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OFHH7E/EY8Y0owTizOfsBA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 23:16:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H7sGde0sl3uOFLxcuwByXw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

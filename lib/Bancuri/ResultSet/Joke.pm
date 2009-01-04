@@ -25,6 +25,41 @@ sub search_random_joke {
     return $joke->first;
 };
 
+=head2 search_for_day 
+
+Search the default joke for_day. If none found and time is still early then 
+use the yesterday one (or day before). Otherwise assign a assign one. If all
+fails then Titanic doesn't (the first joke). 
+
+=cut
+
+sub search_for_day {
+    my ($self, $day, $noon) = @_;
+    
+    my $joke = $self->search({ for_day => $day })->first;
+    if (!$joke and "before_noon") {
+        $joke = $self->search(
+            { for_day => {'<' => $day} },
+            { order_by => "for_day desc" }
+        )->slice(0,0)->first;
+    };
+    unless ($joke) {
+        $joke = $self->set_for_day($day);
+    }
+    unless ($joke) {
+        $joke = $self->first;
+    }
+    return $joke;
+}
+
+sub set_for_day {
+    my ($self, $day, $id) = @_;
+
+    # select * from joke_current where votes > 10 and for_day is null order by stars desc limit 1;
+
+    return;    
+}
+
 sub search_ids {
     my ($self, $ids) = @_;
     

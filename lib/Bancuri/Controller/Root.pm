@@ -71,7 +71,7 @@ sub load_joke : Private {
     
     my $joke;
     if ( $field eq 'for_day' ) {
-        $joke = $c->model('BancuriDB::Joke')->find_for_day($value, '12:00');
+        $joke = $c->model('BancuriDB::Joke')->search_for_day($value, '12:00');
     }
     else {
         $joke = $c->model('BancuriDB::Joke')->find({ $field => $value });

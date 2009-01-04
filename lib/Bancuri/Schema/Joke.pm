@@ -42,6 +42,7 @@ __PACKAGE__->add_columns(
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("idx_joke_for_day", ["for_day"]);
 __PACKAGE__->add_unique_constraint("pk_joke", ["id"]);
 __PACKAGE__->add_unique_constraint("idx_joke_link", ["link"]);
 __PACKAGE__->has_many(
@@ -56,8 +57,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MZZfxRMDMuQz/REb+gvBQw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 23:16:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6v8qYsPhhecVieRMtqDAfA
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
