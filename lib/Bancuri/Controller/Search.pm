@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
+use Data::SpreadPagination;
+
 =head1 NAME
 
 Bancuri::Controller::Search - Catalyst Controller
@@ -33,7 +35,9 @@ sub index : Private {
 sub keywords : Chained('/') PathPart('search') CaptureArgs(1) {
     my ( $self, $c, $keywords ) = @_;
 
-    $keywords =~ s/[+-]/ /g;
+    # copied from engine unescape_uri
+    $keywords =~ s/(?:%([0-9A-Fa-f]{2})|\+)/defined $1 ? chr(hex($1)) : ' '/eg;
+    
     $c->stash->{'keywords'} = $keywords;
 }
 
@@ -89,6 +93,17 @@ sub results : Private {
     # http://xappy.googlecode.com/svn/trunk/xappy/highlight.py
     # http://article.gmane.org/gmane.comp.search.xapian.general/2027/match=context
     # Search::Xapian::Enquire::get_matching_terms_begin
+    
+    my $pages = Data::SpreadPagination->new({
+        totalEntries     => $result->pager->total_entries,
+        entriesPerPage   => $perpage,
+        currentPage      => $page,
+        maxPages         => 10
+    });
+
+    $c->stash(
+        pages => $pages,
+    );
     
     $c->stash->{template} = 'search.html';
 }

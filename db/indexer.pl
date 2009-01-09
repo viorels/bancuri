@@ -20,7 +20,7 @@ my $config=YAML::LoadFile( $config_file ) || die "Could not load specified confi
 
 $config->{index} ||= "$FindBin::Bin/../index";
 $config->{ts_file} ||= $config->{index}.'/timestamp';
-my $stemmer=Search::Xapian::Stem->new($config->{index_lang}||'english');
+my $stemmer=Search::Xapian::Stem->new($config->{index_lang}||'romanian');
 my $db=Search::Xapian::WritableDatabase->new( $config->{index}, DB_CREATE_OR_OPEN );
 
 my $ts;

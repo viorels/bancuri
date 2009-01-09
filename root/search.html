@@ -43,6 +43,18 @@ _joke_link = "[% joke.link %]";
 					<p>[% joke.text_snippet %]</p>
 					[% END %]
                 </div>
+				
+				<div id="#pager">
+				[% FOREACH page IN pages.pages_in_spread %]
+				    [% IF !page.defined %]
+				        ...
+				    [% ELSIF page == current_page %]
+				        <strong>[% page %]</strong>
+				    [% ELSE %]
+				        <a href="[% c.uri_for('/search', keywords, page) %]">[% page %]</a>
+				    [% END %]
+				[% END %]
+				</div>
 
 			</div>
 	
@@ -64,7 +76,7 @@ _joke_link = "[% joke.link %]";
 
 				<h4><span>detalii</span> banc</h4>
 				<div id="info">
-					666 <strong>results</strong><br />
+					<strong>[% pages.total_entries %]</strong> bancuri gasite<br />
 				</div>
 
 	

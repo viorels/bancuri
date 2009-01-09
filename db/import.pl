@@ -74,7 +74,6 @@ while ( my $banc = $bancuri->next ) {
 			#text => encode("utf8",decode("windows-1250", $banc->banc)),
 			text => $banc_text,
 			created => $banc->data,
-			user_id => $banc->user,
 			stars => $banc->nota/2,
 			votes => $banc->voturi,
 			views => $banc->vizite,
