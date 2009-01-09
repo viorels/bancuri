@@ -62,22 +62,14 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
+__PACKAGE__->mk_group_accessors('simple' => qw/text_snippet/);
+
 __PACKAGE__->has_one(
   "current",
   "Bancuri::Schema::JokeVersion",
   { "foreign.joke_id" => "self.id",
   	"foreign.version" => "self.version" },
 );
-
-sub text_snippet {
-    my ($self, $snippet) = @_;
-    
-    warn "SNIPPET $snippet";
-    if ($snippet) {
-        $self->{'_text_snippet'} = $snippet;
-    }
-    return $self->{'_text_snippet'};
-}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

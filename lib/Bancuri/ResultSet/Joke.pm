@@ -64,7 +64,10 @@ sub search_ids {
     my ($self, $ids) = @_;
     
     # TODO version might have changed meanwhile ... 
-    my @jokes = $self->search({ id => $ids });
+    my @jokes = $self->search(
+        { id => $ids },
+        { prefetch => [ 'current' ] } );
+
     return \@jokes;
 }
 
