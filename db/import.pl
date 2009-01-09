@@ -1,22 +1,4 @@
 #!/usr/bin/perl 
-#===============================================================================
-#
-#         FILE:  import.pl
-#
-#        USAGE:  ./import.pl 
-#
-#  DESCRIPTION:  Import from bancuri 1.0
-#
-#      OPTIONS:  ---
-# REQUIREMENTS:  ---
-#         BUGS:  ---
-#        NOTES:  ---
-#       AUTHOR:  Viorel Stirbu (vio), <viorels@gmail.com>
-#      COMPANY:  SVSOFT
-#      VERSION:  1.0
-#      CREATED:  12/21/2008 01:12:26 PM EET
-#     REVISION:  ---
-#===============================================================================
 
 use strict;
 use warnings;
@@ -66,6 +48,7 @@ $joke->delete();
 
 while ( my $banc = $bancuri->next ) {
 	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
+	my @tag_rows = map { {tag => $_} } @tags; # structure to insert in db
 	
 	# TODO add tags
 	print $banc->id, " @tags\n";
@@ -95,9 +78,10 @@ while ( my $banc = $bancuri->next ) {
 			stars => $banc->nota/2,
 			votes => $banc->voturi,
 			views => $banc->vizite,
-		}]
+		}],
+		tags => \@tag_rows,
 	});
-	
+
 }
 
 

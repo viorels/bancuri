@@ -1,4 +1,4 @@
-[% title = 'bancuri - ' _ joke_ver.title %]
+[% title = 'bancuri - ' _ joke_version.title %]
 [% INCLUDE inc/header.html %]
 
 <script type="text/javascript">
@@ -35,18 +35,18 @@ _joke_link = "[% joke.link %]";
 
 			<div id="columnA_3columns">
 		
-				<h3>[% joke_ver.title | html_entity %]</h3>
+				<h3>[% joke_version.title | html_entity %]</h3>
 
                 <div id="banc" class="banc edit">
                     <table><tbody><tr>
                       <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
-                      <td class="columnText">[% joke_ver.text | html_entity | html_line_break %]</td>
+                      <td class="columnText">[% joke_version.text | html_entity | html_line_break %]</td>
                       <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
                     </tr></tbody></table>
                 </div>
 
                 <div>
-                    Nota [% joke_ver.stars %] : X *****<br>
+                    Nota [% joke_version.stars %] : X *****<br>
                 </div>
 
 				<br class="clear" />
@@ -87,12 +87,18 @@ _joke_link = "[% joke.link %]";
 				</form>
 
 				<h4><span>detalii</span> banc</h4>
-<div id="info">
-<strong>modified</strong> [% joke.modified %]<br />
-<strong>current ver</strong> [% joke.version %]<br />
-<strong>shown ver</strong> [% joke_ver.version %]<br />
-</div>
-
+				<div id="info">
+					<strong>Modificat</strong> [% joke.changed %]<br />
+					<strong>Varianta curenta</strong> [% joke.version %]<br />
+					[% IF joke.version != joke_version.version %]
+					<strong>Varianta afisata</strong> [% joke_version.version %]<br />
+					[% END %]
+					<strong>Cuvinte cheie</strong> 
+					[% FOR tag = joke.tags %]
+					[% tag.tag %]
+					[% END %]
+					<br />
+				</div>
 	
 				<h4>Alte <span>perspective</span></h4>
 				<ul class="links">

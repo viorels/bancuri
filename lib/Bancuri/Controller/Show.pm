@@ -57,12 +57,12 @@ sub show : Private {
 	my ( $self, $c, $version ) = @_;
 	
     my $joke = $c->stash->{'joke'};
-    my $joke_ver;
+    my $joke_version;
 	if ( looks_like_number $version ) {
-	    $joke_ver = $joke->search_related('joke_versions', { version => $version })->first
+	    $joke_version = $joke->search_related('joke_versions', { version => $version })->first
 	}
 	else {
-	    $joke_ver = $joke->current;
+	    $joke_version = $joke->current;
 	}
 	
 	# TODO check if there is no such version
@@ -73,7 +73,7 @@ sub show : Private {
 
 	$c->stash(
         joke => $joke,
-        joke_ver => $joke_ver, # TODO make a nicer name, e.g. joke_v !
+        joke_version => $joke_version,
         next_joke => $next_joke,
     );
 
