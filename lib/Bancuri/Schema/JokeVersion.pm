@@ -52,6 +52,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "views",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
+  "last_view",
+  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
   "banned",
   {
     data_type => "boolean",
@@ -74,8 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cz7yZ/z8IHD+n2eQpGbmSA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-09 21:23:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wp5BUSVWX2jcKsl1fTasig
 
 sub text_teaser {
     my ($self) = @_;

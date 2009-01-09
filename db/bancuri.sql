@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Jan  4 23:10:33 2009
+--   Generated at:      Fri Jan  9 21:19:25 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -91,6 +91,7 @@ create table joke_version (
   stars                     real,
   votes                     integer,
   views                     integer,
+  last_view                 date,
   banned                    boolean default false,
   constraint pk_Joke_version primary key (joke_id,version)
 ) ;
@@ -152,9 +153,8 @@ create table vote (
 -- tag
 create table tag (
   joke_id                   integer not null,
-  user_id                   integer not null,
-  tag                       varchar(32) not null,
-  constraint pk_Tag primary key (joke_id,user_id)
+  user_id                   integer,
+  tag                       varchar(32) not null
 ) ;
 
 -- change

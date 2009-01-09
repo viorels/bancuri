@@ -24,6 +24,8 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 64,
   },
+  "for_day",
+  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
   "changed",
   {
     data_type => "timestamp without time zone",
@@ -38,8 +40,6 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 1,
   },
-  "for_day",
-  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("idx_joke_for_day", ["for_day"]);
@@ -57,8 +57,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 23:16:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6v8qYsPhhecVieRMtqDAfA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-09 21:23:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ftrwkvD9ecy8Iq+ExzFqkA
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
