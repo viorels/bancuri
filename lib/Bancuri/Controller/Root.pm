@@ -32,6 +32,7 @@ sub auto : Private {
     my $req_with = $c->request->header('X-Requested-With');
     if ( $req_with and $req_with eq 'XMLHttpRequest' ) {
         # This is an AJAX request
+        $c->log->warn('AJAX');
         $c->stash->{'AJAX'} = $req_with;
     }
     

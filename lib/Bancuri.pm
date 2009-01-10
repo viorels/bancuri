@@ -8,6 +8,7 @@ use Catalyst qw/ConfigLoader
 				Session::State::Cookie
 				Session::Store::FastMmap
 				Authentication
+				Authorization::Roles
                 Unicode
                 DateTime
 

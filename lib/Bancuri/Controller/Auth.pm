@@ -28,21 +28,29 @@ sub login : Local {
     my $type = $c->forward('type', [ $id ]);
     if ( $type eq 'email' and length $password ) {
         $authenticated = $c->authenticate( { 
-            email => $id, 
+            email => $id,
             password => $password,
 #           deleted => 0,
         }, $type);
     };
     
-    if ( $type eq 'openid' ) {
-        $authenticated = $c->authenticate( { 
-            url => $id, 
-#           deleted => 0,
-        }, $type);
-    }
+#    if ( $type eq 'openid' ) {
+#        $authenticated = $c->authenticate( { 
+#            url => $id, 
+#            deleted => 0,
+#        }, $type);
+#    }
 
     if ( $authenticated ) {
-        $c->forward('/redirect', [ '/' ]) unless $c->stash->{'AJAX'};
+        if ( $c->stash->{'AJAX'} ) {
+            $c->stash->{'json_login'} = {
+                id => $id,
+                name => $c->user->name,
+            };
+        }
+        else {
+            $c->forward('/redirect', [ '/' ]);
+        }
     }
     else {
        # or undef is authentication failed.  
@@ -54,7 +62,9 @@ sub login : Local {
 sub type : Local {
     my ( $self, $c, $id ) = @_;
     
+    $c->log->debug("ID ".$id);
     if ( $id =~ /@/ ) {
+        $c->log->debug("EMAIL");
         return 'email';
     }
     else {
@@ -69,7 +79,7 @@ sub id_exists : Local {
     my $user = $c->model('BancuriDB::Users')->find({email=>$id});
     # TODO also search openid
     
-    $c->stash->{'json_id_exists'} = $user ? 1 : 0;
+    $c->stash->{'json_id_exists'} = $user ? $id : 0;
 }
 
 sub logout : Local {

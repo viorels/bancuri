@@ -1,7 +1,9 @@
     [% META title = 'Login' %]
+
+	<h3>Identifica-te</h3>
     
     <!-- Login form -->
-    <form method="post" action="[% c.uri_for('/auth/login') %]">
+    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
       <table>
         <tr>
           <td>Email:</td>
@@ -12,7 +14,7 @@
         </tr>
         <tr>
           <td>Password:</td>
-          <td><input type="password" name="password" size="25" /></td>
+          <td><input id="password" type="password" name="password" size="25" /></td>
         </tr>
         <tr>
           <td colspan="2"><input type="submit" name="submit" value="Login" /></td>
