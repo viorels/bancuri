@@ -35,6 +35,8 @@ $(document).ready(function() {
             $("#alternatives").slideUp();
         }
     );
+	
+	$("#id").blur(check_id);
 });
 
 function joke_id() {
@@ -78,4 +80,26 @@ function build_alternative(alt) {
 
     return html;
 }
+
+function check_id() {
+	// remove all the class add the messagebox classes and start fading
+	$("#id_res").removeClass().addClass('messagebox').text('Checking...').fadeIn("slow");
+	// check the username exists or not from ajax
+	$.getJSON("/auth/id_exists",{ id:$(this).val() } ,function(data) {
+		if( data["json_id_exists"] ) {
+			// start fading the messagebox
+			$("#id_res").fadeTo(200,0.1,function() {
+				//add message and change the class of the box and start fading
+				$(this).html('This User name Already exists').addClass('messagebox_error').fadeTo(900,1);
+			});
+		}
+		else {
+			// start fading the messagebox
+			$("#id_res").fadeTo(200,0.1,function() {
+				// add message and change the class of the box and start fading
+		    	$(this).html('Username available to register').addClass('messagebox_ok').fadeTo(900,1);
+			});
+		}
+	});
+};
 

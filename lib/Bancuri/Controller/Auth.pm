@@ -26,13 +26,20 @@ sub login : Local {
     my $password = $c->request->params->{password} || "";
 
     my $type = $c->forward('type', [ $id ]);
-    if ( $type eq 'email' ) {
+    if ( $type eq 'email' and length $password ) {
         $authenticated = $c->authenticate( { 
             email => $id, 
             password => $password,
-    #        deleted => 0,
+#           deleted => 0,
         }, $type);
     };
+    
+    if ( $type eq 'openid' ) {
+        $authenticated = $c->authenticate( { 
+            url => $id, 
+#           deleted => 0,
+        }, $type);
+    }
 
     if ( $authenticated ) {
         $c->forward('/redirect', [ '/' ]) unless $c->stash->{'AJAX'};
@@ -53,6 +60,16 @@ sub type : Local {
     else {
         return 'openid';
     }
+}
+
+sub id_exists : Local {
+    my ( $self, $c ) = @_;
+
+    my $id = $c->request->params->{'id'};
+    my $user = $c->model('BancuriDB::Users')->find({email=>$id});
+    # TODO also search openid
+    
+    $c->stash->{'json_id_exists'} = $user ? 1 : 0;
 }
 
 sub logout : Local {
