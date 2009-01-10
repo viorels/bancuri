@@ -87,7 +87,7 @@ sub load_joke : Private {
 
 	unless ( $joke ) {
 	    if ( $field eq 'link' ) {
-	        $c->forward('redirect_link', [ $value ]);
+	        $c->forward('redirect_joke', [ $value ]);
 	    }
 	    else {
 	        $c->forward('not_found', []);
@@ -97,7 +97,7 @@ sub load_joke : Private {
 	$c->stash->{'joke'} = $joke;
 }
 
-sub redirect_link : Private {
+sub redirect_joke : Private {
     my ( $self, $c, $joke_link ) = @_;
     
 	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
