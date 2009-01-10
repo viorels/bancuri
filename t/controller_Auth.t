@@ -9,6 +9,6 @@ plan $@
 
 ok( my $mech = Test::WWW::Mechanize::Catalyst->new, 'Created mech object' );
 
-$mech->get_ok( 'http://localhost:3000/?id=1' );
+$mech->get_ok( 'http://localhost/auth' );
 
 

@@ -17,7 +17,7 @@ _joke_link = "[% joke.link %]";
 		
 		<div id="menu">
 			<ul>
-				<li><a href="#">Bula</a></li>
+				<li><a href="#">[% c.user.name || 'login' %]</a></li>
 				<li><a href="#" class="active">Bancuri</a></li>
 				<li><a href="#">Blog</a></li>
 				<li><a href="#">Contacteaza-ma</a></li>
@@ -34,6 +34,8 @@ _joke_link = "[% joke.link %]";
 		<div id="primaryContent_3columns">
 
 			<div id="columnA_3columns">
+				<h3>Login</h3>
+				[% INCLUDE inc/login.html %]
 		
 				<h3>[% joke_version.title | html_entity %]</h3>
 

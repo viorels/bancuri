@@ -5,8 +5,9 @@ use warnings;
 
 use Catalyst qw/ConfigLoader
 				Session
-				Session::Store::FastMmap
 				Session::State::Cookie
+				Session::Store::FastMmap
+				Authentication
                 Unicode
                 DateTime
 
@@ -23,6 +24,32 @@ our $VERSION = '0.01';
 __PACKAGE__->config( 
     name => 'Bancuri',
     default_view => 'Bancuri::View::TT',
+    'Plugin::Authentication' => {
+        default_realm => 'email',
+        email => {
+            credential => {
+                class => 'Password',
+                password_field => 'password',
+                password_type => 'clear'
+            },
+            store => {
+                class => 'DBIx::Class',
+                user_class => 'BancuriDB::Users',
+#                role_column => 'roles',
+            }
+        },
+#        openid => {
+#        },
+#        typekey => {
+#            credential => {
+#                class => 'TypeKey',
+#                key_url => 'http://example.com/regkeys.txt',
+#            },
+#            store => {
+#                class => 'Null',
+#            }
+#        },
+    },
     'Plugin::Log::Colorful' => {
         color_table => {
             debug       => {

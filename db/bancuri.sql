@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Fri Jan  9 21:19:25 2009
+--   Generated at:      Sat Jan 10 03:51:11 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -120,6 +120,7 @@ create table users (
   password                  character varying(255),
   birth                     date,
   karma                     real,
+  deleted                   boolean default false,
   comment                   text default '',
   constraint pk_Users primary key (id)
 ) ;
@@ -201,7 +202,7 @@ create table change_vote (
 
 -- joke_current
 create view joke_current as
-  select joke.*, version.text, version.title, version.comment, version.created, version.parent_ver, version.user_id, version.browser_id, version.stars, version.votes, version.views, version.banned
+  select joke.*, version.text, version.title, version.comment, version.created, version.parent_ver, version.user_id, version.browser_id, version.stars, version.votes, version.views, version.last_view, version.banned
   from joke,
     joke_version version
   where (joke.id = version.joke_id and joke.version = version.version)

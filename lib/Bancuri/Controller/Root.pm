@@ -27,7 +27,14 @@ sub begin : Private {
 
 sub auto : Private {
 	my ( $self, $c ) = @_;
-
+	
+    # TODO test on IE
+    my $req_with = $c->request->header('X-Requested-With');
+    if ( $req_with and $req_with eq 'XMLHttpRequest' ) {
+        # This is an AJAX request
+        $c->stash->{'AJAX'} = $req_with;
+    }
+    
     return 1;
 };
 
@@ -35,6 +42,7 @@ sub default : Path {
 	my ( $self, $c ) = @_;
 	
 	# Called when no other action matches.
+	$c->forward('not_found', []);
 };
 
 sub index : Path Args(0) {
@@ -79,7 +87,7 @@ sub load_joke : Private {
 
 	unless ( $joke ) {
 	    if ( $field eq 'link' ) {
-	        $c->forward('redirect', [ $value ]);
+	        $c->forward('redirect_link', [ $value ]);
 	    }
 	    else {
 	        $c->forward('not_found', []);
@@ -89,7 +97,7 @@ sub load_joke : Private {
 	$c->stash->{'joke'} = $joke;
 }
 
-sub redirect : Private {
+sub redirect_link : Private {
     my ( $self, $c, $joke_link ) = @_;
     
 	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
@@ -99,14 +107,36 @@ sub redirect : Private {
         $redirect->update();
 
         # TODO rebuild full link, e.g. /un-banc/edit
-		my $new_url = $c->uri_for( q{/} . $redirect->new_link );
-		my $permanent = 301;
-		$c->response->redirect( $new_url, $permanent );
-		$c->detach();
+		my $url = '/' . $redirect->new_link;
+        $c->forward('redirect', [ $url ])
 	}
 	else {
 		$c->forward('not_found', [ $joke_link ]);
 	}
+}
+
+sub redirect : Private {
+    my ( $self, $c, $url, $status ) = @_;
+    
+	unless ( $url =~ m|^https?://| ) {
+	   $url = $c->uri_for( $url );
+	};
+
+    unless ( $status ) {
+        my $method = $c->request->method;
+        if ( $method eq 'GET' ) {
+            $status = 301; # Moved Permanently
+        }
+        elsif ( $method eq 'POST' ) {
+            $status = 303; # See Other
+        }
+        else {
+            $status = 302; # Temporary Redirect
+        }
+    }    
+    
+	$c->response->redirect( $url, $status );
+	$c->detach();
 }
 
 sub not_found : Private {
@@ -128,9 +158,7 @@ sub end : ActionClass('RenderView') {
 	
     # do stuff here; the RenderView action is called afterwards
     
-    # TODO test on IE
-    my $req_with = $c->request->header('X-Requested-With');
-    if ( $req_with and $req_with eq 'XMLHttpRequest' ) {
+    if ( $c->stash->{'AJAX'} ) {
        	$c->forward($c->view('JSON'));
     }
 }
