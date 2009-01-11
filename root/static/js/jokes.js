@@ -38,6 +38,9 @@ $(document).ready(function() {
 	
 	$("#id").blur(check_id);
 	$("#login_form").submit(login);
+	$("#btn_profile").click(function() {
+		$("#authentication").slideDown();
+	})
 });
 
 function joke_id() {

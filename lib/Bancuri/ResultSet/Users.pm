@@ -7,13 +7,7 @@ sub search_email_or_openid {
     my ( $self, $id ) = @_;
     
     my $user = $self->find({ email => $id });
-
-    unless ( $user ) {
-        $user = $self->search(
-            { 'user_openids.identifier' => $id },
-            { join => 'user_openids' }
-        )->first;
-    }
+    $user = $self->search_openid($id) unless $user;
 
     return $user;
 }

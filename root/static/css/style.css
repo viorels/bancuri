@@ -6,6 +6,10 @@
 	border: none;
 }
 
+#authentication {
+	display: none;
+}
+
 .banc .columnLeftQuote { vertical-align: top }
 .banc .columnRightQuote { vertical-align: bottom }
 .banc .columnText { 

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use Math::Random qw(random_beta);
 use JSON::Any;
 require LWP::UserAgent;
 
@@ -139,6 +140,24 @@ sub register : Private {
     
     # TODO merge with a possible previous account
     return $c->model('BancuriDB::Users')->register($profile);
+}
+
+sub user_info : Private {
+    my ( $self, $c ) = @_;
+    
+    my @teasers = (
+        'Login',
+        'Nu te cunosc',
+        'Spune-mi cine esti',
+        'Identifica-te',
+    );
+    
+    # Beta probability distribution function for a=1, b=2 is f(x) = 2*(1-x) 
+    # ... in translation this means that lower numbers are more probable
+    my $rand = random_beta(1, 1, 2); # count, a, b
+    $rand = int($rand * @teasers); 
+    
+    $c->stash->{'anonymous'} = $teasers[$rand];
 }
 
 sub logout : Local {
