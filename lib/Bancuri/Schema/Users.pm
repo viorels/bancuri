@@ -79,10 +79,25 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_users", ["id"]);
 __PACKAGE__->add_unique_constraint("idx_users_email", ["email"]);
+__PACKAGE__->has_many(
+  "changes",
+  "Bancuri::Schema::Change",
+  { "foreign.user_id" => "self.id" },
+);
+__PACKAGE__->has_many(
+  "joke_versions",
+  "Bancuri::Schema::JokeVersion",
+  { "foreign.user_id" => "self.id" },
+);
+__PACKAGE__->has_many(
+  "user_openids",
+  "Bancuri::Schema::UserOpenid",
+  { "foreign.user_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-11 03:51:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:P6VYX6bhgpEFjQpDsbmFhQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-11 15:49:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EuBgvd5H4CeSFrV+zySgIQ
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Users');
 
