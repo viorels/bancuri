@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Jan 11 02:17:29 2009
+--   Generated at:      Sun Jan 11 03:53:46 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -119,7 +119,7 @@ create table users (
   email                     character varying(255),
   password                  character varying(255),
   birth                     date,
-  gender                    character varying(1),
+  gender                    character varying(6),
   country                   character varying(64),
   karma                     real,
   deleted                   boolean default false,
