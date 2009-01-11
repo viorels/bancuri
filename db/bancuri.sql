@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sat Jan 10 03:51:11 2009
+--   Generated at:      Sun Jan 11 02:17:29 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -119,9 +119,12 @@ create table users (
   email                     character varying(255),
   password                  character varying(255),
   birth                     date,
+  gender                    character varying(1),
+  country                   character varying(64),
   karma                     real,
   deleted                   boolean default false,
   comment                   text default '',
+  created                   timestamp default now(),
   constraint pk_Users primary key (id)
 ) ;
 
@@ -137,8 +140,9 @@ create table browser (
 -- user_openid
 create table user_openid (
   user_id                   integer not null,
-  openid                    varchar(255) not null,
-  constraint pk_User_openid primary key (user_id,openid)
+  identifier                varchar(255) not null,
+  created                   timestamp default now(),
+  constraint pk_User_openid primary key (user_id,identifier)
 ) ;
 
 -- vote

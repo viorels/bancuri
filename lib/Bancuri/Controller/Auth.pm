@@ -79,8 +79,7 @@ sub id_exists : Local {
     my ( $self, $c ) = @_;
 
     my $id = $c->request->params->{'id'};
-    my $user = $c->model('BancuriDB::Users')->find({email=>$id});
-    # TODO also search openid
+    my $user = $c->model('BancuriDB::Users')->search_email_or_openid($id);
     
     $c->stash->{'json_id_exists'} = $user ? $id : 0;
 }
@@ -106,7 +105,13 @@ sub rpx : Local {
         $c->log->debug( $json );
         my $auth_info = $j->jsonToObj($json);
         if ($auth_info->{'stat'} eq 'ok') {
-            $c->log->debug("JSON OK : ".$auth_info->{'profile'}{'identifier'});
+            my $identifier = $auth_info->{'profile'}{'identifier'};
+            $c->log->debug("JSON OK : $identifier");
+            my $user = $c->model('BancuriDB::Users')->search_openid($identifier);
+            unless ( $user ) {
+                $user = $c->forward('register', [ $auth_info->{'profile'} ]);
+            }
+            $c->forward('login_openid', [ $user ]);
         }
     }
     else {
@@ -115,6 +120,25 @@ sub rpx : Local {
     
     # TODO redirect to last url
     $c->forward('/redirect', ['/']);
+}
+
+sub login_openid : Private {
+    my ( $self, $c, $user ) = @_;
+
+    my $authenticated = $c->authenticate( { 
+        email => $user->email,
+        password => $user->password,
+        deleted => 0,
+    }, 'email');
+    
+    return $c->user;
+}
+
+sub register : Private {
+    my ( $self, $c, $profile ) = @_;
+    
+    # TODO merge with a possible previous account
+    return $c->model('BancuriDB::Users')->register($profile);
 }
 
 sub logout : Local {
