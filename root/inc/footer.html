@@ -2,5 +2,14 @@
 	&copy; 2009 bancuri. Toate drepturile rezervate. Design by <a href="http://www.nodethirtythree.com/">NodeThirtyThree Design</a>.
 </div>
 
+<script src="https://rpxnow.com/openid/v2/widget"
+        type="text/javascript"></script>
+<script type="text/javascript">
+  RPXNOW.token_url = "[% c.uri_for('/auth/rpx') %]";
+  
+  RPXNOW.realm = "bancuri";
+  RPXNOW.overlay = true;
+</script>
+
 </body>
 </html>

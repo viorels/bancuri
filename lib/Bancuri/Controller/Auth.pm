@@ -4,6 +4,9 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use JSON::Any;
+require LWP::UserAgent;
+
 =head1 NAME
 
 Bancuri::Controller::Auth - Catalyst Controller
@@ -80,6 +83,38 @@ sub id_exists : Local {
     # TODO also search openid
     
     $c->stash->{'json_id_exists'} = $user ? $id : 0;
+}
+
+sub rpx : Local {
+    my ( $self, $c ) = @_;
+
+    # TODO Fallback to http ?
+    my $rest_url = 'https://rpxnow.com/api/v2/auth_info';
+    my $token = $c->request->params->{'token'};
+    
+    my $j = JSON::Any->new;
+    my $ua = LWP::UserAgent->new;
+    $ua->timeout(10);
+
+    my $response = $ua->post($rest_url, {
+        apiKey => 'b5cc4fa0a04cb0c290942a009fa342c17a2d4d00',
+        token => $token,
+    });
+    
+    if ( $response->is_success ) {
+        my $json = $response->decoded_content;
+        $c->log->debug( $json );
+        my $auth_info = $j->jsonToObj($json);
+        if ($auth_info->{'stat'} eq 'ok') {
+            $c->log->debug("JSON OK : ".$auth_info->{'profile'}{'identifier'});
+        }
+    }
+    else {
+        $c->log->warn("FAILED $token");
+    }
+    
+    # TODO redirect to last url
+    $c->forward('/redirect', ['/']);
 }
 
 sub logout : Local {
