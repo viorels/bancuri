@@ -126,6 +126,7 @@ sub rpx : Local {
 sub login_openid : Private {
     my ( $self, $c, $user ) = @_;
 
+    # Authenticate user with numeric id (not open id)
     my $authenticated = $c->authenticate( { 
         id => $user->id,
         deleted => 0,

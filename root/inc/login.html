@@ -7,14 +7,14 @@
 	    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
 	      <table>
 	        <tr>
-	          <td>Email:</td>
+	          <td><label for="id">Email :</label></td>
 	          <td>
 	          	<input id="id" type="text" name="id" size="25" />
 				<span id="id_res" style="display:none"></span>
 			  </td>
 	        </tr>
 	        <tr>
-	          <td>Password:</td>
+	          <td><label for="password">Parola :</label></td>
 	          <td><input id="password" type="password" name="password" size="25" /></td>
 	        </tr>
 	        <tr>
@@ -23,9 +23,10 @@
 	      </table>
 	    </form>
 		
-		Sau 
-		<a class="rpxnow" onclick="return false;" href="https://bancuri.rpxnow.com/openid/v2/signin?token_url=[% c.uri_for('/auth/rpx') %]">
-			identifica-te
-		</a>
-		doar cu id-ul de Yahoo! Messenger, Google, samd.
+		<h4>... sau <strong>fara parola</strong></h4>
+
+		<iframe src="https://bancuri.rpxnow.com/openid/embed?token_url=[% c.uri_for('/auth/rpx') %]" 
+		  scrolling="no" frameBorder="no" style="width:400px;height:240px;">
+		</iframe>
+
 	</div>
