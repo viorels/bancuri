@@ -127,8 +127,7 @@ sub login_openid : Private {
     my ( $self, $c, $user ) = @_;
 
     my $authenticated = $c->authenticate( { 
-        email => $user->email,
-        password => $user->password,
+        id => $user->id,
         deleted => 0,
     }, 'email');
     
