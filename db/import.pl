@@ -6,6 +6,7 @@ use warnings;
 use Encode;
 use HTML::Entities;
 use Data::Dumper;
+use List::Util qw(sum);
 
 use Bancuri::Model::BancuriDB;
 
@@ -46,6 +47,8 @@ $new_schema->resultset('JokeVersion')->delete();
 my $joke = $new_schema->resultset('Joke');
 $joke->delete();
 
+my $redirect = $new_schema->resultset('Redirect');
+
 while ( my $banc = $bancuri->next ) {
 	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
 	my @tag_rows = map { {tag => $_} } @tags; # structure to insert in db
@@ -58,21 +61,25 @@ while ( my $banc = $bancuri->next ) {
     # Fix encoding
     # TODO check for double encoding !!!
 	my $banc_text = encode( "UTF-8", decode_entities($banc->banc) );
+    #text => encode("utf8",decode("windows-1250", $banc->banc)),
 
     # Fix line terminators
     $banc_text =~ s/\n\r/\n/g;
+    
+    my $title = make_title($banc_text);
+    my $link = $joke->new_link_from_title($title);
 	
-	$joke->create({
+	my $new_joke = $joke->create({
         # TODO !!! SALVEAZA NUMARUL DE VIZUALIZARI LA MOMENTUL IMPORT-ULUI
         #      ... in coloana old_views pentru a compara ulterior noua distributie neuniforma p(x) = x
 		# TODO create a nice link, redirect and title !!!
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
 
-		'link' => $banc->id,
+		'link' => $link,
 		joke_versions => [{
 			version => 1,
-			#text => encode("utf8",decode("windows-1250", $banc->banc)),
 			text => $banc_text,
+			title => $title,
 			created => $banc->data,
 			stars => $banc->nota/2,
 			votes => $banc->voturi,
@@ -80,10 +87,72 @@ while ( my $banc = $bancuri->next ) {
 		}],
 		tags => \@tag_rows,
 	});
+	
+	$redirect->create({
+	    old_link => $banc->id,
+	    new_link => $link,
+	})
 
 }
 
+sub make_title {
+    my ($text) = @_;
+    
+    my @words = split_words($text);
+    @words = qw(empty) unless @words;
+    
+    # TODO get this from db schema
+    my $title_size = 50; # 64 in db
 
+    # Sum the length of the words and spaces
+    my $i = 0;
+    # TODO check if off by one !... workaround = join words 0..$i-1
+    while ( sum( map { length } @words[0..$i] ) + $i < $title_size
+            and $i < $#words ) {
+        $i++;
+    }
+
+    my $title = join ' ', @words[0..$i-1];
+
+    # TODO If there is just one LONG word the result will be 0 or > $title_size !
+    # This is not a good fix ...
+    $title = substr($title, 0, $title_size) if length $title > $title_size;
+
+    return $title;    
+}
+
+# http://www.s-anand.net/Splitting_a_sentence_into_words.html
+
+sub split_words {
+    my ($text) = @_;
+
+    my $boundary = qr/
+        [\s+ \! \? \;\(\)\[\]\{\}\<\> " ]
+ 
+# ... by COMMA, unless it has numbers on both sides: 3,000,000
+|       (?<=\D) ,
+|       , (?=\D)
+ 
+# ... by FULL-STOP, SINGLE-QUOTE, HYPHEN, AMPERSAND, unless it has a letter on both sides
+|       (?<=\W) [\.\-\&]
+|       [\.\-\&] (?=\W)
+ 
+# ... by QUOTE, unless it follows a letter (e.g. McDonald's, Holmes')
+|       (?<=\W) [']
+ 
+# ... by SLASH, if it has spaces on at least one side. (URLs shouldn't be split)
+|       \s \/
+|       \/ \s
+ 
+# ... by COLON, unless it's a URL or a time (11:30am for e.g.)
+|       \:(?!\/\/|\d)
+    /x;
+    
+    my @words = split $boundary, $text;
+    my @true_words = grep { length } @words;
+    
+    return @true_words;
+}
 
 1;
 

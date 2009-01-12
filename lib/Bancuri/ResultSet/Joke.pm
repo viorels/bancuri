@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use base 'DBIx::Class::ResultSet';
 
+use List::Util qw(sum);
+
 sub search_next_joke {
     my ($self) = @_;
 
@@ -69,6 +71,38 @@ sub search_ids {
         { prefetch => [ 'current' ] } );
 
     return \@jokes;
+}
+
+sub new_link_from_title {
+    my ($self, $title) = @_;
+    
+    # TODO get link size from schema
+    my $link_size = 40;
+
+    my $link;
+    my @words = split /\s/, $title;
+    
+    my $use_id = 0;
+    my $increment_title = sub {
+        my @link = @words;
+        if ( $use_id ) {
+            while ( sum( map { length } @link ) + @link + length $use_id > $link_size ) {
+                pop @link;  
+            };
+            push @link, $use_id;
+        }
+        
+        # Try next id if we get called again;
+        $use_id++;
+
+        return join '-', @link;
+    };
+
+    do {
+        $link = $increment_title->();
+    } while ( $self->find({ link => $link }) );
+
+    return $link;
 }
 
 sub add {
