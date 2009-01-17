@@ -30,8 +30,8 @@ __PACKAGE__->add_unique_constraint("pk_user_openid", ["identifier"]);
 __PACKAGE__->belongs_to("user_id", "Bancuri::Schema::Users", { id => "user_id" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-17 20:41:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L/W5hVwQ4l+cErtu3LGtRg
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:36:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+6pH9Jw18Ry2whyf3jtlQw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

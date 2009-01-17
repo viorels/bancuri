@@ -18,7 +18,11 @@ __PACKAGE__->add_columns(
     size => 2,
   },
   "user_id",
+  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
+  "browser_id",
   { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  "date",
+  { data_type => "date", default_value => "now()", is_nullable => 1, size => 4 },
   "stars",
   {
     data_type => "smallint",
@@ -26,11 +30,7 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 2,
   },
-  "date",
-  { data_type => "date", default_value => "now()", is_nullable => 1, size => 4 },
 );
-__PACKAGE__->set_primary_key("joke_id", "version", "user_id");
-__PACKAGE__->add_unique_constraint("pk_vote", ["joke_id", "version", "user_id"]);
 __PACKAGE__->belongs_to(
   "joke_version",
   "Bancuri::Schema::JokeVersion",
@@ -38,8 +38,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4R7u3UQVoDuEUTHvQK8JOw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:36:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fr/nW4WxP1DMQLRhTZW+GQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

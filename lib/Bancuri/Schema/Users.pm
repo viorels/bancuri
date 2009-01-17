@@ -94,10 +94,15 @@ __PACKAGE__->has_many(
   "Bancuri::Schema::UserOpenid",
   { "foreign.user_id" => "self.id" },
 );
+__PACKAGE__->has_many(
+  "user_roles",
+  "Bancuri::Schema::UserRole",
+  { "foreign.user_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-17 20:41:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Vol7z+OpubSP6CBMS48W2w
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:36:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZOeRH2RksGeaEkAtsNelRA
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Users');
 

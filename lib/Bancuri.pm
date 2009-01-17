@@ -6,7 +6,7 @@ use warnings;
 use Catalyst qw/ConfigLoader
 				Session
 				Session::State::Cookie
-				Session::Store::FastMmap
+				Session::Store::DBIC
 				Authentication
 				Authorization::Roles
                 Unicode
@@ -22,34 +22,45 @@ our $VERSION = '0.01';
 #
 # Configure the application
 #
-__PACKAGE__->config( 
+__PACKAGE__->config(
     name => 'Bancuri',
     default_view => 'Bancuri::View::TT',
-    'Plugin::Authentication' => {
+    session => {
+        # Session expires in one day but cookie expires in 2 weeks !
+        expires => 86400,
+        cookie_expires => 1209600,
+        dbic_class => 'BancuriDB::Session',
+        id_field => 'cookie',
+        data_field => 'data',
+    },
+    'authentication' => {
         default_realm => 'email',
-        email => {
-            credential => {
-                class => 'Password',
-                password_field => 'password',
-                password_type => 'clear'
+        realms => {
+            email => {
+                credential => {
+                    class => 'Password',
+                    password_field => 'password',
+                    password_type => 'clear'
+                },
+                store => {
+                    class => 'DBIx::Class',
+                    user_class => 'BancuriDB::Users',
+                    role_relation => 'user_roles',
+                    role_field => 'role',
+                }
             },
-            store => {
-                class => 'DBIx::Class',
-                user_class => 'BancuriDB::Users',
-#                role_column => 'roles',
-            }
-        },
-#        openid => {
-#        },
-#        typekey => {
-#            credential => {
-#                class => 'TypeKey',
-#                key_url => 'http://example.com/regkeys.txt',
+#            openid => {
 #            },
-#            store => {
-#                class => 'Null',
-#            }
-#        },
+#            typekey => {
+#                credential => {
+#                    class => 'TypeKey',
+#                    key_url => 'http://example.com/regkeys.txt',
+#                },
+#                store => {
+#                    class => 'Null',
+#                }
+#            },
+        },
     },
     'Plugin::Log::Colorful' => {
         color_table => {

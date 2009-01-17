@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sat Jan 17 22:03:44 2009
+--   Generated at:      Sun Jan 18 00:34:22 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -23,9 +23,9 @@ drop index idx_joke_link;
 drop index idx_joke_for_day;
 drop index idx_joke_version_rating;
 drop index idx_users_email;
-drop index idx_browser_cookie;
 drop index idx_user_openid_user_id;
 drop index idx_tag_tag;
+drop index idx_session_cookie;
 -- alter table joke_version drop constraint joke_version_fk_Joke_id-- (is implicitly done)
 -- alter table user_openid drop constraint user_openid_fk_User_id-- (is implicitly done)
 -- alter table tag drop constraint tag_fk_Joke_id-- (is implicitly done)
@@ -33,6 +33,8 @@ drop index idx_tag_tag;
 -- alter table browser drop constraint browser_fk_Useragent_id-- (is implicitly done)
 -- alter table change drop constraint change_fk_User_id-- (is implicitly done)
 -- alter table joke_version drop constraint joke_version_fk_User_id-- (is implicitly done)
+-- alter table user_role drop constraint user_role_fk_User_id-- (is implicitly done)
+-- alter table user_role drop constraint user_role_fk_Role_id-- (is implicitly done)
 
 
 -- Generated Permissions Drops
@@ -61,6 +63,9 @@ drop table vote cascade ;
 drop table tag cascade ;
 drop table change cascade ;
 drop table change_vote cascade ;
+drop table session cascade ;
+drop table user_role cascade ;
+drop table role cascade ;
 
 
 -- Generated SQL Schema
@@ -132,7 +137,7 @@ create table users (
 -- browser
 create table browser (
   id                        serial not null,
-  cookie                    char(64) not null,
+  session_id                integer not null,
   ip                        inet,
   useragent_id              integer,
   constraint pk_Browser primary key (id)
@@ -150,10 +155,10 @@ create table user_openid (
 create table vote (
   joke_id                   integer not null,
   version                   smallint not null,
-  user_id                   integer not null,
-  stars                     smallint,
+  user_id                   integer,
+  browser_id                integer not null,
   date                      date default now(),
-  constraint pk_Vote primary key (joke_id,version,user_id)
+  stars                     smallint
 ) ;
 
 -- tag
@@ -188,6 +193,32 @@ create table change_vote (
   time                      timestamp default now(),
   constraint pk_Change_vote primary key (change_id,user_id)
 ) ;
+
+-- session
+create table session (
+  id                        serial not null,
+  cookie                    character(72) not null,
+  data                      text,
+  expires                   integer,
+  constraint pk_Session primary key (id)
+) ;
+
+-- user_role
+create table user_role (
+  user_id                   integer not null,
+  role_id                   integer not null,
+  constraint pk_User_role primary key (user_id,role_id)
+) ;
+
+-- role
+create table role (
+  id                        integer not null,
+  role                      character varying(16) not null,
+  constraint pk_Role primary key (id)
+) ;
+
+
+
 
 
 
@@ -229,6 +260,14 @@ create view joke_current as
 -- inserts for users (id, name, email, password, birth, karma, comment)
 insert into users (id, name, email, password, birth, karma, comment) values ( 1, 'Bula', 'bula@bancuri.com', 'killME', '19810514', 666, 'adica eu ...' ) ;
 
+-- inserts for role (id, role)
+insert into role (id, role) values ( 1, 'admin' ) ;
+insert into role (id, role) values ( 2, 'moderator' ) ;
+
+-- inserts for user_role (user_id, role_id)
+insert into user_role (user_id, role_id) values ( 1, 1 ) ;
+insert into user_role (user_id, role_id) values ( 1, 2 ) ;
+
 
 -- Generated SQL Constraints
 -- --------------------------------------------------------------------
@@ -237,9 +276,9 @@ create unique index idx_joke_link on joke  (link) ;
 create unique index idx_joke_for_day on joke  (for_day) ;
 create index idx_joke_version_rating on joke_version  (rating) ;
 create unique index idx_users_email on users  (email) ;
-create unique index idx_browser_cookie on browser  (cookie) ;
 create index idx_user_openid_user_id on user_openid  (user_id) ;
 create index idx_tag_tag on tag  (tag) ;
+create unique index idx_session_cookie on session  (cookie) ;
 alter table joke_version add constraint joke_version_fk_Joke_id
   foreign key (joke_id)
   references joke (id)  ;
@@ -261,4 +300,10 @@ alter table change add constraint change_fk_User_id
 alter table joke_version add constraint joke_version_fk_User_id
   foreign key (user_id)
   references users (id)  ;
+alter table user_role add constraint user_role_fk_User_id
+  foreign key (user_id)
+  references users (id)  ;
+alter table user_role add constraint user_role_fk_Role_id
+  foreign key (role_id)
+  references role (id)  ;
 
