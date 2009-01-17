@@ -83,7 +83,14 @@ sub redir_show : Private {
 sub rating : Local {
 	my ( $self, $c ) = @_;
     
-    $c->response->body(4.5);    
+    my $id = $c->request->params->{'id'};
+    my $vote = $c->request->params->{'rating'};
+    
+    # TODO It's WRONG to assume current version
+    my $joke_version = $c->model('BancuriDB::Joke')->find({ id => $id })->current;
+    my $new_rating = $joke_version->vote($vote);
+
+    $c->response->body($new_rating);
 }
 
 =head1 AUTHOR

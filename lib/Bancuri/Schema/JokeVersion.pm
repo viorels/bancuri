@@ -88,5 +88,17 @@ sub text_teaser {
     return $text;
 };
 
+sub vote {
+    my ($self, $vote, $weight ) = @_;
+    
+    # TODO implement using stored procedure;
+    my $new_rating = ($self->rating * $self->raters + $vote) / ($self->raters + 1);
+    $self->rating( $new_rating );
+    $self->raters( $self->raters + 1 );
+    $self->update;
+    
+    return $self->rating();
+}
+
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;
