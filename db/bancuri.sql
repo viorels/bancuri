@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Jan 11 03:53:46 2009
+--   Generated at:      Sat Jan 17 22:03:44 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -21,9 +21,10 @@
 
 drop index idx_joke_link;
 drop index idx_joke_for_day;
-drop index idx_joke_version_stars;
+drop index idx_joke_version_rating;
 drop index idx_users_email;
 drop index idx_browser_cookie;
+drop index idx_user_openid_user_id;
 drop index idx_tag_tag;
 -- alter table joke_version drop constraint joke_version_fk_Joke_id-- (is implicitly done)
 -- alter table user_openid drop constraint user_openid_fk_User_id-- (is implicitly done)
@@ -88,8 +89,8 @@ create table joke_version (
   parent_ver                integer,
   user_id                   integer,
   browser_id                integer,
-  stars                     real,
-  votes                     integer,
+  rating                    real,
+  raters                    integer,
   views                     integer,
   last_view                 date,
   banned                    boolean default false,
@@ -142,7 +143,7 @@ create table user_openid (
   user_id                   integer not null,
   identifier                varchar(255) not null,
   created                   timestamp default now(),
-  constraint pk_User_openid primary key (user_id,identifier)
+  constraint pk_User_openid primary key (identifier)
 ) ;
 
 -- vote
@@ -206,7 +207,7 @@ create table change_vote (
 
 -- joke_current
 create view joke_current as
-  select joke.*, version.text, version.title, version.comment, version.created, version.parent_ver, version.user_id, version.browser_id, version.stars, version.votes, version.views, version.last_view, version.banned
+  select joke.*, version.text, version.title, version.comment, version.created, version.parent_ver, version.user_id, version.browser_id, version.rating, version.raters, version.views, version.last_view, version.banned
   from joke,
     joke_version version
   where (joke.id = version.joke_id and joke.version = version.version)
@@ -234,9 +235,10 @@ insert into users (id, name, email, password, birth, karma, comment) values ( 1,
 
 create unique index idx_joke_link on joke  (link) ;
 create unique index idx_joke_for_day on joke  (for_day) ;
-create index idx_joke_version_stars on joke_version  (stars) ;
+create index idx_joke_version_rating on joke_version  (rating) ;
 create unique index idx_users_email on users  (email) ;
 create unique index idx_browser_cookie on browser  (cookie) ;
+create index idx_user_openid_user_id on user_openid  (user_id) ;
 create index idx_tag_tag on tag  (tag) ;
 alter table joke_version add constraint joke_version_fk_Joke_id
   foreign key (joke_id)

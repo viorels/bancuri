@@ -46,9 +46,9 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "browser_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
-  "stars",
+  "rating",
   { data_type => "real", default_value => undef, is_nullable => 1, size => 4 },
-  "votes",
+  "raters",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "views",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
@@ -76,8 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-09 21:23:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wp5BUSVWX2jcKsl1fTasig
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-17 20:41:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:r+l4anDCfmBCdXFStksPmw
 
 sub text_teaser {
     my ($self) = @_;

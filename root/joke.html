@@ -39,17 +39,21 @@ _joke_link = "[% joke.link %]";
 		
 				<h3>[% joke_version.title | html_entity %]</h3>
 
-                <div id="banc" class="banc edit">
-                    <table><tbody><tr>
-                      <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
-                      <td class="columnText">[% joke_version.text | html_entity | html_line_break %]</td>
-                      <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
-                    </tr></tbody></table>
-                </div>
+                <table id="banc" class="banc edit"><tbody><tr>
+                  <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+                  <td class="columnText">[% joke_version.text | html_entity | html_line_break %]</td>
+                  <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+                </tr></tbody></table>
 
-                <div>
-                    Nota [% joke_version.stars %] : X *****<br>
-                </div>
+				<div id="rating" class="rating">
+					<label for="rating">Voteaza : </label>
+					<span class="ui-rater">
+						<span class="ui-rater-starsOff" style="width:90px;">
+							<span class="ui-rater-starsOn" style="width:[% joke_version.rating * 18 %]px"></span>
+						</span>
+						<span class="ui-rater-rating">[% joke_version.rating | format('%.2f') %]</span>&nbsp;(<span class="ui-rater-rateCount">[% joke_version.raters %]</span> voturi)
+					</span>
+				</div>
 
 				<br class="clear" />
 			

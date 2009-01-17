@@ -38,6 +38,13 @@ __PACKAGE__->add_columns(
   },
   "birth",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
+  "gender",
+  {
+    data_type => "character varying",
+    default_value => undef,
+    is_nullable => 1,
+    size => 6,
+  },
   "country",
   {
     data_type => "character varying",
@@ -68,13 +75,6 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 8,
   },
-  "gender",
-  {
-    data_type => "character varying",
-    default_value => undef,
-    is_nullable => 1,
-    size => 6,
-  },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_users", ["id"]);
@@ -96,8 +96,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-11 15:49:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EuBgvd5H4CeSFrV+zySgIQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-17 20:41:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Vol7z+OpubSP6CBMS48W2w
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Users');
 

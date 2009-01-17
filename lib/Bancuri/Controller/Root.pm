@@ -162,7 +162,7 @@ sub end : ActionClass('RenderView') {
     # do stuff here; the RenderView action is called afterwards
     
     if ( $c->stash->{'AJAX'} ) {
-       	$c->forward($c->view('JSON'));
+       	$c->stash->{'current_view'} = 'JSON';
     }
 }
 
