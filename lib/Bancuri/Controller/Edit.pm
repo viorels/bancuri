@@ -80,6 +80,12 @@ sub redir_show : Private {
 	$c->response->redirect( q{/} . $node, 303 );
 }
 
+sub rating : Local {
+	my ( $self, $c ) = @_;
+    
+    $c->response->body(4.5);    
+}
+
 =head1 AUTHOR
 
 Viorel,,,

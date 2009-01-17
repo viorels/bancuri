@@ -17,6 +17,10 @@
     text-align: justify;
 }
 
+.rating {
+	text-align: right;
+}
+
 p.alternative {
     white-space: pre;
 }
@@ -63,3 +67,13 @@ textarea.edit {
  font-weight:bold;
  color:#CC0000;
 }
+
+/* RATING */
+
+.ui-rater>span {vertical-align:top;}
+.ui-rater-rating {margin-left:.8em}
+.ui-rater-starsOff, .ui-rater-starsOn {display:inline-block; height:18px; background:url(/static/img/stars.png) repeat-x 0 0px;}
+.ui-rater-starsOn {display:block; max-width:90px; top:0; background-position: 0 -36px;}
+.ui-rater-starsHover {background-position: 0 -18px!important;}
+
+/* END RATING */

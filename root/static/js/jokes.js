@@ -20,6 +20,9 @@ function finishEdit(me) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-61552.html
 
 $(document).ready(function() {
+	
+	$('#rating').rater({ postHref: '/edit/rating', id: joke_id() });
+
     var got_versions = false;
     $("#btn_versions").toggle(
         function() {
