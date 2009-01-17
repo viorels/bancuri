@@ -62,7 +62,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
-__PACKAGE__->mk_group_accessors('simple' => qw/text_snippet/);
+__PACKAGE__->mk_group_accessors('simple' => qw/position text_snippet/);
 
 __PACKAGE__->has_one(
   "current",

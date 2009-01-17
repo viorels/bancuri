@@ -35,16 +35,16 @@ _joke_link = "[% joke.link %]";
 
 			<div id="columnA_3columns">
 		
-				<h3>Bancuri despre [% keywords %]</h3>
+				<h3>Bancuri cu [% keywords %]</h3>
 
                 <div id="results">
 					[% FOR joke = results %]
-					<h4><a href="/[% joke.link %]">[% joke.id %]</a></h4>
+					<h4><a href="/[% joke.link %]">[% joke.position _". "_ joke.current.title %]</a></h4>
 					<p>[% joke.text_snippet %]</p>
 					[% END %]
                 </div>
 				
-				<div id="#pager">
+				<div id="pager">
 				[% FOREACH page IN pages.pages_in_spread %]
 				    [% IF !page.defined %]
 				        ...

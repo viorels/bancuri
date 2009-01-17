@@ -51,8 +51,7 @@ sub page : Chained('keywords') PathPart('') Args(1) {
 sub first_page : Chained('keywords') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 
-    $c->stash->{'page'} = 1;
-    $c->forward('results');  
+    $c->forward('results');
 } 
 
 sub results : Private {    
@@ -61,7 +60,7 @@ sub results : Private {
     my $keywords = $c->stash->{'keywords'};
     $c->detach('all') unless length $keywords;
     
-    my $page = $c->stash->{'page'};
+    my $page = $c->stash->{'page'} || 1;
     my $perpage = 10;
 
     my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
@@ -79,6 +78,7 @@ sub results : Private {
         my $joke_snippets = $c->model('Xapian')->highlight(\@joke_texts, $keywords);
         
         for (my $i=0; $i<@$jokes; $i++) {
+            $jokes->[$i]->position( $perpage * ($page-1) + $i + 1 );
             $jokes->[$i]->text_snippet( $joke_snippets->[$i] );
         }
         
