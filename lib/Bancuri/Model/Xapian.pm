@@ -118,7 +118,6 @@ sub new {
 	$self->qp(Search::Xapian::QueryParser->new($self->db));
     
     if ( defined($config{language}) ) {
-        warn $config{language};
 	    my $stemmer=Search::Xapian::Stem->new($config{language});
 	    $self->qp->set_stemmer($stemmer);
 	    $self->qp->set_stemming_strategy(STEM_NONE);

@@ -33,7 +33,7 @@ __PACKAGE__->config(
         id_field => 'cookie',
         data_field => 'data',
     },
-    'authentication' => {
+    authentication => {
         default_realm => 'email',
         realms => {
             email => {
@@ -45,7 +45,7 @@ __PACKAGE__->config(
                 store => {
                     class => 'DBIx::Class',
                     user_class => 'BancuriDB::Users',
-                    role_relation => 'user_roles',
+                    role_relation => 'roles',
                     role_field => 'role',
                 }
             },
