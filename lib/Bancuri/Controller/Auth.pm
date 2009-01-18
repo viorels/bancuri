@@ -58,8 +58,8 @@ sub login : Local {
     }
     else {
        # or undef is authentication failed.  
-       # so display the 'try again' page here.
-       $c->response->body('Login failed');
+       # so display the 'try again' page here (unless AJAX).
+       # $c->response->body('Login failed');
     }
 }
 
@@ -154,6 +154,7 @@ sub user_info : Private {
         'Nu te cunosc',
         'Spune-mi cine esti',
         'Identifica-te',
+        'Eu sunt Bula ... tu ?',
     );
     
     # Beta probability distribution function for a=1, b=2 is f(x) = 2*(1-x) 

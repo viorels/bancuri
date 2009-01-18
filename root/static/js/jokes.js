@@ -90,7 +90,7 @@ function build_version(version) {
 
 function check_id() {
 	// remove all the class add the messagebox classes and start fading
-	$("#id_res").removeClass().addClass('messagebox').text('Checking...').fadeIn("slow");
+	$("#id_res").removeClass().addClass('messagebox').text('Te cunosc ?').fadeIn("slow");
 	// check the username exists or not from ajax
 	$.getJSON("/auth/id_exists",{ id:$(this).val() } ,function(data) {
 		// TODO check if response is for current id (last request)
@@ -98,14 +98,18 @@ function check_id() {
 			// start fading the messagebox
 			$("#id_res").fadeTo(200,0.1,function() {
 				//add message and change the class of the box and start fading
-				$(this).html('This User name Already exists').addClass('messagebox_error').fadeTo(900,1);
+				$(this).html('Te cunosc dar zi parola').addClass('messagebox_ok').fadeTo(900,1);
+				$('#login_form .signup').hide();
+				$('#btn_login').show();
 			});
 		}
 		else {
 			// start fading the messagebox
 			$("#id_res").fadeTo(200,0.1,function() {
 				// add message and change the class of the box and start fading
-		    	$(this).html('Username available to register').addClass('messagebox_ok').fadeTo(900,1);
+		    	$(this).html('Nu te cunosc dar zi-mi o parola').addClass('messagebox_ok').fadeTo(900,1);
+				$('#login_form .signup').show();
+				$('#btn_login').hide();
 			});
 		}
 	});
@@ -113,15 +117,17 @@ function check_id() {
 
 function login() {
 	// remove all the class add the messagebox classes and start fading
-    $("#id_res").removeClass().addClass('messagebox').text('Validating....').fadeIn(1000);
+    $("#id_res").removeClass().addClass('messagebox').text('Verific parola ...').fadeIn(1000);
+
     // check the username exists or not from ajax
     $.post("/auth/login", $("#login_form").serialize(), function(data) {
 		if ( data['json_login'] ) {
+			var name = data['json_login']['name'];
 			$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
 				// add message and change the class of the box and start fading
-				$(this).html('Logging in.....').addClass('messagebox_ok').fadeTo(900,1,
+				$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1,
 				function() {
-					$("#btn_profile").text(data['json_login']['name']);
+					$("#btn_profile").text(name);
 					$("#authentication").slideUp();
 				});
             });
@@ -129,7 +135,7 @@ function login() {
 		else {
 			$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
 				// add message and change the class of the box and start fading
-				$(this).html('Your login detail sucks...').addClass('messagebox_error').fadeTo(900,1);
+				$(this).html('Ai uitat parola ?').addClass('messagebox_error').fadeTo(900,1);
             });
 		}
 	}, 'json');
