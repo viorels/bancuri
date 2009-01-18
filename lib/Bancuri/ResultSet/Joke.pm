@@ -3,28 +3,20 @@ use strict;
 use warnings;
 use base 'DBIx::Class::ResultSet';
 
+use Math::Random qw(random_beta);
 use List::Util qw(sum);
-
-sub search_next_joke {
-    my ($self) = @_;
-
-    my $all_jokes = $self->search(
-        {},
-        { order_by => 'id DESC' },
-    );
-    my $count = $all_jokes->count;
-    warn "COUNT = $count";
-    return $all_jokes;
-}
 
 sub search_random_joke {
     my ($self) = @_;
 
     my $count = $self->count();
-    my $offset = int(rand($count));
-    my $joke = $self->slice($offset, $offset); 
+    
+    # random_beta count, a, b
+    my $offset = int( random_beta(1, 0.75, 1.75) * $count );
+    my $joke = $self->search_related('current', {}, { order_by => 'rating ASC' })
+        ->slice($offset, $offset)->first->joke_id;
 
-    return $joke->first;
+    return $joke;
 };
 
 =head2 search_for_day 
