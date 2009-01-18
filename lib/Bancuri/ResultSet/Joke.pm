@@ -11,8 +11,8 @@ sub search_random_joke {
 
     my $count = $self->count();
     
-    # random_beta count, a, b
-    my $offset = int( random_beta(1, 0.75, 1.75) * $count );
+    # random_beta count=1, a=1.75, b=0.75 => sanse mai mari spre 1 decat spre 0
+    my $offset = int( random_beta(1, 1.75, 0.75) * $count );
     my $joke = $self->search_related('current', {}, { order_by => 'rating ASC' })
         ->slice($offset, $offset)->first->joke_id;
 
