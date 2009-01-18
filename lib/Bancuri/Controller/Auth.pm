@@ -34,7 +34,7 @@ sub login : Local {
         $authenticated = $c->authenticate( { 
             email => $id,
             password => $password,
-#           deleted => 0,
+            deleted => 0,
         }, $type);
     };
     
@@ -107,7 +107,6 @@ sub rpx : Local {
         my $auth_info = $j->jsonToObj($json);
         if ($auth_info->{'stat'} eq 'ok') {
             my $identifier = $auth_info->{'profile'}{'identifier'};
-            $c->log->debug("JSON OK : $identifier");
             my $user = $c->model('BancuriDB::Users')->search_openid($identifier);
             unless ( $user ) {
                 $user = $c->forward('register', [ $auth_info->{'profile'} ]);
@@ -126,11 +125,16 @@ sub rpx : Local {
 sub login_openid : Private {
     my ( $self, $c, $user ) = @_;
 
+    $c->log->debug("LOGIN OPENID ". $user->email);
+
     # Authenticate user with numeric id (not open id)
     my $authenticated = $c->authenticate( { 
         id => $user->id,
+        email => $user->email,
+        password => $user->password,
         deleted => 0,
     }, 'email');
+    $c->log->warn($authenticated ? "SUCCESS" : "FAILED");
     
     return $c->user;
 }

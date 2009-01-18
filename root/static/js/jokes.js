@@ -122,6 +122,7 @@ function login() {
 				$(this).html('Logging in.....').addClass('messagebox_ok').fadeTo(900,1,
 				function() {
 					$("#btn_profile").text(data['json_login']['name']);
+					$("#authentication").slideUp();
 				});
             });
 		}
