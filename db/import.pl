@@ -70,9 +70,6 @@ while ( my $banc = $bancuri->next ) {
     my $link = $joke->new_link_from_title($title);
 	
 	my $new_joke = $joke->create({
-        # TODO !!! SALVEAZA NUMARUL DE VIZUALIZARI LA MOMENTUL IMPORT-ULUI
-        #      ... in coloana old_views pentru a compara ulterior noua distributie neuniforma p(x) = x
-		# TODO create a nice link, redirect and title !!!
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
 
 		'link' => $link,
@@ -82,8 +79,11 @@ while ( my $banc = $bancuri->next ) {
 			title => $title,
 			created => $banc->data,
 			rating => $banc->nota/2,
-			raters => $banc->voturi,
-			views => $banc->vizite,
+			voted => $banc->voturi,
+			visited => $banc->vizite,
+			old_rating => $banc->nota/2,
+			old_voted => $banc->voturi,
+			old_visited => $banc->vizite,
 		}],
 		tags => \@tag_rows,
 	});

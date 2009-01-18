@@ -40,7 +40,7 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 8,
   },
-  "parent_ver",
+  "parent_version",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "user_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
@@ -48,11 +48,17 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "rating",
   { data_type => "real", default_value => undef, is_nullable => 1, size => 4 },
-  "raters",
+  "voted",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
-  "views",
+  "visited",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
-  "last_view",
+  "old_rating",
+  { data_type => "real", default_value => undef, is_nullable => 0, size => 4 },
+  "old_voted",
+  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  "old_visited",
+  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  "last_visit",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
   "banned",
   {
@@ -76,8 +82,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-17 20:41:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:r+l4anDCfmBCdXFStksPmw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 17:14:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:B72l1KJFt+5yHPOgp/KT2A
 
 sub text_teaser {
     my ($self) = @_;
@@ -92,9 +98,9 @@ sub vote {
     my ($self, $vote, $weight ) = @_;
     
     # TODO implement using stored procedure;
-    my $new_rating = ($self->rating * $self->raters + $vote) / ($self->raters + 1);
+    my $new_rating = ($self->rating * $self->voted + $vote) / ($self->voted + 1);
     $self->rating( $new_rating );
-    $self->raters( $self->raters + 1 );
+    $self->voted( $self->voted + 1 );
     $self->update;
     
     return $self->rating();

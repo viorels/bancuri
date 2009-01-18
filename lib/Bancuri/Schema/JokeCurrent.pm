@@ -63,7 +63,7 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 8,
   },
-  "parent_ver",
+  "parent_version",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "user_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
@@ -71,19 +71,19 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "rating",
   { data_type => "real", default_value => undef, is_nullable => 1, size => 4 },
-  "raters",
+  "voted",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
-  "views",
+  "visited",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
-  "last_view",
+  "last_visit",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
   "banned",
   { data_type => "boolean", default_value => undef, is_nullable => 1, size => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-17 20:41:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u6mD0FwATTsl6O0K8qyoQw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 17:14:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0fN9hGr+kqhMnuxuI8AHYQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

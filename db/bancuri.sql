@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Jan 18 00:34:22 2009
+--   Generated at:      Sun Jan 18 17:12:37 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -66,6 +66,8 @@ drop table change_vote cascade ;
 drop table session cascade ;
 drop table user_role cascade ;
 drop table role cascade ;
+drop table visit cascade ;
+drop table search cascade ;
 
 
 -- Generated SQL Schema
@@ -91,13 +93,16 @@ create table joke_version (
   title                     character varying(64),
   comment                   character varying(255),
   created                   timestamp default now(),
-  parent_ver                integer,
+  parent_version            integer,
   user_id                   integer,
   browser_id                integer,
   rating                    real,
-  raters                    integer,
-  views                     integer,
-  last_view                 date,
+  voted                     integer,
+  visited                   integer,
+  old_rating                real not null,
+  old_voted                 integer not null,
+  old_visited               integer not null,
+  last_visit                date,
   banned                    boolean default false,
   constraint pk_Joke_version primary key (joke_id,version)
 ) ;
@@ -152,13 +157,15 @@ create table user_openid (
 ) ;
 
 -- vote
+-- Historic table, but keep jokes rated with 5 for a loger time so we
+-- can show similar tastes
 create table vote (
   joke_id                   integer not null,
   version                   smallint not null,
   user_id                   integer,
   browser_id                integer not null,
   date                      date default now(),
-  stars                     smallint
+  rating                    smallint
 ) ;
 
 -- tag
@@ -217,10 +224,29 @@ create table role (
   constraint pk_Role primary key (id)
 ) ;
 
+-- visit
+create table visit (
+  joke_id                   integer not null,
+  user_id                   integer not null,
+  date                      date default now(),
+  constraint pk_Visit primary key (joke_id,user_id)
+) ;
+
+-- search
+create table search (
+  keywords                  character varying(255) not null,
+  times                     integer default 1,
+  last_time                 date,
+  constraint pk_Search primary key (keywords)
+) ;
 
 
 
 
+
+
+
+comment on table vote is 'Historic table, but keep jokes rated with 5 for a loger time so we can show similar tastes';
 
 
 
@@ -238,7 +264,7 @@ create table role (
 
 -- joke_current
 create view joke_current as
-  select joke.*, version.text, version.title, version.comment, version.created, version.parent_ver, version.user_id, version.browser_id, version.rating, version.raters, version.views, version.last_view, version.banned
+  select joke.*, version.text, version.title, version.comment, version.created, version.parent_version, version.user_id, version.browser_id, version.rating, version.voted, version.visited, version.last_visit, version.banned
   from joke,
     joke_version version
   where (joke.id = version.joke_id and joke.version = version.version)
