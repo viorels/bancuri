@@ -5422,7 +5422,7 @@
         </dia:composite>
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#last_time#</dia:string>
+            <dia:string>#last#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#date#</dia:string>

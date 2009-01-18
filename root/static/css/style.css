@@ -41,6 +41,12 @@ textarea.edit {
 	border-collapse:collapse; */
 }
 
+#login_form label {
+	font-size: 1.2em;
+	font-weight: normal;;
+	padding-top: 8px;
+}
+
 #login_form .signup {
 	display: none;
 }

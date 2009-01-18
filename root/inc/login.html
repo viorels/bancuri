@@ -5,29 +5,19 @@
 		<h3>Identifica-te</h3>
 
 	    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
-	      <table>
-	        <tr>
-	          <td><label for="id">Email</label></td>
-	          <td>
-	          	<input id="id" type="text" name="id" size="25" />
-				<span id="id_res" style="display:none"></span>
-			  </td>
-	        </tr>
-	        <tr>
-	          <td><label for="password">Parola</label></td>
-	          <td>
-	          	<input id="password" type="password" name="password" size="25" />
-				<input id="btn_login" type="submit" name="login" value="Login" />
-			  </td>
-	        </tr>
-	        <tr class="signup">
-	          <td><label for="password2">Parola din nou</label></td>
-	          <td>
-	          	<input id="password2" type="password" name="password2" size="25" />
-				<input type="submit" name="signup" value="Sign Up" />
-			  </td>
-	        </tr>
-	      </table>
+            <label for="id">Email :</label><br />
+          	<input id="id" type="text" name="id" size="25" />
+			<span id="id_res" style="display:none"></span><br />
+
+            <label for="password">Parola :</label><br />
+          	<input id="password" type="password" name="password" size="25" />
+			<input id="btn_login" type="submit" name="login" value="Login" /><br />
+
+	        <div class="signup">
+				<label for="password2">Parola din nou :</label><br />
+            	<input id="password2" type="password" name="password2" size="25" />
+				<input type="submit" name="signup" value="Sign Up" /><br />
+			</div>
 	    </form>
 		
 		<h4>Sau <strong>fara sa-mi zici parola</strong> folosind doar id-ul de Yahoo!, MySpace, etc. (experimenal)</h4>

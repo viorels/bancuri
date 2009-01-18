@@ -43,6 +43,7 @@ $(document).ready(function() {
 	$("#login_form").submit(login);
 	$("#btn_profile").click(function() {
 		$("#authentication").slideDown();
+		return false;
 	})
 });
 
