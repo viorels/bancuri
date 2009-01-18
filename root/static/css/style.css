@@ -21,7 +21,11 @@
 	text-align: right;
 }
 
-p.alternative {
+#versions {
+	display: none;
+}
+
+p.variante {
     white-space: pre;
 }
 

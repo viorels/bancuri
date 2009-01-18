@@ -46,7 +46,6 @@ _joke_link = "[% joke.link %]";
                 </tr></tbody></table>
 
 				<div id="rating" class="rating">
-					<label for="rating">Voteaza : </label>
 					<span class="ui-rater">
 						<span class="ui-rater-starsOff" style="width:90px;">
 							<span class="ui-rater-starsOn" style="width:[% joke_version.rating * 18 %]px"></span>
@@ -55,15 +54,17 @@ _joke_link = "[% joke.link %]";
 					</span>
 				</div>
 
+				Acest banc mai are <a id="btn_versions" href="#">variante</a> si <a href="#">seamana</a> cu alte bancuri !<br>
+
 				<br class="clear" />
 			
-                <h3><a id="btn_versions" href="#">Variante</a></h3>
 				<div id="versions">
+                <h3>Variante</h3>
 
 				</div>
 
                 <div id="teaser" class="banc">
-                    <h3>[% next_joke.current.title || "Urmatorul banc" | html_entity %]</h3>
+                    <h3>alt banc : [% next_joke.current.title | html_entity %]</h3>
 
                     <table><tbody><tr>
                         <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
@@ -99,14 +100,14 @@ _joke_link = "[% joke.link %]";
 					[% IF joke.version != joke_version.version %]
 					<strong>Varianta afisata</strong> [% joke_version.version %]<br />
 					[% END %]
-					Alte <strong>cuvinte cheie</strong> 
+					<strong>Etichete</strong> 
 					[% FOR tag = joke.tags %]
 					[% tag.tag %]
 					[% END %]
 					<br />
 				</div>
 
-				<h4><span>Cuvinte</span> cheie</h4>
+				<h4>Alte <span>etichete</span></h4>
 				
 				<p class="catcloud" style="text-align: center;">
 				<a href="/tag/books/" title="3 posts filed under books" style="font-size: 84%;">books</a> 
