@@ -1,4 +1,4 @@
-package Bancuri::ResultSet::Users;
+package Bancuri::Schema::ResultSet::Users;
 use strict;
 use warnings;
 use base 'DBIx::Class::ResultSet';

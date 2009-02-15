@@ -1,4 +1,4 @@
-package Bancuri::ResultSet::Joke;
+package Bancuri::Schema::ResultSet::Joke;
 use strict;
 use warnings;
 use base 'DBIx::Class::ResultSet';
