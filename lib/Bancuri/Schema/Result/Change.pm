@@ -1,4 +1,4 @@
-package Bancuri::Schema::Change;
+package Bancuri::Schema::Result::Change;
 
 use strict;
 use warnings;

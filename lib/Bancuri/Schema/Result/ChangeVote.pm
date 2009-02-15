@@ -1,4 +1,4 @@
-package Bancuri::Schema::ChangeVote;
+package Bancuri::Schema::Result::ChangeVote;
 
 use strict;
 use warnings;

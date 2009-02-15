@@ -1,4 +1,4 @@
-package Bancuri::Schema::Joke;
+package Bancuri::Schema::Result::Joke;
 
 use strict;
 use warnings;
@@ -59,8 +59,6 @@ __PACKAGE__->has_many(
 
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-09 21:23:40
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ftrwkvD9ecy8Iq+ExzFqkA
-
-__PACKAGE__->resultset_class('Bancuri::ResultSet::Joke');
 
 __PACKAGE__->mk_group_accessors('simple' => qw/position text_snippet/);
 

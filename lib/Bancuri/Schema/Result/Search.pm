@@ -1,4 +1,4 @@
-package Bancuri::Schema::Search;
+package Bancuri::Schema::Result::Search;
 
 use strict;
 use warnings;

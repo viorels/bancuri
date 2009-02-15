@@ -1,4 +1,4 @@
-package Bancuri::Schema::Useragent;
+package Bancuri::Schema::Result::Useragent;
 
 use strict;
 use warnings;

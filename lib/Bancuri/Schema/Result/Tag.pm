@@ -1,4 +1,4 @@
-package Bancuri::Schema::Tag;
+package Bancuri::Schema::Result::Tag;
 
 use strict;
 use warnings;

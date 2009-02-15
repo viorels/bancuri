@@ -1,4 +1,4 @@
-package Bancuri::Schema::Users;
+package Bancuri::Schema::Result::Users;
 
 use strict;
 use warnings;
@@ -103,8 +103,6 @@ __PACKAGE__->has_many(
 
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:36:08
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZOeRH2RksGeaEkAtsNelRA
-
-__PACKAGE__->resultset_class('Bancuri::ResultSet::Users');
 
 # many_to_many():
 #   args:

@@ -1,4 +1,4 @@
-package Bancuri::Schema::JokeVersion;
+package Bancuri::Schema::Result::JokeVersion;
 
 use strict;
 use warnings;

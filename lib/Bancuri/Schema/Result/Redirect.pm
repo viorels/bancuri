@@ -1,4 +1,4 @@
-package Bancuri::Schema::Redirect;
+package Bancuri::Schema::Result::Redirect;
 
 use strict;
 use warnings;

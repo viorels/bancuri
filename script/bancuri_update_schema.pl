@@ -6,16 +6,14 @@ use warnings;
 my $constraint = $ARGV[0] || '.*';
 $constraint = qr/$constraint/;
 
-our $schema_class = "Bancuri::Schema";
-
 use FindBin;
 use DBIx::Class::Schema::Loader qw| make_schema_at |;
 make_schema_at(
-    $schema_class,
+    'Bancuri::Schema',
     {
         debug          => 1,
         use_namespaces => 1,
-        result_namespace => "+$schema_class",
+        result_namespace => 'Result',
         resultset_namespace => 'ResultSet',
         components     => [qw/InflateColumn::DateTime/],
         dump_directory => "$FindBin::Bin/../lib",

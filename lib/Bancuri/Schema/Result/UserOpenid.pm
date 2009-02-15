@@ -1,4 +1,4 @@
-package Bancuri::Schema::UserOpenid;
+package Bancuri::Schema::Result::UserOpenid;
 
 use strict;
 use warnings;

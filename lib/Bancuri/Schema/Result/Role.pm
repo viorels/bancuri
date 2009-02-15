@@ -1,4 +1,4 @@
-package Bancuri::Schema::Role;
+package Bancuri::Schema::Result::Role;
 
 use strict;
 use warnings;
