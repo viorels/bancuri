@@ -17,7 +17,7 @@ sub search_random_joke {
     my $joke = $self->search( undef, {
         join    => 'current',
         order_by => 'current.rating ASC',  
-    })->slice($offset, $offset)->first;
+    })->slice($offset, $offset);
 
     return $joke;
 };
@@ -61,11 +61,11 @@ sub search_ids {
     my ($self, $ids) = @_;
     
     # TODO version might have changed meanwhile ... 
-    my @jokes = $self->search(
+    my $jokes = $self->search(
         { id => $ids },
         { prefetch => [ 'current' ] } );
 
-    return \@jokes;
+    return $jokes;
 }
 
 sub new_link_from_title {

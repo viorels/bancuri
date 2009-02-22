@@ -69,7 +69,7 @@ sub show : Private {
     # node is not deleted ?
 	# node_required_moderation
 
-    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke();
+    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke()->first();
 
 	$c->stash(
         joke => $joke,
