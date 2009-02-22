@@ -31,8 +31,8 @@ __PACKAGE__->set_primary_key("old_link");
 __PACKAGE__->add_unique_constraint("pk_redirect", ["old_link"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4rklwszKqXSluvXXDXVT6g
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X5cVVAtIclj8xpUnLi5Z1g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -22,13 +22,13 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_role", ["id"]);
 __PACKAGE__->has_many(
   "user_roles",
-  "Bancuri::Schema::UserRole",
+  "Bancuri::Schema::Result::UserRole",
   { "foreign.role_id" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:35:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ph0qxDHYf3ZWjK5RtKLTHg
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R4mn9/NCkQ1KKtwnX+rEsA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

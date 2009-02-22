@@ -27,13 +27,13 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_useragent", ["id"]);
 __PACKAGE__->has_many(
   "browsers",
-  "Bancuri::Schema::Browser",
+  "Bancuri::Schema::Result::Browser",
   { "foreign.useragent_id" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xbkgabvWLAi45FCWpqaaYA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KwH8lU294fvK5Z67SnvS2A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

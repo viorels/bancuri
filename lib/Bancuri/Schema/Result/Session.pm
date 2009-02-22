@@ -37,8 +37,8 @@ __PACKAGE__->add_unique_constraint("pk_session", ["id"]);
 __PACKAGE__->add_unique_constraint("idx_session_cookie", ["cookie"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:35:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L6rgtCKoF+fROAXWq9SXNw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H8K0BJtTSKjaIrD7niq0mA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

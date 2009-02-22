@@ -70,11 +70,19 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("joke_id", "version");
 __PACKAGE__->add_unique_constraint("pk_joke_version", ["joke_id", "version"]);
-__PACKAGE__->belongs_to("user_id", "Bancuri::Schema::Users", { id => "user_id" });
-__PACKAGE__->belongs_to("joke_id", "Bancuri::Schema::Joke", { id => "joke_id" });
+__PACKAGE__->belongs_to(
+  "user_id",
+  "Bancuri::Schema::Result::Users",
+  { id => "user_id" },
+);
+__PACKAGE__->belongs_to(
+  "joke_id",
+  "Bancuri::Schema::Result::Joke",
+  { id => "joke_id" },
+);
 __PACKAGE__->has_many(
   "votes",
-  "Bancuri::Schema::Vote",
+  "Bancuri::Schema::Result::Vote",
   {
     "foreign.joke_id" => "self.joke_id",
     "foreign.version" => "self.version",
@@ -82,8 +90,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 17:14:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:B72l1KJFt+5yHPOgp/KT2A
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L3CZYehHcIszIGABYWE4zw
 
 sub text_teaser {
     my ($self) = @_;
@@ -96,13 +104,13 @@ sub text_teaser {
 
 sub vote {
     my ($self, $vote, $weight ) = @_;
-    
+
     # TODO implement using stored procedure;
     my $new_rating = ($self->rating * $self->voted + $vote) / ($self->voted + 1);
     $self->rating( $new_rating );
     $self->voted( $self->voted + 1 );
     $self->update;
-    
+
     return $self->rating();
 }
 

@@ -19,8 +19,8 @@ __PACKAGE__->set_primary_key("joke_id", "user_id");
 __PACKAGE__->add_unique_constraint("pk_visit", ["joke_id", "user_id"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 17:14:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2Y1zL+L1zomC27fcHTGVgA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ENFzHMCcaCYmi4A6MVUdUA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

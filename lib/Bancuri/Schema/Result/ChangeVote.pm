@@ -31,8 +31,8 @@ __PACKAGE__->set_primary_key("change_id", "user_id");
 __PACKAGE__->add_unique_constraint("pk_change_vote", ["change_id", "user_id"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:44XYYvIYXme7iPe4swJdaA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:12:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CRMSuNZy5v0z5U4pSjXDdA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -75,11 +75,15 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("joke_id", "user_id");
 __PACKAGE__->add_unique_constraint("pk_change", ["joke_id", "user_id"]);
-__PACKAGE__->belongs_to("user_id", "Bancuri::Schema::Users", { id => "user_id" });
+__PACKAGE__->belongs_to(
+  "user_id",
+  "Bancuri::Schema::Result::Users",
+  { id => "user_id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-04 21:39:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Loc+wmBbTa9QJMBfUdqvcA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:12:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X3ZJ9G/KSMvEGKEE/GNsbA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

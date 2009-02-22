@@ -33,13 +33,13 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->belongs_to(
   "joke_version",
-  "Bancuri::Schema::JokeVersion",
+  "Bancuri::Schema::Result::JokeVersion",
   { joke_id => "joke_id", version => "version" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 17:14:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XEy64n62dz+p0UwOATr02A
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IujaYWKzjEfIZ03X4oC7eA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

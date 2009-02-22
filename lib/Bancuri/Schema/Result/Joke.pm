@@ -47,26 +47,26 @@ __PACKAGE__->add_unique_constraint("pk_joke", ["id"]);
 __PACKAGE__->add_unique_constraint("idx_joke_link", ["link"]);
 __PACKAGE__->has_many(
   "joke_versions",
-  "Bancuri::Schema::JokeVersion",
+  "Bancuri::Schema::Result::JokeVersion",
   { "foreign.joke_id" => "self.id" },
 );
 __PACKAGE__->has_many(
   "tags",
-  "Bancuri::Schema::Tag",
+  "Bancuri::Schema::Result::Tag",
   { "foreign.joke_id" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-09 21:23:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ftrwkvD9ecy8Iq+ExzFqkA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YHALbz+sruH/HclfvV4T+Q
 
 __PACKAGE__->mk_group_accessors('simple' => qw/position text_snippet/);
 
 __PACKAGE__->has_one(
   "current",
-  "Bancuri::Schema::JokeVersion",
+  "Bancuri::Schema::Result::JokeVersion",
   { "foreign.joke_id" => "self.id",
-  	"foreign.version" => "self.version" },
+    "foreign.version" => "self.version" },
 );
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -20,11 +20,15 @@ __PACKAGE__->add_columns(
     size => 32,
   },
 );
-__PACKAGE__->belongs_to("joke_id", "Bancuri::Schema::Joke", { id => "joke_id" });
+__PACKAGE__->belongs_to(
+  "joke_id",
+  "Bancuri::Schema::Result::Joke",
+  { id => "joke_id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-09 21:23:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ukowDHGsbe1iVVcvnxhqDA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:009y+p5kBRJ0dUMkIZP3RQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

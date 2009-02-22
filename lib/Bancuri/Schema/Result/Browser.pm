@@ -31,13 +31,13 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_browser", ["id"]);
 __PACKAGE__->belongs_to(
   "useragent_id",
-  "Bancuri::Schema::Useragent",
+  "Bancuri::Schema::Result::Useragent",
   { id => "useragent_id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-01-18 00:35:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:B1XaOUg7hSFXKUEXrcVZKg
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:12:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:19Afw6r8NB6c8XrxBgPiuQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
