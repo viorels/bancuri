@@ -49,6 +49,19 @@ __PACKAGE__->config(
                     role_field => 'role',
                 }
             },
+            passwordless => {
+                credential => {
+                    class => 'Password',
+                    password_field => 'password',
+                    password_type => 'none'
+                },
+                store => {
+                    class => 'DBIx::Class',
+                    user_class => 'BancuriDB::Users',
+                    role_relation => 'roles',
+                    role_field => 'role',
+                }
+            },
 #            openid => {
 #            },
 #            typekey => {

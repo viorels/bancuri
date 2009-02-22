@@ -131,9 +131,8 @@ sub login_openid : Private {
     my $authenticated = $c->authenticate( { 
         id => $user->id,
         email => $user->email,
-        password => $user->password,
         deleted => 0,
-    }, 'email');
+    }, 'passwordless');
     $c->log->warn($authenticated ? "SUCCESS" : "FAILED");
     
     return $c->user;
