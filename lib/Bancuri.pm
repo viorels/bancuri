@@ -14,7 +14,6 @@ use Catalyst qw/ConfigLoader
 
                 Static::Simple
                 StackTrace
-                Log::Colorful
 				/;
 
 our $VERSION = '0.01';
@@ -62,26 +61,7 @@ __PACKAGE__->config(
                     role_field => 'role',
                 }
             },
-#            openid => {
-#            },
-#            typekey => {
-#                credential => {
-#                    class => 'TypeKey',
-#                    key_url => 'http://example.com/regkeys.txt',
-#                },
-#                store => {
-#                    class => 'Null',
-#                }
-#            },
         },
-    },
-    'Plugin::Log::Colorful' => {
-        color_table => {
-            debug       => {
-                color       => 'white',
-                bg_color    => 'black'
-            },
-        }
     },
 );
 

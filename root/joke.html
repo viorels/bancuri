@@ -1,37 +1,9 @@
 [% title = 'bancuri - ' _ joke_version.title %]
-[% INCLUDE inc/header.html %]
 
 <script type="text/javascript">
 _joke_id = [% joke.id %];
 _joke_link = "[% joke.link %]";
 </script>
-
-<div id="header">
-
-	<div id="header_inner" class="fluid">
-
-		<div id="logo">
-			<h1><span>Bancuri</span> BETA</h1>
-			<h2>de Bula</h2>
-		</div>
-		
-		<div id="menu">
-			<ul>
-				<li><a id="btn_profile" href="/profile">[% c.user.name || anonymous %]</a></li>
-				<li><a href="#" class="active">Bancuri</a></li>
-				<li><a href="#">Blog</a></li>
-				<li><a href="#">Contacteaza-ma</a></li>
-			</ul>
-		</div>
-		
-	</div>
-</div>
-
-<div id="main">
-
-	<div id="main_inner" class="fluid">
-
-		<div id="primaryContent_3columns">
 
 			<div id="columnA_3columns">
 
@@ -77,69 +49,4 @@ _joke_link = "[% joke.link %]";
 
 			</div>
 	
-		</div>
-		
-		<div id="secondaryContent_3columns">
-		
-			<div id="columnB_3columns">
 
-				<h4><span>Cauta</span></h4>
-				
-				<form method="get" action="/search">
-				<div id="search">
-					<input type="text" class="text" name="keywords" />
-					<input type="submit" class="button" value="Go" />
-					<br class="clear" />
-				</div>
-				</form>
-
-				<h4><span>detalii</span> banc</h4>
-				<div id="info">
-					<strong>Modificat</strong> [% joke.changed %]<br />
-					<strong>Varianta curenta</strong> [% joke.version %]<br />
-					[% IF joke.version != joke_version.version %]
-					<strong>Varianta afisata</strong> [% joke_version.version %]<br />
-					[% END %]
-					<strong>Etichete</strong> 
-					[% FOR tag = joke.tags %]
-					[% tag.tag %]
-					[% END %]
-					<br />
-				</div>
-
-				<h4>Alte <span>etichete</span></h4>
-				
-				<p class="catcloud" style="text-align: center;">
-				<a href="/tag/books/" title="3 posts filed under books" style="font-size: 84%;">books</a> 
-				<a href="/tag/movies/" title="12 posts filed under movies" style="font-size: 95%;">movies</a> 
-				<a href="/tag/music/mp3s/" title="73 posts filed under mp3s" style="font-size: 169%;">mp3s</a> 
-				<a href="/tag/music/" title="182 posts filed under music" style="font-size: 302%;">music</a> 
-				<a href="/tag/music/music-videos/" title="10 posts filed under music videos" style="font-size: 93%;">music videos</a> 
-				<a href="/tag/podcasts/" title="37 posts filed under podcasts" style="font-size: 125%;">podcasts</a> 
-				<a href="/tag/short-movies/" title="18 posts filed under short movies" style="font-size: 102%;">short movies</a> 
-				<a href="/tag/uncategorized/" title="1 posts filed under Uncategorized" style="font-size: 82%;">Uncategorized</a> 
-				<a href="/tag/visual-art/" title="66 posts filed under visual art" style="font-size: 161%;">visual art</a> </p>
-
-			</div>
-			
-			<div id="columnC_3columns">
-	
-				<h4><span>Linkuri</span></h4>
-				<ul class="links">
-				<li class="first"><a href="#">Velit molestie</a></li>				<li><a href="#">Consequat cursus</a></li>				<li><a href="#">Tempus nullam</a></li>				<li><a href="#">Magna sed mauris</a></li>				<li><a href="#">Semper molestie</a></li>				</ul>
-				
-				<h4><span>Reclama</span> ta</h4>
-				<ul class="links">
-				<li class="first"><a href="#">Dui neque fringilla</a></li>				<li><a href="#">Metus sed donec</a></li>				<li><a href="#">Semper nisi molestie</a></li>				<li><a href="#">Sed cursus</a></li>				<li><a href="#">Tempus nullam</a></li>				<li><a href="#">Semper nisi molestie</a></li>				<li><a href="#">Sed bibendum mauris</a></li>				</ul>
-	
-			</div>
-
-		</div>
-
-		<br class="clear" />
-
-	</div>
-
-</div>
-
-[% INCLUDE inc/footer.html %]

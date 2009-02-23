@@ -1,0 +1,103 @@
+[%- DEFAULT
+  title = 'Enciclopedia de bancuri',
+  menu = 'menu_joke.html',
+-%]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+        Nonzero1.0 by nodethirtythree design
+        http://www.nodethirtythree.com
+        missing in a maze
+
+-->
+<html>
+<head>
+  <title>[% title | html_entity %]</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="keywords" content="bancuri glume" />
+  <meta name="description" content="" />
+  <link rel="stylesheet" type="text/css" href="/static/css/template.css" />
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+  [% UNLESS nojs %]
+  <script type="text/javascript" src="/static/js/jquery.js"></script>
+  <script type="text/javascript" src="/static/js/jq-editable.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.rater.js"></script>
+  <script type="text/javascript" src="/static/js/jokes.js"></script>
+  [% END %]
+</head>
+<body>
+	
+<div id="header">
+
+	<div id="header_inner" class="fluid">
+
+		<div id="logo">
+			<h1><span>Bancuri</span> BETA</h1>
+			<h2>de Bula</h2>
+		</div>
+		
+		<div id="menu">
+			<ul>
+				<li><a id="btn_profile" href="/profile">[% c.user.name || anonymous %]</a></li>
+				<li><a href="#" class="active">Bancuri</a></li>
+				<li><a href="#">Blog</a></li>
+				<li><a href="#">Contacteaza-ma</a></li>
+			</ul>
+		</div>
+		
+	</div>
+</div>
+
+<div id="main">
+
+	<div id="main_inner" class="fluid">
+
+		<div id="primaryContent_3columns">
+
+[% content %]
+
+		</div>
+		
+		<div id="secondaryContent_3columns">
+		
+			<div id="columnB_3columns">
+
+			[% INCLUDE $menu %]
+
+			</div>
+			
+			<div id="columnC_3columns">
+	
+				<h4><span>Linkuri</span></h4>
+				<ul class="links">
+				<li class="first"><a href="#">Velit molestie</a></li>
+				<li><a href="#">Consequat cursus</a></li>
+				<li><a href="#">Tempus nullam</a></li>
+				<li><a href="#">Magna sed mauris</a></li>
+				<li><a href="#">Semper molestie</a></li>
+				</ul>
+				
+				<h4><span>Reclama</span> ta</h4>
+				<ul class="links">
+				<li class="first"><a href="#">Dui neque fringilla</a></li>
+				<li><a href="#">Metus sed donec</a></li>
+				<li><a href="#">Semper nisi molestie</a></li>
+				<li><a href="#">Sed cursus</a></li>
+				<li><a href="#">Tempus nullam</a></li>
+				<li><a href="#">Semper nisi molestie</a></li>
+				<li><a href="#">Sed bibendum mauris</a></li>
+				</ul>
+	
+			</div>
+
+		</div>
+		<br class="clear" />
+	</div>
+</div>
+
+<div id="footer" class="fluid">
+	&copy; 2009 bancuri. Toate drepturile rezervate. Design by <a href="http://www.nodethirtythree.com/">NodeThirtyThree Design</a>.
+</div>
+
+</body>
+</html>

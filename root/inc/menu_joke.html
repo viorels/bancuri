@@ -1,0 +1,38 @@
+				<h4><span>Cauta</span></h4>
+				
+				<form method="get" action="/search">
+				<div id="search">
+					<input type="text" class="text" name="keywords" />
+					<input type="submit" class="button" value="Go" />
+					<br class="clear" />
+				</div>
+				</form>
+
+				<h4><span><a href="/add">Adauga</a> un banc</span></h4>
+
+				<h4><span>detalii</span> banc</h4>
+				<div id="info">
+					<strong>Modificat</strong> [% joke.changed %]<br />
+					<strong>Varianta curenta</strong> [% joke.version %]<br />
+					[% IF joke.version != joke_version.version %]
+					<strong>Varianta afisata</strong> [% joke_version.version %]<br />
+					[% END %]
+					<strong>Etichete</strong> 
+					[% FOR tag = joke.tags %]
+					[% tag.tag %]
+					[% END %]
+					<br />
+				</div>
+
+				<h4>Alte <span>etichete</span></h4>
+				
+				<p class="catcloud" style="text-align: center;">
+				<a href="/tag/books/" title="3 posts filed under books" style="font-size: 84%;">books</a> 
+				<a href="/tag/movies/" title="12 posts filed under movies" style="font-size: 95%;">movies</a> 
+				<a href="/tag/music/mp3s/" title="73 posts filed under mp3s" style="font-size: 169%;">mp3s</a> 
+				<a href="/tag/music/" title="182 posts filed under music" style="font-size: 302%;">music</a> 
+				<a href="/tag/music/music-videos/" title="10 posts filed under music videos" style="font-size: 93%;">music videos</a> 
+				<a href="/tag/podcasts/" title="37 posts filed under podcasts" style="font-size: 125%;">podcasts</a> 
+				<a href="/tag/short-movies/" title="18 posts filed under short movies" style="font-size: 102%;">short movies</a> 
+				<a href="/tag/uncategorized/" title="1 posts filed under Uncategorized" style="font-size: 82%;">Uncategorized</a> 
+				<a href="/tag/visual-art/" title="66 posts filed under visual art" style="font-size: 161%;">visual art</a> </p>
