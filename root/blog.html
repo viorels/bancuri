@@ -1,41 +1,5 @@
-[% INCLUDE inc/header.html %]
-
-
-<div id="header">
-
-	<div id="header_inner" class="fluid">
-
-		<div id="logo">
-			<h1><span>Bancuri</span> BETA</h1>
-			<h2>de Bula</h2>
-		</div>
 		
-		<div id="menu">
-			<ul>
-				<li><a href="#" class="active">Bancuri</a></li>
-				<li><a href="#">Blog</a></li>
-				<li><a href="#">Contacteaza-ma</a></li>
-			</ul>
-		</div>
-		
-	</div>
-</div>
-
-<div id="main">
-
-	<div id="main_inner" class="fluid">
-
-		<div id="primaryContent_3columns">
-
-			<div id="columnA_3columns">
-		
-				<h3>Ion si Maria veneau de la camp ...</h3>
-
-<div id="banc" class="edit">
-  <a href="/[% node %]/edit">
-    [% text || '+' %]
-  </a>
-</div>
+				<h3>Un nou site</h3>
 
 				<p>
 					Nonzero<sup>1.0</sup> is a free, lightweight, tableless, fluid/fixed W3C-valid 
@@ -86,66 +50,3 @@
 
 				</div>
 		
-			</div>
-	
-		</div>
-		
-		<div id="secondaryContent_3columns">
-		
-			<div id="columnB_3columns">
-
-				<h4><span>Cauta</span></h4>
-				
-				<form method="post" action="/search">
-				<div id="search">
-					<input type="text" class="text" name="keywords" />
-					<input type="submit" class="button" value="Go" />
-					<br class="clear" />
-				</div>
-				</form>
-
-				<h4><span>Autentificare</span></h4>
-
-				<form method="post" action="/login">
-				<div id="login">
-					<input type="text" class="text" name="user" />
-					<input type="submit" class="button" value="Login" />
-					<br class="clear" />
-				</div>
-				</form>
-				
-				<h4><span>detalii</span> banc</h4>
-<div id="info">
-<strong>last_modified</strong> [% last_modified %]<br />
-<strong>version</strong> [% version %]<br />
-<strong>metadata</strong> [% metadata %]<br />
-</div>
-
-	
-				<h4>Alte <span>perspective</span></h4>
-				<ul class="links">
-				<li class="first"><a href="#">Fusce dui neque fringilla</a></li>				<li><a href="#">Eget tempor eget nonummy</a></li>				<li><a href="#">Nec metus sed donec</a></li>				<li><a href="#">Velit semper nisi molestie</a></li>				<li><a href="#">Consequat sed cursus</a></li>				<li><a href="#">Nisi tempus nullam</a></li>				<li><a href="#">Magna sed bibendum mauris</a></li>				<li><a href="#">Velit semper nisi molestie</a></li>				<li><a href="#">Consequat sed cursus</a></li>				<li><a href="#">Id posuere metus sem</a></li>				<li><a href="#">Eget tempor eget nullam</a></li>				<li><a href="#">Velit semper nisi molestie</a></li>				<li><a href="#">Consequat sed cursus</a></li>				</ul>
-
-			</div>
-			
-			<div id="columnC_3columns">
-	
-				<h4><span>Linkuri</span></h4>
-				<ul class="links">
-				<li class="first"><a href="#">Velit molestie</a></li>				<li><a href="#">Consequat cursus</a></li>				<li><a href="#">Tempus nullam</a></li>				<li><a href="#">Magna sed mauris</a></li>				<li><a href="#">Semper molestie</a></li>				</ul>
-				
-				<h4><span>Reclama</span> ta</h4>
-				<ul class="links">
-				<li class="first"><a href="#">Dui neque fringilla</a></li>				<li><a href="#">Metus sed donec</a></li>				<li><a href="#">Semper nisi molestie</a></li>				<li><a href="#">Sed cursus</a></li>				<li><a href="#">Tempus nullam</a></li>				<li><a href="#">Semper nisi molestie</a></li>				<li><a href="#">Sed bibendum mauris</a></li>				</ul>
-	
-			</div>
-
-		</div>
-
-		<br class="clear" />
-
-	</div>
-
-</div>
-
-[% INCLUDE inc/footer.html %]
