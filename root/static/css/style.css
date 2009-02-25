@@ -31,7 +31,7 @@ p.variante {
 
 textarea.edit {
 	width: 100%;
-	min-height: 100px;
+	min-height: 200px;
 /*	background-color: #F9F9F9;
 	background-attachment: fixed;*/
 	overflow: auto;

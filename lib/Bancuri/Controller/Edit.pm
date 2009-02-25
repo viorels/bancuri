@@ -16,6 +16,19 @@ Catalyst Controller.
 
 =cut
 
+sub add : Global {
+    my ( $self, $c ) = @_;
+
+    my $joke = $c->request->params->{'joke'};
+    $c->stash->{'joke'} = $joke;
+    $c->stash->{'joke_preview'} = $joke;
+    
+    if ( $c->request->method eq 'POST' ) {
+    }
+
+    $c->stash->{'template'} = 'add.html';
+}
+
 =head2 edit 
 
 =cut

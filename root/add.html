@@ -1,0 +1,26 @@
+[% 
+    nojs = 1 
+%]
+
+<h3>Adauga un banc</h3>
+
+<form method="POST">
+
+  <textarea name="joke" class="edit">[% joke %]</textarea>
+  <div id="ctrl">
+    <input type="submit" name="preview" value="Verifica" />
+    <input type="submit" name="save" value="Salveaza" />
+    <input type="submit" name="cancel" value="Anuleaza" />
+  </div>
+
+</form>
+
+<br>
+
+<h3>Verificare</h3>
+
+<table id="banc" class="banc edit"><tbody><tr>
+  <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+  <td class="columnText">[% joke_preview | html_entity | html_line_break %]</td>
+  <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+</tr></tbody></table>
