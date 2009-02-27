@@ -69,5 +69,40 @@ __PACKAGE__->has_one(
     "foreign.version" => "self.version" },
 );
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+use List::Util qw(sum);
+
+sub default_link {
+    my ($self) = @_;
+    
+    my $title = $self->current->title;
+    
+    # TODO get link size from schema
+    my $link_size = 40;
+
+    my $link;
+    my @words = split /\s/, $title;
+    
+    my $use_id = 0;
+    my $increment_title = sub {
+        my @link = @words;
+        if ( $use_id ) {
+            while ( sum( map { length } @link ) + @link + length $use_id > $link_size ) {
+                pop @link;  
+            };
+            push @link, $use_id;
+        }
+        
+        # Try next id if we get called again;
+        $use_id++;
+
+        return join '-', @link;
+    };
+
+    do {
+        $link = $increment_title->();
+    } while ( $self->result_source->resultset->find({ link => $link }) );
+
+    return $link;
+}
+
 1;

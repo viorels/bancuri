@@ -9,7 +9,14 @@ __PACKAGE__->config(
         'dbi:Pg:dbname=bancuri;host=localhost',
         'bancuri',
         'gSj0wGSH',
-        
+        {
+            AutoCommit        => 1,
+            RaiseError        => 1,
+            pg_enable_utf8    => 1,
+            on_connect_do     => [
+                "SET client_encoding=UTF8",
+            ],
+        },
     ],
 );
 

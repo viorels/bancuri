@@ -19,11 +19,17 @@ Catalyst Controller.
 sub add : Global {
     my ( $self, $c ) = @_;
 
-    my $joke = $c->request->params->{'joke'};
-    $c->stash->{'joke'} = $joke;
-    $c->stash->{'joke_preview'} = $joke;
-    
     if ( $c->request->method eq 'POST' ) {
+        my $joke = $c->request->params->{'joke'};
+        $c->stash->{'joke'} = $joke;
+        $c->stash->{'joke_preview'} = $joke;
+        
+        if ( $c->request->params->{'save'} ) {
+            my $new_joke = $c->model('BancuriDB::Joke')->add($joke);
+            my $link = '/' . $new_joke->link;
+            $c->forward('/redirect', [ $link ]);
+        }
+        
     }
 
     $c->stash->{'template'} = 'add.html';

@@ -4,7 +4,6 @@ use warnings;
 use base 'DBIx::Class::ResultSet';
 
 use Math::Random qw(random_beta);
-use List::Util qw(sum);
 
 sub search_random_joke {
     my ($self) = @_;
@@ -68,47 +67,29 @@ sub search_ids {
     return $jokes;
 }
 
-sub new_link_from_title {
-    my ($self, $title) = @_;
-    
-    # TODO get link size from schema
-    my $link_size = 40;
-
-    my $link;
-    my @words = split /\s/, $title;
-    
-    my $use_id = 0;
-    my $increment_title = sub {
-        my @link = @words;
-        if ( $use_id ) {
-            while ( sum( map { length } @link ) + @link + length $use_id > $link_size ) {
-                pop @link;  
-            };
-            push @link, $use_id;
-        }
-        
-        # Try next id if we get called again;
-        $use_id++;
-
-        return join '-', @link;
-    };
-
-    do {
-        $link = $increment_title->();
-    } while ( $self->find({ link => $link }) );
-
-    return $link;
-}
-
 sub add {
-	my ($self) = @_;
+	my ($self, $text) = @_;
 	
 	# http://www.gossamer-threads.com/lists/catalyst/users/18185#18185
 	
 	# $schema->txn_do($coderef);
 	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Storage.pm#txn_do
-	# add a joke ...
-	# return $self->price * $self->currency->rate; (use related tables)
+
+	my $joke = $self->create({
+		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
+
+        link => undef,
+		joke_versions => [{
+			version => 1,
+			text => $text,
+		}],
+	});
+	
+	$joke->current->title( $joke->current->default_title );
+	$joke->link( $joke->default_link );
+	$joke->update;
+
+    return $joke;	
 }
 
 1;

@@ -93,6 +93,8 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L3CZYehHcIszIGABYWE4zw
 
+use List::Util qw(sum);
+
 sub text_teaser {
     my ($self) = @_;
 
@@ -114,5 +116,69 @@ sub vote {
     return $self->rating();
 }
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+=item default_title
+
+Generates a default title from text
+
+=cut
+
+sub default_title {
+    my ($self) = @_;
+    
+    my @words = $self->split_words( $self->text );
+    @words = qw(empty) unless @words;
+    
+    # TODO get this from db schema
+    my $title_size = 50; # 64 in db
+
+    # Sum the length of the words and spaces
+    my $i = 0;
+    # TODO check if off by one !... workaround = join words 0..$i-1
+    while ( sum( map { length } @words[0..$i] ) + $i < $title_size
+            and $i < $#words ) {
+        $i++;
+    }
+
+    my $title = join ' ', @words[0..$i-1];
+
+    # TODO If there is just one LONG word the result will be 0 or > $title_size !
+    # This is not a good fix ...
+    $title = substr($title, 0, $title_size) if length $title > $title_size;
+
+    return $title;    
+}
+
+# http://www.s-anand.net/Splitting_a_sentence_into_words.html
+
+sub split_words {
+    my ($self, $text) = @_;
+
+    my $boundary = qr/
+        [\s+ \! \? \;\(\)\[\]\{\}\<\> " ]
+ 
+# ... by COMMA, unless it has numbers on both sides: 3,000,000
+|       (?<=\D) ,
+|       , (?=\D)
+ 
+# ... by FULL-STOP, SINGLE-QUOTE, HYPHEN, AMPERSAND, unless it has a letter on both sides
+|       (?<=\W) [\.\-\&]
+|       [\.\-\&] (?=\W)
+ 
+# ... by QUOTE, unless it follows a letter (e.g. McDonald's, Holmes')
+|       (?<=\W) [']
+ 
+# ... by SLASH, if it has spaces on at least one side. (URLs shouldn't be split)
+|       \s \/
+|       \/ \s
+ 
+# ... by COLON, unless it's a URL or a time (11:30am for e.g.)
+|       \:(?!\/\/|\d)
+    /x;
+    
+    my @words = split $boundary, $text;
+    my @true_words = grep { length } @words;
+    
+    return @true_words;
+}
+
 1;

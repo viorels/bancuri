@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Jan 18 17:12:37 2009
+--   Generated at:      Fri Feb 27 23:58:45 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -78,7 +78,7 @@ drop table search cascade ;
 create table joke (
   id                        serial not null,
   version                   smallint default 1,
-  link                      character varying(64) not null,
+  link                      character varying(64),
   for_day                   date,
   changed                   timestamp default now(),
   deleted                   boolean default false,
@@ -99,9 +99,9 @@ create table joke_version (
   rating                    real,
   voted                     integer,
   visited                   integer,
-  old_rating                real not null,
-  old_voted                 integer not null,
-  old_visited               integer not null,
+  old_rating                real,
+  old_voted                 integer,
+  old_visited               integer,
   last_visit                date,
   banned                    boolean default false,
   constraint pk_Joke_version primary key (joke_id,version)
@@ -136,6 +136,7 @@ create table users (
   deleted                   boolean default false,
   comment                   text default '',
   created                   timestamp default now(),
+  last_login                date,
   constraint pk_Users primary key (id)
 ) ;
 
@@ -150,8 +151,8 @@ create table browser (
 
 -- user_openid
 create table user_openid (
-  user_id                   integer not null,
   identifier                varchar(255) not null,
+  user_id                   integer not null,
   created                   timestamp default now(),
   constraint pk_User_openid primary key (identifier)
 ) ;
@@ -236,7 +237,7 @@ create table visit (
 create table search (
   keywords                  character varying(255) not null,
   times                     integer default 1,
-  last_time                 date,
+  last                      date,
   constraint pk_Search primary key (keywords)
 ) ;
 
@@ -293,6 +294,9 @@ insert into role (id, role) values ( 2, 'moderator' ) ;
 -- inserts for user_role (user_id, role_id)
 insert into user_role (user_id, role_id) values ( 1, 1 ) ;
 insert into user_role (user_id, role_id) values ( 1, 2 ) ;
+
+-- inserts for user_openid (user_id, identifier)
+insert into user_openid (user_id, identifier) values ( 1, 'http://stirbu.name/' ) ;
 
 
 -- Generated SQL Constraints
