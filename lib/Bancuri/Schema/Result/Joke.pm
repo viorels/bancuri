@@ -21,7 +21,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "character varying",
     default_value => undef,
-    is_nullable => 0,
+    is_nullable => 1,
     size => 64,
   },
   "for_day",
@@ -57,8 +57,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YHALbz+sruH/HclfvV4T+Q
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-28 01:38:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x0lAhN4fKXwMZ8uh+TLT1g
 
 __PACKAGE__->mk_group_accessors('simple' => qw/position text_snippet/);
 

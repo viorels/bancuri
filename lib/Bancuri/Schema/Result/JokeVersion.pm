@@ -53,11 +53,11 @@ __PACKAGE__->add_columns(
   "visited",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "old_rating",
-  { data_type => "real", default_value => undef, is_nullable => 0, size => 4 },
+  { data_type => "real", default_value => undef, is_nullable => 1, size => 4 },
   "old_voted",
-  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "old_visited",
-  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "last_visit",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
   "banned",
@@ -90,8 +90,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L3CZYehHcIszIGABYWE4zw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-28 01:38:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:78mc9tSbqzojeJQ7ZqmVjQ
 
 use List::Util qw(sum);
 
