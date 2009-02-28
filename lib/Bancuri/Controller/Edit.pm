@@ -27,9 +27,17 @@ sub add : Global {
         if ( $c->request->params->{'save'} ) {
             my $new_joke = $c->model('BancuriDB::Joke')->add($joke);
             my $link = '/' . $new_joke->link;
+
             $c->forward('/redirect', [ $link ]);
         }
         
+        if ( $c->request->params->{'cancel'} ) {
+            my $back = '/';
+            $back = $c->session->{'last_page'} 
+                if exists $c->session->{'last_page'};
+
+            $c->forward('/redirect', [ $back ]);
+        }
     }
 
     $c->stash->{'template'} = 'add.html';

@@ -118,8 +118,11 @@ sub rpx : Local {
         $c->log->warn("FAILED $token");
     }
     
-    # TODO redirect to last url
-    $c->forward('/redirect', ['/']);
+    my $back = '/';
+    $back = $c->session->{'last_page'} 
+        if exists $c->session->{'last_page'};
+
+    $c->forward('/redirect', [ $back ]);
 }
 
 sub login_openid : Private {
