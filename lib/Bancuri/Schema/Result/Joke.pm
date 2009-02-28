@@ -70,23 +70,35 @@ __PACKAGE__->has_one(
 );
 
 use List::Util qw(sum);
+use Search::Tools::Transliterate;
 
 sub default_link {
     my ($self) = @_;
     
-    my $title = $self->current->title;
-    
-    # TODO get link size from schema
+    my $link;
+    # TODO get max link size from schema
     my $link_size = 40;
 
-    my $link;
+    # Convert UTF-8 to ascii where possible, lowercase 
+    # and strip illegal url chars
+    my $tr = Search::Tools::Transliterate->new();
+    my $title = $tr->convert( $self->current->title );
+    $title = lc $title;
+    $title =~ s/[^0-9a-z \Q$-_.+!*'()\E]//g;
+ 
     my @words = split /\s/, $title;
     
+    # Remove first -
+    $words[0] =~ s/^-//;
+    
     my $use_id = 0;
-    my $increment_title = sub {
+    do {
         my @link = @words;
         if ( $use_id ) {
-            while ( sum( map { length } @link ) + @link + length $use_id > $link_size ) {
+            # Link length = sum of all words length + number of spaces 
+            #        + length of id
+            while ( sum( map { length } @link ) + @link + 
+                    length $use_id > $link_size ) {
                 pop @link;  
             };
             push @link, $use_id;
@@ -95,11 +107,7 @@ sub default_link {
         # Try next id if we get called again;
         $use_id++;
 
-        return join '-', @link;
-    };
-
-    do {
-        $link = $increment_title->();
+        $link = join '-', @link;
     } while ( $self->result_source->resultset->find({ link => $link }) );
 
     return $link;

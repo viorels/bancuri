@@ -69,11 +69,7 @@ sub search_ids {
 
 sub add {
 	my ($self, $text) = @_;
-	
-	# http://www.gossamer-threads.com/lists/catalyst/users/18185#18185
-	
-	# $schema->txn_do($coderef);
-	# http://search.cpan.org/~ash/DBIx-Class-0.08010/lib/DBIx/Class/Storage.pm#txn_do
+	return if $self->bad_joke($text);
 
 	my $joke = $self->create({
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
@@ -90,6 +86,24 @@ sub add {
 	$joke->update;
 
     return $joke;	
+}
+
+sub bad_joke {
+    my ( $self, $text ) = @_; 
+    
+    # Be optimistic
+    my $bad = 0;
+    
+    # Only empty space
+    $bad = 1 if $text =~ /^\s*$/;
+
+    # Words too long (words = non-space)
+    $bad = 1 if $text =~ /\S{100,}/;
+    
+    my @words = split /\s+/, $text;
+    $bad = 1 if @words < 7;
+    
+    return $bad;
 }
 
 1;

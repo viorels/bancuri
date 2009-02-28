@@ -13,6 +13,7 @@ use String::Tokenizer;
 use Storable;
 use YAML;
 use DateTime;
+use Data::Dump qw(pp);
 
 $ARGV[0] || warn "usage: xapian-indexer.pl <xapian-indexer.cfg>\n";
 my $config_file = $ARGV[0] || "$FindBin::Bin/indexer.yml";
@@ -60,8 +61,11 @@ while ( my $item=$items->next ) {
     $doc->add_term($docid);
     my $p=$db->postlist_begin($docid);
     unless ( $p eq $db->postlist_end($docid) ) {
-        $db->replace_document($p->get_docid, $doc);
         warn('replacing '.$item->id);
+        eval {
+            $db->replace_document($p->get_docid, $doc);
+        };
+        warn $@ if $@;
     } else {
         eval {
             $db->add_document( $doc );
@@ -72,7 +76,7 @@ while ( my $item=$items->next ) {
                 warn "got:".$s;
                 $s++;
             }
-            die "oops:". $@. "\n". Dumper(Storable::thaw($doc->get_data));
+            warn "oops:". $@. "\n". pp(Storable::thaw($doc->get_data));
         }
         warn('indexing '.$item->id) if (($item->id % 100)==0);
     }

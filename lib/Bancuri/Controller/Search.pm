@@ -5,6 +5,7 @@ use warnings;
 use base 'Catalyst::Controller';
 
 use Data::SpreadPagination;
+use Data::Dump qw(pp);
 
 =head1 NAME
 
@@ -68,8 +69,7 @@ sub results : Private {
     my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
     # hits querytime struct search pager query query_obj mset page page_size    
 
-    use Data::Dumper;
-    $c->log->debug(Dumper $result);
+    $c->log->debug(pp $result);
     
     my @ids = map { $_->{'id'} } @{ $result->hits };
     my @jokes;

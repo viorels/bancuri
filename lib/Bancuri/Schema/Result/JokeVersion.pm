@@ -131,18 +131,15 @@ sub default_title {
     # TODO get this from db schema
     my $title_size = 50; # 64 in db
 
-    # Sum the length of the words and spaces
-    my $i = 0;
-    # TODO check if off by one !... workaround = join words 0..$i-1
-    while ( sum( map { length } @words[0..$i] ) + $i < $title_size
-            and $i < $#words ) {
-        $i++;
+    # Sum the length of the words and spaces and pop until it's good
+    while ( @words 
+            and sum( map { length } @words ) + @words > $title_size ) {
+        pop @words;
     }
 
-    my $title = join ' ', @words[0..$i-1];
+    my $title = join ' ', @words;
 
-    # TODO If there is just one LONG word the result will be 0 or > $title_size !
-    # This is not a good fix ...
+    # If it's still too long (one LONG word)
     $title = substr($title, 0, $title_size) if length $title > $title_size;
 
     return $title;    

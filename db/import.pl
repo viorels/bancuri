@@ -58,6 +58,8 @@ while ( my $banc = $bancuri->next ) {
 	# TODO add tags
 	print $banc->id, " @tags\n";
 
+    # Skip bad jokes
+    next if $joke->bad_joke( $banc->banc );
 #	next if $banc->id < 4540;
 	
     # Fix encoding
@@ -65,9 +67,12 @@ while ( my $banc = $bancuri->next ) {
 	my $banc_text = encode( "UTF-8", decode_entities($banc->banc) );
     #text => encode("utf8",decode("windows-1250", $banc->banc)),
 
-    # Fix line terminators
+    # Fix totally wrong line terminators (no such thing as \n\r)
     $banc_text =~ s/\n\r/\n/g;
     
+    # Convert dos/mac terminators to unix
+    $banc_text =~ s/\r\n|\n|\r/\n/g;
+
 	my $new_joke = $joke->create({
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
 
