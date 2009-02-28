@@ -5,7 +5,6 @@ use warnings;
 
 use Encode;
 use HTML::Entities;
-use Data::Dumper;
 use List::Util qw(sum);
 
 use Bancuri::Model::BancuriDB;
@@ -26,8 +25,6 @@ my $categorii = $old_schema->resultset('Categorii')->search({sectiune=>1});
 while ( my $cat = $categorii->next ) {
 	$tags{$cat->id} = tags_from_cat($cat->nume);
 };
-
-#print Dumper \%tags;
 
 # LOAD banc_cat
 
