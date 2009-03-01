@@ -106,8 +106,6 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-01 19:33:36
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BszHZwxx2i1U1Iasrda/aw
 
-use DateTime;
-
 __PACKAGE__->many_to_many(roles => 'user_roles', 'role_id');
 
 sub age {

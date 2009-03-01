@@ -10,4 +10,7 @@ Model::BancuriDB:
           pg_enable_utf8: 1
           on_connect_do: 
             - SET client_encoding=UTF8
+Model::RPX:
+    args:
+        api_key: b5cc4fa0a04cb0c290942a009fa342c17a2d4d00
 

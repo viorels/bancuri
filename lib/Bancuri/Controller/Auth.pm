@@ -5,10 +5,7 @@ use warnings;
 use parent 'Catalyst::Controller';
 
 use Math::Random qw(random_beta);
-use JSON::Any;
 use Email::Valid;
-
-require LWP::UserAgent;
 
 =head1 NAME
 
@@ -119,34 +116,24 @@ sub id_exists : Local {
 sub rpx : Local {
     my ( $self, $c ) = @_;
 
-    # TODO Fallback to http ?
-    my $rest_url = 'https://rpxnow.com/api/v2/auth_info';
     my $token = $c->request->params->{'token'};
     
-    my $j = JSON::Any->new;
-    my $ua = LWP::UserAgent->new;
-    $ua->timeout(10);
+    my $user_data;
+    eval {
+        $user_data = $c->model('RPX')->auth_info({ token => $token });
+    };
+    $c->log->warn($@) if $@;
 
-    my $response = $ua->post($rest_url, {
-        apiKey => 'b5cc4fa0a04cb0c290942a009fa342c17a2d4d00',
-        token => $token,
-    });
-    
-    if ( $response->is_success ) {
-        my $json = $response->decoded_content;
-        $c->log->error( $json );
-        my $auth_info = $j->jsonToObj($json);
-        if ($auth_info->{'stat'} eq 'ok') {
-            my $identifier = $auth_info->{'profile'}{'identifier'};
-            my $user = $c->model('BancuriDB::Users')->search_openid($identifier);
-            unless ( $user ) {
-                $user = $c->forward('register', [ $auth_info->{'profile'} ]);
-            }
-            $c->forward('login_openid', [ $user ]);
+    if ( $user_data ) {
+        my $identifier = $user_data->{'profile'}{'identifier'};
+        my $user = $c->model('BancuriDB::Users')->search_openid($identifier);
+        unless ( $user ) {
+            $user = $c->forward('register', [ $user_data->{'profile'} ]);
         }
+        $c->forward('login_openid', [ $user ]);
     }
     else {
-        $c->log->warn("FAILED $token");
+        $c->log->warn("RPX FAILED $token");
     }
     
     my $back = '/';
