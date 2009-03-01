@@ -1,6 +1,7 @@
+[% UNLESS nowrap %]
 [%- DEFAULT
   title = 'Enciclopedia de bancuri',
-  menu = 'menu_joke.html',
+  menu = 'inc/menu_joke.html',
 -%]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
@@ -22,6 +23,7 @@
   <script type="text/javascript" src="/static/js/jquery.js"></script>
   <script type="text/javascript" src="/static/js/jq-editable.js"></script>
   <script type="text/javascript" src="/static/js/jquery.rater.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.form.js"></script>
   <script type="text/javascript" src="/static/js/jokes.js"></script>
   [% END %]
 </head>
@@ -42,6 +44,9 @@
 				<li><a href="#" class="active">Bancuri</a></li>
 				<li><a href="#">Blog</a></li>
 				<li><a href="#">Contacteaza-ma</a></li>
+                [% IF c.user %]
+				<li><a id="btn_logout" href="#">Logout</a></li>
+                [% END %]
 			</ul>
 		</div>
 		
@@ -52,9 +57,9 @@
 	<div id="main_inner" class="fluid">
 		<div id="primaryContent_3columns">
 			<div id="columnA_3columns">
-
+[% END %]
 [% content %]
-
+[% UNLESS nowrap %]
 			</div>
 		</div>
 		
@@ -101,3 +106,4 @@
 
 </body>
 </html>
+[% END %]

@@ -161,7 +161,7 @@ sub end : ActionClass('RenderView') {
 	
     # do stuff here; the RenderView action is called afterwards
     
-    if ( $c->stash->{'AJAX'} ) {
+    if ( $c->stash->{'AJAX'} and not exists $c->stash->{'current_view'} ) {
        	$c->stash->{'current_view'} = 'JSON';
     }
 }

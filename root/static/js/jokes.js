@@ -39,12 +39,22 @@ $(document).ready(function() {
         }
     );
 	
-	$("#id").blur(check_id);
-	$("#login_form").submit(login);
 	$("#btn_profile").click(function() {
-		$("#authentication").slideDown();
+		$("#authentication").load('/auth/form', {}, 
+			function function (responseText, textStatus, XMLHttpRequest) {
+				$(this).slideDown();
+				$("#id").blur(check_id);
+				$("#login_form").ajaxForm({
+					beforeSubmit: login_pre,
+					success: login_cb,
+					dataType: 'json',
+				});
+			}
+		);
 		return false;
 	})
+	
+	setup_logout();
 });
 
 function joke_id() {
@@ -116,30 +126,42 @@ function check_id() {
 	});
 };
 
-function login() {
+function login_pre() {
 	// remove all the class add the messagebox classes and start fading
     $("#id_res").removeClass().addClass('messagebox').text('Verific parola ...').fadeIn(1000);
 
     // check the username exists or not from ajax
-    $.post("/auth/login", $("#login_form").serialize(), function(data) {
-		if ( data['json_login'] ) {
-			var name = data['json_login']['name'];
-			$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
-				// add message and change the class of the box and start fading
-				$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1,
-				function() {
-					$("#btn_profile").text(name);
-					$("#authentication").slideUp();
-				});
-            });
-		}
-		else {
-			$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
-				// add message and change the class of the box and start fading
-				$(this).html('Ai uitat parola ?').addClass('messagebox_error').fadeTo(900,1);
-            });
-		}
-	}, 'json');
-	return false; // not to post the  form physically
+	return true; // Allow ajax submit to continue
 };
 
+function login_cb(data, status) {
+	if ( data['json_login'] ) {
+		var name = data['json_login']['name'];
+		$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
+			// add message and change the class of the box and start fading
+			$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1,
+			function() {
+				$("#btn_profile").text(name);
+				$("#menu").children("ul")
+					.append('<li><a id="btn_logout" href="#">Logout</a></li>');
+				setup_logout();
+				$("#authentication").slideUp();
+			});
+		});
+	}
+	else {
+		var error = data['json_error'];
+		$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
+			// add message and change the class of the box and start fading
+			$(this).html(error).addClass('messagebox_error').fadeTo(900,1);
+		});
+	}
+}
+
+function setup_logout() {
+	$("#btn_logout").click(function () {
+		$.post("/auth/logout", {}, function () {
+			window.location.reload()
+		})
+	})
+}

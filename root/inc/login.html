@@ -1,7 +1,6 @@
-    [% META title = 'Login' %]
-    
-    <!-- Login form -->
-	<div id="authentication">
+	    [% META title = 'Login' %]
+	    
+	    <!-- Login form -->
 		<h3>Identifica-te</h3>
 
 	    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
@@ -15,7 +14,9 @@
 
 	        <div class="signup">
 				<label for="password2">Parola din nou :</label><br />
-            	<input id="password2" type="password" name="password2" size="25" />
+            	<input id="password2" type="password" name="password2" size="25" /><br />
+            	<label for="name">Numele sau porecla :</label><br />
+            	<input id="name" name="name" type="text" size="25">
 				<input type="submit" name="signup" value="Sign Up" /><br />
 			</div>
 	    </form>
@@ -26,4 +27,3 @@
 		  scrolling="no" frameBorder="no" style="width:400px;height:240px;">
 		</iframe>
 
-	</div>

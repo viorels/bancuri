@@ -6,7 +6,7 @@ use base 'Catalyst::View::TT';
 __PACKAGE__->config({
     INCLUDE_PATH => [
         Bancuri->path_to( 'root' ),
-        Bancuri->path_to( 'root', 'inc' ),
+#        Bancuri->path_to( 'root', 'inc' ),
     ],
     TEMPLATE_EXTENSION  => '.html',
     CATALYST_VAR        => 'c',

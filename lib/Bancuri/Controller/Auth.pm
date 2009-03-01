@@ -6,6 +6,8 @@ use parent 'Catalyst::Controller';
 
 use Math::Random qw(random_beta);
 use JSON::Any;
+use Email::Valid;
+
 require LWP::UserAgent;
 
 =head1 NAME
@@ -20,32 +22,58 @@ Catalyst Controller.
 
 =cut
 
+sub form : Local {
+    my ( $self, $c ) = @_;
+    
+    $c->stash(
+        current_view => 'TT',
+        nowrap => 1,
+        template => 'inc/login.html',
+    );
+}
+
 sub login : Local {
     my ( $self, $c ) = @_;
 
-    my $authenticated = 0;
-
-    # Get the id and optional password from form
     my $id = $c->request->params->{id} || "";
-    my $password = $c->request->params->{password} || "";
-
     my $type = $c->forward('type', [ $id ]);
-    if ( $type eq 'email' and length $password ) {
-        $authenticated = $c->authenticate( { 
+
+    if ( $type eq 'email' ) {
+        my $password = $c->request->params->{password} || "";
+
+        if ( $c->request->params->{'signup'} ) {
+            my $password2 = $c->request->params->{'password2'} || "";
+            my $name = $c->request->params->{'name'};
+
+            my $error;
+            my $user = $c->model('BancuriDB::Users')->find({ email => $id });
+            if ( $user ) {
+                $error = "$id e deja inregistrat";
+            }
+            elsif ( $password ne $password2 ) {
+                $error = "Parolele nu se potrivesc";
+            }
+            elsif ( not length $name ) {
+                $error = "Cum te cheama ?";
+            }
+            else {
+                $user = $c->forward('register', [{
+                    email => $id,
+                    password => $password,
+                    displayName => $name,
+                }]);
+            }
+            $c->stash->{'json_error'} = $error;
+        }
+
+        $c->authenticate( { 
             email => $id,
             password => $password,
             deleted => 0,
-        }, $type);
-    };
+        }, 'email');
+    }
     
-#    if ( $type eq 'openid' ) {
-#        $authenticated = $c->authenticate( { 
-#            url => $id, 
-#            deleted => 0,
-#        }, $type);
-#    }
-
-    if ( $authenticated ) {
+    if ( $c->user ) {
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
                 id => $id,
@@ -57,9 +85,9 @@ sub login : Local {
         }
     }
     else {
-       # or undef is authentication failed.  
-       # so display the 'try again' page here (unless AJAX).
-       # $c->response->body('Login failed');
+        if ( $c->stash->{'AJAX'} ) {
+            $c->stash->{'json_error'} ||= 'Ai uitat parola ?';
+        }
     }
 }
 
@@ -67,7 +95,7 @@ sub type : Local {
     my ( $self, $c, $id ) = @_;
     
     $c->log->debug("ID ".$id);
-    if ( $id =~ /@/ ) {
+    if ( Email::Valid->address($id) ) {
         $c->log->debug("EMAIL");
         return 'email';
     }
@@ -103,7 +131,7 @@ sub rpx : Local {
     
     if ( $response->is_success ) {
         my $json = $response->decoded_content;
-        $c->log->debug( $json );
+        $c->log->error( $json );
         my $auth_info = $j->jsonToObj($json);
         if ($auth_info->{'stat'} eq 'ok') {
             my $identifier = $auth_info->{'profile'}{'identifier'};
@@ -141,6 +169,12 @@ sub login_openid : Private {
     return $c->user;
 }
 
+=item register
+
+Register a user (openid). Arguments are RPX stile, e.g. displayName
+
+=cut
+
 sub register : Private {
     my ( $self, $c, $profile ) = @_;
     
@@ -170,12 +204,12 @@ sub user_info : Private {
 sub logout : Local {
     my ( $self, $c ) = @_;
    
-    $c->log->warn("GET /auth/logout") if $c->request->method eq 'GET';
-
     $c->logout();
 
     # Send the user to the starting point
-    $c->response->redirect($c->uri_for('/'));
+    unless ( $c->stash->{'AJAX'} ) {
+        $c->forward('/redirect', [ '/' ]);
+    }
 }
 
 =head1 AUTHOR
