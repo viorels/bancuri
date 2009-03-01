@@ -71,9 +71,12 @@ sub login : Local {
             password => $password,
             deleted => 0,
         }, 'email');
+
     }
     
     if ( $c->user ) {
+        $c->user->update_last_login;
+        
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
                 id => $id,
@@ -165,6 +168,8 @@ sub login_openid : Private {
         deleted => 0,
     }, 'passwordless');
     $c->log->warn($authenticated ? "SUCCESS" : "FAILED");
+    
+    $c->user->update_last_login;
     
     return $c->user;
 }

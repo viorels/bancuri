@@ -75,6 +75,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 8,
   },
+  "last_login",
+  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_users", ["id"]);
@@ -101,8 +103,10 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qmRM8OlAJVO3waq+22Udhg
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-01 19:33:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BszHZwxx2i1U1Iasrda/aw
+
+use DateTime;
 
 __PACKAGE__->many_to_many(roles => 'user_roles', 'role_id');
 
@@ -110,6 +114,13 @@ sub age {
     my ($self) = @_;
 
     # TODO Return DateTime diff in years. Also make this a setter for birth.
+}
+
+sub update_last_login {
+    my ($self) = @_;
+    
+    $self->last_login('now()');
+    $self->update;
 }
 
 # You can replace this text with custom content, and it will be preserved on regeneration
