@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Fri Feb 27 23:58:45 2009
+--   Generated at:      Tue Mar  3 00:12:11 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -68,6 +68,7 @@ drop table user_role cascade ;
 drop table role cascade ;
 drop table visit cascade ;
 drop table search cascade ;
+drop table profanity cascade ;
 
 
 -- Generated SQL Schema
@@ -241,6 +242,13 @@ create table search (
   constraint pk_Search primary key (keywords)
 ) ;
 
+-- profanity
+create table profanity (
+  filter                    varchar(255) not null,
+  created                   timestamp default now(),
+  constraint pk_Profanity primary key (filter)
+) ;
+
 
 
 
@@ -248,6 +256,7 @@ create table search (
 
 
 comment on table vote is 'Historic table, but keep jokes rated with 5 for a loger time so we can show similar tastes';
+
 
 
 
