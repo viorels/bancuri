@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Tue Mar  3 00:12:11 2009
+--   Generated at:      Sun Mar  8 13:53:56 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -244,9 +244,9 @@ create table search (
 
 -- profanity
 create table profanity (
-  filter                    varchar(255) not null,
+  word                      varchar(255) not null,
   created                   timestamp default now(),
-  constraint pk_Profanity primary key (filter)
+  constraint pk_Profanity primary key (word)
 ) ;
 
 

@@ -6,6 +6,7 @@ use warnings;
 use Encode;
 use HTML::Entities;
 use List::Util qw(sum);
+use Data::Dump qw(pp);
 
 use Bancuri::Model::BancuriDB;
 
@@ -42,11 +43,15 @@ my $bancuri = $old_schema->resultset('Bancuri')->search();
 $new_schema->resultset('JokeVersion')->delete();
 $new_schema->resultset('Redirect')->delete();
 $new_schema->resultset('Tag')->delete();
+$new_schema->resultset('Profanity')->delete();
 
 my $joke = $new_schema->resultset('Joke');
 $joke->delete();
 
 my $redirect = $new_schema->resultset('Redirect');
+
+my @profanity_words = map { { word => $_ } } profanity(); 
+$new_schema->resultset('Profanity')->populate(\@profanity_words);
 
 while ( my $banc = $bancuri->next ) {
 	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
@@ -69,6 +74,8 @@ while ( my $banc = $bancuri->next ) {
     
     # Convert dos/mac terminators to unix
     $banc_text =~ s/\r\n|\n|\r/\n/g;
+    
+    $banc_text = unfilter_joke($banc_text);
 
 	my $new_joke = $joke->create({
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
@@ -99,6 +106,8 @@ while ( my $banc = $bancuri->next ) {
 
 }
 
+# END OF MAIN
+
 sub tags_from_cat {
 	my $cat = shift;
 
@@ -120,6 +129,134 @@ sub tags_from_cat {
 
 	return [ $tag ];
 }
+
+sub unfilter_joke {
+    my ($joke) = @_;
+
+    my $boundary = qr/\s+|[,.?!():;"'`-]/;
+    $joke =~ s/($boundary)(.{3,}?)($boundary)/$1.unfilter_word($2).$3/eg;
+
+    return $joke;        
+}
+
+# profanity + not_profanity - profanity_rare => words tu unfilter
+my @unfilter_profanity = 
+    grep { my $a = $_; none { $a eq $_ } profanity_rare() } 
+        (profanity(), not_profanity());
+
+sub unfilter_word { 
+    my ($word) = @_;
+
+    my $filter = $word;
+    $filter =~ s/\*/./g;
+    $filter =~ s/\@/a/g;
+    $filter =~ s/#/[fhlt]/g;
+    
+    my @found = grep { /^$filter$/i } @unfilter_profanity;
+    if (@found == 1) {
+        return shift @found;
+    }
+    else {
+        return $word;
+    }
+};
+
+sub profanity {qw(
+    caca
+    cacarea
+    cacat
+    cacatu
+    cace
+    cur
+    curu
+    curului
+    curva
+    curve
+    fut
+    futa
+    futai
+    fute
+    futea
+    futeam
+    futeati
+    futeau
+    futel
+    futem
+    futeo
+    futeti
+    futi
+    futu
+    futui
+    futut
+    futute
+    fututi
+    homo
+    homosexual
+    homosexuale
+    homosexuali
+    homosexualii
+    homosexualilor
+    homosexualitatii
+    homosexualu
+    homosexualul
+    homosexualului
+    laba
+    labagiu
+    lesbiana
+    muie
+    nefutut
+    penis
+    pis
+    pisa
+    pisat
+    pise
+    pizda
+    pizde
+    pizdei
+    pizdii
+    pizdele
+    pizdoase
+    pizdos
+    pizdulita
+    pula
+    pulan
+    pule
+    pulele
+    puli
+    pulica
+    pulicica
+    pulii
+    pulile
+    sex
+    sexi
+    sexual
+    sexuala
+    sexuale
+    sexul
+    sexului
+    sperma
+    spermatozoid
+    spermatozoidul
+    spermatozoizi
+    spermatozoizii
+    spermeaza
+    sula
+    vagin
+)};
+
+sub profanity_rare {qw(
+    pisa
+    pise
+    pulile
+    pizdii
+)};    
+
+sub not_profanity {qw(
+    populara
+    populatia
+    populatiei
+)};
+
 
 package My::Schema;
 use base qw/DBIx::Class::Schema::Loader/;

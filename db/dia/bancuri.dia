@@ -5601,7 +5601,7 @@
       <dia:attribute name="attributes">
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#filter#</dia:string>
+            <dia:string>#word#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#varchar(255)#</dia:string>

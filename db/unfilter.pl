@@ -4,12 +4,21 @@ use strict;
 use warnings;
 
 use List::MoreUtils qw(none);
+use Perl6::Slurp;
 
 my @match_profanity = (profanity(), not_profanity());
 @match_profanity = grep { my $a = $_; none { $a eq $_ } profanity_rare() } @match_profanity;
 
-for my $word (<>) {
-    chomp $word;
+my $boundary = qr/\s+|[,.?!():;"'`-]/;
+
+my $joke = slurp '/tmp/banc';
+
+$joke =~ s/($boundary)(.{3,}?)($boundary)/$1.unfilter($2).$3/eg;
+print $joke;
+
+sub unfilter { 
+    my ($word) = @_;
+    warn $word;
     my $filter = $word;
     $filter =~ s/\*/./g;
     $filter =~ s/\@/a/g;
@@ -17,10 +26,10 @@ for my $word (<>) {
     
     my @found = grep { /^$filter$/i } @match_profanity;
     if (@found == 1) {
-        print "$word > $found[0]\n";
+        return shift @found;
     }
     else {
-        print "! $word (@found)\n";
+        return $word;
     }
 };
 
