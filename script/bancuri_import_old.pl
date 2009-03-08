@@ -53,25 +53,23 @@ $joke->delete();
 
 my $redirect = $new_schema->resultset('Redirect');
 
+my @profanity_words = map { { word => $_ } } profanity(); 
+$new_schema->resultset('Profanity')->populate(\@profanity_words);
 
 # profanity + not_profanity - profanity_rare => words tu unfilter
 my @unfilter_profanity = 
     grep { my $a = $_; none { $a eq $_ } profanity_rare() } 
         (profanity(), not_profanity());
 
-my @profanity_words = map { { word => $_ } } profanity(); 
-$new_schema->resultset('Profanity')->populate(\@profanity_words);
+my $profanity_regex = join q{|}, profanity();
+$profanity_regex = qr/^$profanity_regex$/i;
 
 while ( my $banc = $bancuri->next ) {
-	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
-	my @tag_rows = map { {tag => $_} } @tags; # structure to insert in db
-	
-	# TODO add tags
-	print $banc->id, " @tags\n";
-
     # Skip bad jokes
     next if $joke->bad_joke( $banc->banc );
 #	next if $banc->id < 4540;
+
+    print q{+ } . $banc->id . "\n";
 	
     # Fix encoding
     # TODO check for double encoding !!!
@@ -84,7 +82,15 @@ while ( my $banc = $bancuri->next ) {
     # Convert dos/mac terminators to unix
     $banc_text =~ s/\r\n|\n|\r/\n/g;
     
-    $banc_text = unfilter_joke($banc_text);
+    my $obscen;
+    ( $banc_text, $obscen ) = unfilter_joke($banc_text);
+
+    # add tags (do in memory join of tables to find old category)
+	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
+	push @tags, 'obscen' if $obscen and none { $_ eq 'obscen' } @tags;
+	my @tag_rows = map { {tag => $_} } @tags; # structure to insert in db
+
+	print "~ @tags\n";
 
 	my $new_joke = $joke->create({
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
@@ -126,8 +132,8 @@ sub tags_from_cat {
 		'Sir si John' => [qw(sir john)],
 		'Elefant si soarece' => [qw(elefant soarece)],
 		'Ion si Maria' => [qw(ion maria)],
-		'Spermatozoizi' => [qw(spermatozoizi obscen)],
-		'Homosexuali' => [qw(homosexuali obscen)],
+		'Spermatozoizi' => [qw(spermatozoizi)], # obscen ?
+		'Homosexuali' => [qw(homosexuali)], # obscen ?
 		'Diverse' => [],
 	);
 	
@@ -142,16 +148,20 @@ sub tags_from_cat {
 sub unfilter_joke {
     my ($joke) = @_;
 
-    my $boundary = qr/(?:\s+|[,.?!():;"'`-])+/;;
+    my $boundary = qr/(?:\s+|[,.?!():;"'`-])+/;
 
     my @words = split /($boundary)/, $joke;
+
+    my $obscen = 0;
     for my $word (@words) {
         if ( $word !~ /$boundary/ and $word =~ /\*/ ) {
-            $word = unfilter_word($word)
+            $word = unfilter_word($word);
+            $obscen++ if $word =~ $profanity_regex;
         }
     }
 
-    return join q{}, @words;
+    my $unfiltered = join q{}, @words;
+    return wantarray ? ( $unfiltered, $obscen ) : $unfiltered;
 }
 
 sub unfilter_word { 
