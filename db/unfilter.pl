@@ -9,16 +9,20 @@ use Perl6::Slurp;
 my @match_profanity = (profanity(), not_profanity());
 @match_profanity = grep { my $a = $_; none { $a eq $_ } profanity_rare() } @match_profanity;
 
-my $boundary = qr/\s+|[,.?!():;"'`-]/;
+my $boundary = qr/(?:\s+|[,.?!():;"'`-])+/;
 
 my $joke = slurp '/tmp/banc';
 
-$joke =~ s/($boundary)(.{3,}?)($boundary)/$1.unfilter($2).$3/eg;
-print $joke;
+#print $joke;
+my @words = split /($boundary)/, $joke;
+for my $word (@words) {
+    $word = unfilter_word($word) unless $word =~ /$boundary/;
+}
+print(join q{}, @words);
+exit;
 
-sub unfilter { 
+sub unfilter_word { 
     my ($word) = @_;
-    warn $word;
     my $filter = $word;
     $filter =~ s/\*/./g;
     $filter =~ s/\@/a/g;

@@ -7,7 +7,10 @@ use Encode;
 use HTML::Entities;
 use List::Util qw(sum);
 use Data::Dump qw(pp);
+use List::MoreUtils qw(none);
+use FindBin;
 
+use lib "$FindBin::Bin/../lib";
 use Bancuri::Model::BancuriDB;
 
 my $new_schema = new Bancuri::Model::BancuriDB;
@@ -49,6 +52,12 @@ my $joke = $new_schema->resultset('Joke');
 $joke->delete();
 
 my $redirect = $new_schema->resultset('Redirect');
+
+
+# profanity + not_profanity - profanity_rare => words tu unfilter
+my @unfilter_profanity = 
+    grep { my $a = $_; none { $a eq $_ } profanity_rare() } 
+        (profanity(), not_profanity());
 
 my @profanity_words = map { { word => $_ } } profanity(); 
 $new_schema->resultset('Profanity')->populate(\@profanity_words);
@@ -133,16 +142,17 @@ sub tags_from_cat {
 sub unfilter_joke {
     my ($joke) = @_;
 
-    my $boundary = qr/\s+|[,.?!():;"'`-]/;
-    $joke =~ s/($boundary)(.{3,}?)($boundary)/$1.unfilter_word($2).$3/eg;
+    my $boundary = qr/(?:\s+|[,.?!():;"'`-])+/;;
 
-    return $joke;        
+    my @words = split /($boundary)/, $joke;
+    for my $word (@words) {
+        if ( $word !~ /$boundary/ and $word =~ /\*/ ) {
+            $word = unfilter_word($word)
+        }
+    }
+
+    return join q{}, @words;
 }
-
-# profanity + not_profanity - profanity_rare => words tu unfilter
-my @unfilter_profanity = 
-    grep { my $a = $_; none { $a eq $_ } profanity_rare() } 
-        (profanity(), not_profanity());
 
 sub unfilter_word { 
     my ($word) = @_;
@@ -154,7 +164,17 @@ sub unfilter_word {
     
     my @found = grep { /^$filter$/i } @unfilter_profanity;
     if (@found == 1) {
-        return shift @found;
+        my $found = shift @found;
+        
+        if ( $word eq ucfirst $word and $word =~ /^\w/ ) {
+            $found = ucfirst $found;
+            
+            my $uccount = scalar grep { /\w/ and uc eq $_ } split //, $word;
+            $found = uc $found if $uccount >= 2;
+        };
+
+        warn "$word => $found\n";
+        return $found;
     }
     else {
         return $word;
