@@ -64,10 +64,25 @@ sub regexp {
 
     return $self->_regexp if $self->_regexp;
 
+    my %utf8_map = (
+        S => '[S' . chr(0x0218) . chr(0x015E) . ']', # Ș Ş
+        s => '[s' . chr(0x0219) . chr(0x015F) . ']', # ș ş
+        T => '[T' . chr(0x021A) . chr(0x0162) . ']', # Ț Ţ
+        t => '[t' . chr(0x021B) . chr(0x0163) . ']', # ț ţ
+        A => '[A' . chr(0x0102) . chr(0x00C2) . ']', # Ă Â
+        a => '[a' . chr(0x0103) . chr(0x00E2) . ']', # ă â
+        I => '[I' . chr(0x00CE) . ']', # Î
+        i => '[i' . chr(0x00EE) . ']', # î
+    );
+
+    my $utf8_chars = join q{}, keys %utf8_map;
+    $utf8_chars = qr/[$utf8_chars]/;
+
     my $ra = Regexp::Assemble->new( anchor_line => 1, unroll_plus => 1 );
     for my $word (@{ $self->words }) {
         my $pattern = $word;
         $pattern =~ s/(.)/$1+/g;
+        $pattern =~ s/($utf8_chars)/$utf8_map{$1}/ge;
         $ra->add($pattern);
     }
     $self->_regexp($ra->re);
