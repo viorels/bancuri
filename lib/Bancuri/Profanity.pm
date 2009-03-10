@@ -48,6 +48,7 @@ sub filter_joke {
 sub filter_word {
     my ($self, $word) = @_;
     
+    # TODO try hash based pattern check
     my $filtered = $word;
     my $is_profanity = $word =~ $self->regexp;
     if ($is_profanity) {
@@ -62,7 +63,7 @@ sub regexp {
 
     return $self->_regexp if $self->_regexp;
 
-    my $ra = Regexp::Assemble->new( anchor_line => 1 );
+    my $ra = Regexp::Assemble->new( anchor_line => 1, unroll_plus => 1 );
     for my $word (@{ $self->words }) {
         $word =~ s/(.)/$1+/g;
         $ra->add($word);
