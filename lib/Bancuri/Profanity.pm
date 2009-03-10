@@ -66,8 +66,9 @@ sub regexp {
 
     my $ra = Regexp::Assemble->new( anchor_line => 1, unroll_plus => 1 );
     for my $word (@{ $self->words }) {
-        $word =~ s/(.)/$1+/g;
-        $ra->add($word);
+        my $pattern = $word;
+        $pattern =~ s/(.)/$1+/g;
+        $ra->add($pattern);
     }
     $self->_regexp($ra->re);
 
