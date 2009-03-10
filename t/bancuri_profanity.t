@@ -21,7 +21,7 @@ is( $bp->filter_joke(' -pula'), ' -p**a', ' -p**a' );
 is( $bp->filter_joke('.,;'), '.,;', '.,;' );
 
 push @words, 'fut';
-$bp->reset_regexp;
+$bp->words(\@words);
 
 # Incearca un cuvant nou adaugat
 is ( $bp->filter_joke('fut'), 'f*t', 'adaugat fut' );

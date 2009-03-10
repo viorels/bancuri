@@ -13,6 +13,7 @@ has 'words' => (
     is => 'rw',
     isa => 'ArrayRef',
     default => sub { [] },
+    trigger => sub { shift->reset_regexp },
 );
 
 has 'non_word' => (
