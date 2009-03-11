@@ -32,18 +32,18 @@ fails then Titanic doesn't (the first joke).
 sub search_for_day {
     my ($self, $day, $noon) = @_;
     
-    my $joke = $self->search({ for_day => $day })->first;
+    my $joke = $self->search({ for_day => $day })->single;
     if (!$joke and "before_noon") {
         $joke = $self->search(
             { for_day => {'<' => $day} },
             { order_by => "for_day desc" }
-        )->slice(0,0)->first;
+        )->slice(0,0)->single;
     };
     unless ($joke) {
         $joke = $self->set_for_day($day);
     }
     unless ($joke) {
-        $joke = $self->first;
+        $joke = $self->single;
     }
     return $joke;
 }

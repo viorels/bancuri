@@ -61,17 +61,18 @@ sub show : Private {
     my $joke = $c->stash->{'joke'};
     my $joke_version;
 	if ( looks_like_number $version ) {
-	    $joke_version = $joke->search_related('joke_versions', { version => $version })->first
+	    $joke_version = $joke->search_related('joke_versions', 
+	       { version => $version })->single;
 	}
 	else {
 	    $joke_version = $joke->current;
 	}
-	
+
 	# TODO check if there is no such version
     # node is not deleted ?
 	# node_required_moderation
 
-    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke()->first();
+    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke()->single();
 
 	$c->stash(
         joke => $joke,

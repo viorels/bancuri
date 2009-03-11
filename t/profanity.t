@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN { use_ok 'Bancuri::Profanity' }
@@ -26,6 +26,9 @@ is( $bp->filter_joke('pullaaaa'), 'p******a', 'p******a' );
 
 # diacritice
 is( $bp->filter_joke('pul'.chr(0x0103)), 'p**'.chr(0x0103), 'p**ă' );
+
+# upper case
+is( $bp->filter_joke('PULA'), 'P**A', 'P**A' );
 
 push @words, 'fut';
 $bp->words(\@words);

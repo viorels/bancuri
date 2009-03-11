@@ -78,7 +78,7 @@ sub regexp {
     my $utf8_chars = join q{}, keys %utf8_map;
     $utf8_chars = qr/[$utf8_chars]/;
 
-    my $ra = Regexp::Assemble->new( anchor_line => 1, unroll_plus => 1 );
+    my $ra = Regexp::Assemble->new( anchor_line => 1, flags => 'i', unroll_plus => 1 );
     for my $word (@{ $self->words }) {
         my $pattern = $word;
         $pattern =~ s/(.)/$1+/g;

@@ -93,12 +93,43 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-28 01:38:45
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:78mc9tSbqzojeJQ7ZqmVjQ
 
+__PACKAGE__->mk_group_accessors('simple' => qw/text_cleaned profanity/);
+
 use List::Util qw(sum);
+
+sub text_clean {
+    my $self = shift;
+    
+    unless ( defined $self->text_cleaned ) {
+        my $text = $self->text;
+        my $profanity;
+        if (my $filter = $self->result_source->schema->profanity_filter) {
+            ($text, $profanity) = $filter->filter_joke($text);
+            $self->text_cleaned($text);
+            $self->profanity($profanity);
+        }
+    }
+    
+    return $self->text_cleaned;
+}
+
+sub has_profanity {
+    my ($self) = @_;
+    
+    unless ( defined $self->profanity ) {
+        # This will also set $self->profanity if needed
+        $self->text_clean();
+    }
+    
+    # TODO also check for 'obscen' tag
+
+    return $self->profanity;
+}
 
 sub text_teaser {
     my ($self) = @_;
 
-    my $text = $self->text;
+    my $text = $self->text_clean;
     $text = substr($text, 0, length($text)/2) . " ...";
 
     return $text;
@@ -125,7 +156,7 @@ Generates a default title from text
 sub default_title {
     my ($self) = @_;
     
-    my @words = $self->split_words( $self->text );
+    my @words = $self->split_words( $self->text_clean );
     @words = qw(empty) unless @words;
     
     # TODO get this from db schema
