@@ -74,6 +74,10 @@ sub show : Private {
 
     my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke()->single();
 
+    if ( $joke_version->has_profanity or $next_joke->current->has_profanity ) {
+        $c->stash( profanity => 1 );
+    }
+
 	$c->stash(
         joke => $joke,
         joke_version => $joke_version,

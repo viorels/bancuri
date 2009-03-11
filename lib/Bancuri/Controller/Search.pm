@@ -6,6 +6,7 @@ use base 'Catalyst::Controller';
 
 use Data::SpreadPagination;
 use Data::Dump qw(pp);
+use List::MoreUtils qw(any);
 
 =head1 NAME
 
@@ -83,8 +84,10 @@ sub results : Private {
             $jokes[$i]->position( $perpage * ($page-1) + $i + 1 );
             $jokes[$i]->text_snippet( $joke_snippets->[$i] );
         }
+
+        $c->stash->{'profanity'} = any { $_->current->has_profanity } @jokes;
         
-        $c->stash->{results} = \@jokes;
+        $c->stash->{'results'} = \@jokes;
     }
     
     # query->get_description, match->get_document/get_docid
