@@ -24,7 +24,13 @@ sub add : Global {
         $c->stash->{'joke'} = $joke;
 
         if ( $c->request->params->{'preview'} ) {
-            $c->stash->{'joke_preview'} = $joke;
+            my $new_joke = $c->model('BancuriDB::Joke')->new_result({
+                link => undef,
+                current => {
+                    text => $joke, 
+                },
+            });
+            $c->stash->{'joke_preview'} = $new_joke;
         }
         
         if ( $c->request->params->{'save'} ) {

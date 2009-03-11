@@ -197,6 +197,12 @@ sub profanity {qw(
     cacat
     cacatu
     cace
+    clitoris
+    clitorisul
+    coaie
+    coaiele
+    coi
+    coiul
     cur
     curu
     curului
@@ -233,6 +239,8 @@ sub profanity {qw(
     laba
     labagiu
     lesbiana
+    lindic
+    lindicul
     muie
     nefutut
     penis
