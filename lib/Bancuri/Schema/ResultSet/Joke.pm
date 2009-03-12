@@ -4,6 +4,7 @@ use warnings;
 use base 'DBIx::Class::ResultSet';
 
 use Math::Random qw(random_beta);
+use DateTime;
 
 sub search_random_joke {
     my ($self) = @_;
@@ -24,15 +25,17 @@ sub search_random_joke {
 =head2 search_for_day 
 
 Search the default joke for_day. If none found and time is still early then 
-use the yesterday one (or day before). Otherwise assign a assign one. If all
+use the yesterday one (or day before). Otherwise assign one. If all
 fails then Titanic doesn't (the first joke). 
+This function does NOT work for any day, as it assigns
 
 =cut
 
 sub search_for_day {
-    my ($self, $day, $noon) = @_;
+    my ($self, $day, $tz) = @_;
     
-    my $joke = $self->search({ for_day => $day })->single;
+    my $joke = $self->get_for_day($day);
+
     if (!$joke and "before_noon") {
         $joke = $self->search(
             { for_day => {'<' => $day} },
@@ -43,17 +46,29 @@ sub search_for_day {
         $joke = $self->set_for_day($day);
     }
     unless ($joke) {
-        $joke = $self->single;
+        $joke = $self->slice(0,0)->single;
     }
     return $joke;
 }
 
+sub get_for_day {
+    my ($self, $day) = @_;
+
+    return $self->find({ for_day => $day }, { key => 'idx_joke_for_day' });
+};
+
 sub set_for_day {
     my ($self, $day, $id) = @_;
 
-    # select * from joke_current where votes > 10 and for_day is null order by stars desc limit 1;
+    my $min_votes = 10; # If min votes is raised then the rating is lowered
+    my $joke = $self->search(
+        { for_day => undef, voted => { '>' => $min_votes } },
+        { join => 'current', order_by => "rating desc" })->slice(0,0)->single;
 
-    return;    
+    # TODO use configured timezone
+    $joke->update({ for_day => 'now()' });
+
+    return $joke;
 }
 
 sub search_ids {

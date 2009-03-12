@@ -52,7 +52,7 @@ sub index : Path Args(0) {
     my ( $self, $c ) = @_;
 
 	if ( my $id = $c->request->params->{id} ) {
-        $c->forward('load_joke', [ $id ]);
+        $c->forward('load_joke', [ link => $id ]);
 	}
 	else {
 	    $c->forward('joke_for_today');
@@ -72,21 +72,26 @@ sub joke_id : Path('id') Args(1) {
 
 sub joke_for_today : Private {
     my ( $self, $c ) = @_;
-    my $today = $c->datetime(time_zone=>$c->config->{'time_zone'})->ymd;
-    $c->forward('load_joke', [ for_day => $today ]);
+    my $tz = $c->config->{'time_zone'};
+
+    my $day = my $today = $c->datetime( time_zone => $tz )->ymd;
+    my $joke = $c->model('BancuriDB::Joke')->search_for_day($day, $tz);
+
+    $c->forward('load_joke', [ for_day => $joke->for_day ]);
     $c->forward($c->controller('Show'));
 }
+
+=item load_joke
+
+Load a joke using a criterion like id, link or for_day.
+It tries to redirect for links (that includes legacy ids).
+
+=cut
 
 sub load_joke : Private {
     my ( $self, $c, $field, $value ) = @_;
     
-    my $joke;
-    if ( $field eq 'for_day' ) {
-        $joke = $c->model('BancuriDB::Joke')->search_for_day($value, '12:00');
-    }
-    else {
-        $joke = $c->model('BancuriDB::Joke')->find({ $field => $value });
-    }
+    my $joke = $c->model('BancuriDB::Joke')->find({ $field => $value });
 
 	unless ( $joke ) {
 	    if ( $field eq 'link' ) {
