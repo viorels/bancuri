@@ -76,6 +76,11 @@ __PACKAGE__->belongs_to(
   { id => "user_id" },
 );
 __PACKAGE__->belongs_to(
+  "browser_id",
+  "Bancuri::Schema::Result::Browser",
+  { id => "browser_id" },
+);
+__PACKAGE__->belongs_to(
   "joke_id",
   "Bancuri::Schema::Result::Joke",
   { id => "joke_id" },
@@ -90,8 +95,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 21:55:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vn2fqFK8b+KnNqd6lU+/gw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 22:40:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5Tg2k5q4jwqrGGyz9BOG/w
 
 __PACKAGE__->mk_group_accessors('simple' => qw/text_cleaned profanity/);
 

@@ -36,10 +36,15 @@ __PACKAGE__->belongs_to(
   "Bancuri::Schema::Result::JokeVersion",
   { joke_id => "joke_id", version => "version" },
 );
+__PACKAGE__->belongs_to(
+  "browser_id",
+  "Bancuri::Schema::Result::Browser",
+  { id => "browser_id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 21:55:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tMlnVwLsPn/NviPuYQ7NQA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 22:40:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ovfaYPhE36cat9HvJWKy/Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

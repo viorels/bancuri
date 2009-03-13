@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Fri Mar 13 21:55:16 2009
+--   Generated at:      Fri Mar 13 22:38:58 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -35,6 +35,9 @@ drop index idx_session_cookie;
 -- alter table joke_version drop constraint joke_version_fk_User_id-- (is implicitly done)
 -- alter table user_role drop constraint user_role_fk_User_id-- (is implicitly done)
 -- alter table user_role drop constraint user_role_fk_Role_id-- (is implicitly done)
+-- alter table joke_version drop constraint joke_version_fk_Browser_id-- (is implicitly done)
+-- alter table vote drop constraint vote_fk_Browser_id-- (is implicitly done)
+-- alter table change drop constraint change_fk_Browser_id-- (is implicitly done)
 
 
 -- Generated Permissions Drops
@@ -345,4 +348,13 @@ alter table user_role add constraint user_role_fk_User_id
 alter table user_role add constraint user_role_fk_Role_id
   foreign key (role_id)
   references role (id)  ;
+alter table joke_version add constraint joke_version_fk_Browser_id
+  foreign key (browser_id)
+  references browser (id)  ;
+alter table vote add constraint vote_fk_Browser_id
+  foreign key (browser_id)
+  references browser (id)  ;
+alter table change add constraint change_fk_Browser_id
+  foreign key (browser_id)
+  references browser (id)  ;
 

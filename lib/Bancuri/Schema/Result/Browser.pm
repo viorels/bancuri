@@ -34,10 +34,25 @@ __PACKAGE__->belongs_to(
   "Bancuri::Schema::Result::Useragent",
   { id => "useragent_id" },
 );
+__PACKAGE__->has_many(
+  "changes",
+  "Bancuri::Schema::Result::Change",
+  { "foreign.browser_id" => "self.id" },
+);
+__PACKAGE__->has_many(
+  "joke_versions",
+  "Bancuri::Schema::Result::JokeVersion",
+  { "foreign.browser_id" => "self.id" },
+);
+__PACKAGE__->has_many(
+  "votes",
+  "Bancuri::Schema::Result::Vote",
+  { "foreign.browser_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:12:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:19Afw6r8NB6c8XrxBgPiuQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 22:40:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kLlV68bcoC8L5Fxt1yRFFA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
