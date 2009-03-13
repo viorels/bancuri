@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sun Mar  8 13:53:56 2009
+--   Generated at:      Fri Mar 13 21:55:16 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -97,9 +97,9 @@ create table joke_version (
   parent_version            integer,
   user_id                   integer,
   browser_id                integer,
-  rating                    real,
-  voted                     integer,
-  visited                   integer,
+  rating                    real default 0 not null,
+  voted                     integer default 0 not null,
+  visited                   integer default 0 not null,
   old_rating                real,
   old_voted                 integer,
   old_visited               integer,
@@ -167,7 +167,7 @@ create table vote (
   user_id                   integer,
   browser_id                integer not null,
   date                      date default now(),
-  rating                    smallint
+  rating                    smallint not null
 ) ;
 
 -- tag
@@ -186,7 +186,7 @@ create table change (
   from_joke_id              integer,
   user_id                   integer not null,
   browser_id                integer,
-  rating                    smallint,
+  rating                    smallint default 0 not null,
   proposed                  timestamp default now(),
   approved                  timestamp,
   rejected                  timestamp,

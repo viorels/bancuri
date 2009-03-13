@@ -38,12 +38,7 @@ __PACKAGE__->add_columns(
   "browser_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "rating",
-  {
-    data_type => "smallint",
-    default_value => undef,
-    is_nullable => 1,
-    size => 2,
-  },
+  { data_type => "smallint", default_value => 0, is_nullable => 0, size => 2 },
   "proposed",
   {
     data_type => "timestamp without time zone",
@@ -82,8 +77,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:12:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X3ZJ9G/KSMvEGKEE/GNsbA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 21:55:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7CxUNuzsQy+0yjeeAd5xig
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

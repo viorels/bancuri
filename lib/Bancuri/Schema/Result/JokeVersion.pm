@@ -47,11 +47,11 @@ __PACKAGE__->add_columns(
   "browser_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "rating",
-  { data_type => "real", default_value => undef, is_nullable => 1, size => 4 },
+  { data_type => "real", default_value => 0, is_nullable => 0, size => 4 },
   "voted",
-  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
+  { data_type => "integer", default_value => 0, is_nullable => 0, size => 4 },
   "visited",
-  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
+  { data_type => "integer", default_value => 0, is_nullable => 0, size => 4 },
   "old_rating",
   { data_type => "real", default_value => undef, is_nullable => 1, size => 4 },
   "old_voted",
@@ -90,8 +90,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-28 01:38:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:78mc9tSbqzojeJQ7ZqmVjQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 21:55:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vn2fqFK8b+KnNqd6lU+/gw
 
 __PACKAGE__->mk_group_accessors('simple' => qw/text_cleaned profanity/);
 

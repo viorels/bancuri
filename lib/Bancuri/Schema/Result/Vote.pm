@@ -27,7 +27,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "smallint",
     default_value => undef,
-    is_nullable => 1,
+    is_nullable => 0,
     size => 2,
   },
 );
@@ -38,8 +38,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IujaYWKzjEfIZ03X4oC7eA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 21:55:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tMlnVwLsPn/NviPuYQ7NQA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
