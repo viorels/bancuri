@@ -6,6 +6,12 @@ use base 'DBIx::Class::ResultSet';
 use Math::Random qw(random_beta);
 use DateTime;
 
+=item search_random_joke
+
+Search a random joke with preference for higher rating ones 
+
+=cut
+
 sub search_random_joke {
     my ($self) = @_;
 
@@ -22,51 +28,34 @@ sub search_random_joke {
     return $joke;
 };
 
-=head2 search_for_day 
+=item set_for_day 
 
-Search the default joke for_day. If none found and time is still early then 
-use the yesterday one (or day before). Otherwise assign one. If all
-fails then Titanic doesn't (the first joke). 
-This function does NOT work for any day, as it assigns
+Set the default joke for_day. If no joke_id specified then a good one is 
+searched and set.
 
 =cut
-
-sub search_for_day {
-    my ($self, $day, $tz) = @_;
-    
-    my $joke = $self->get_for_day($day);
-
-    if (!$joke and "before_noon") {
-        $joke = $self->search(
-            { for_day => {'<' => $day} },
-            { order_by => "for_day desc" }
-        )->slice(0,0)->single;
-    };
-    unless ($joke) {
-        $joke = $self->set_for_day($day);
-    }
-    unless ($joke) {
-        $joke = $self->slice(0,0)->single;
-    }
-    return $joke;
-}
-
-sub get_for_day {
-    my ($self, $day) = @_;
-
-    return $self->find({ for_day => $day }, { key => 'idx_joke_for_day' });
-};
 
 sub set_for_day {
     my ($self, $day, $id) = @_;
 
+    my $good_jokes = $self->search(
+        { for_day => undef },
+        { join => 'current', order_by => "rating desc" });
+
+    # Search good jokes voted by many
     my $min_votes = 10; # If min votes is raised then the rating is lowered
-    my $joke = $self->search(
-        { for_day => undef, voted => { '>' => $min_votes } },
-        { join => 'current', order_by => "rating desc" })->slice(0,0)->single;
+    my $joke = $good_jokes->search({
+        voted => { '>' => $min_votes }
+    })->slice(0,0)->single;
+
+    # If none found then lower the standards (vote count is ignored)
+    # The database is not infinte so this will fail too eventually
+    unless ($joke) {
+        $joke = $good_jokes->slice(0,0)->single;
+    }
 
     # TODO use configured timezone
-    $joke->update({ for_day => 'now()' });
+    $joke->update({ for_day => $day });
 
     return $joke;
 }
