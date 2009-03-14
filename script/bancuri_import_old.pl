@@ -280,6 +280,13 @@ sub profanity {qw(
     spermeaza
     sula
     vagin
+    viol
+    viola
+    violat
+    violata
+    violez
+    violezi
+    violeze
 )};
 
 sub profanity_rare {qw(
