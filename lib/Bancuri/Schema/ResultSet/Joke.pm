@@ -28,6 +28,12 @@ sub search_random_joke {
     return $joke;
 };
 
+sub get_for_day {
+    my ($self, $day) = @_; 
+    
+    return $self->find({ for_day => $day }, { key => 'idx_joke_for_day' });
+}
+
 =item set_for_day 
 
 Set the default joke for_day. If no joke_id specified then a good one is 

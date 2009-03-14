@@ -29,6 +29,15 @@ p.variante {
     white-space: pre;
 }
 
+div#teaser a {
+	text-decoration: none;
+	color: #008FD9;
+}
+
+div#teaser a:hover {
+	text-decoration: underline;
+}
+
 textarea.edit {
 	width: 100%;
 	min-height: 200px;
