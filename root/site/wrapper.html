@@ -42,8 +42,8 @@
 			<ul>
 				<li><a id="btn_profile" href="/profile">[% c.user.name || anonymous %]</a></li>
 				<li><a href="#" class="active">Bancuri</a></li>
-				<li><a href="#">Blog</a></li>
-				<li><a href="#">Contacteaza-ma</a></li>
+				<li><a href="/blog">Blog</a></li>
+				<li><a href="/contact">Contacteaza-ma</a></li>
                 [% IF c.user %]
 				<li><a id="btn_logout" href="#">Logout</a></li>
                 [% END %]
@@ -75,15 +75,34 @@
 	
 				<h4><span>Linkuri</span></h4>
 				<ul class="links">
-				<li class="first"><a href="#">Velit molestie</a></li>
-				<li><a href="#">Consequat cursus</a></li>
-				<li><a href="#">Tempus nullam</a></li>
-				<li><a href="#">Magna sed mauris</a></li>
-				<li><a href="#">Semper molestie</a></li>
+				<li class="first"><a href="#">Link-ul tau aici</a></li>
+				<li><a href="/contact">Contacteaza-l pe Bula</a></li>
+
+<!--/Start Trafic.ro/-->
+<script type="text/javascript">t_rid="bancurinul";</script>
+<script type="text/javascript" src="http://storage.trafic.ro/js/trafic.js"
+></script><noscript><a href="http://www.trafic.ro/top/?rid=bancurinul"
+ target="_blank"><img border="0" alt="trafic ranking"
+ src="http://log.trafic.ro/cgi-bin/pl.dll?rid=bancurinul"/></a>
+</noscript>
+<!--/End Trafic.ro/-->
+
 				</ul>
 				
 				[% UNLESS profanity %]
 				<h4><span>Reclama</span></h4>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-2614696262444778";
+/* 120x600, created 12/8/08 */
+google_ad_slot = "9044839019";
+google_ad_width = 120;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
 
 				[% END %]
 	
