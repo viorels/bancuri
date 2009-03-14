@@ -41,7 +41,7 @@ $(document).ready(function() {
 	
 	$("#btn_profile").click(function() {
 		$("#authentication").load('/auth/form', {}, 
-			function function (responseText, textStatus, XMLHttpRequest) {
+			function (responseText, textStatus, XMLHttpRequest) {
 				$(this).slideDown();
 				$("#id").blur(check_id);
 				$("#login_form").ajaxForm({
