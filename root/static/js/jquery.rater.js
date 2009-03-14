@@ -46,7 +46,7 @@ $.fn.rater.rate = function($this, opts, rating) {
                     $off.css('cursor', 'default'); $on.css('cursor', 'default');
                     $off.fadeTo(600, 0.1, function() {
 	                    if (opts.rating > 0) {
-	                        $on.removeClass('ui-rater-starsHover').width(opts.rating * opts.size);
+	                        $on.removeClass('ui-rater-starsHover').width(rating * opts.size);
 	                        var $count = $this.find('.ui-rater-rateCount');
 	                        $count.text(parseInt($count.text()) + 1);
 	                        $this.find('.ui-rater-rating').text(opts.rating.toFixed(1));
