@@ -125,7 +125,9 @@ sub rating : Local {
     
     # TODO It's WRONG to assume current version
     my $joke_version = $c->model('BancuriDB::Joke')->find({ id => $id })->current;
-    my $new_rating = $joke_version->vote($vote);
+    my $new_rating = $joke_version
+        ->vote($vote, $c->sessionid, $c->req->address, $c->req->user_agent);
+    $new_rating = 0 unless defined $new_rating;
 
     $c->response->body($new_rating);
 }

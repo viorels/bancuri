@@ -31,6 +31,10 @@ __PACKAGE__->add_columns(
     size => 2,
   },
 );
+__PACKAGE__->add_unique_constraint(
+  "idx_vote_browser_date",
+  ["joke_id", "version", "browser_id", "date"],
+);
 __PACKAGE__->belongs_to(
   "joke_version",
   "Bancuri::Schema::Result::JokeVersion",
@@ -43,8 +47,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 22:40:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ovfaYPhE36cat9HvJWKy/Q
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 23:58:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UelZ0Rh9ntjpa7IL9tlRXQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

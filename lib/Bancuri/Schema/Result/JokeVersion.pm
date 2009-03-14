@@ -141,15 +141,33 @@ sub text_teaser {
 };
 
 sub vote {
-    my ($self, $vote, $weight ) = @_;
+    my ($self, $rating, $session_id, $ip, $useragent, $weight ) = @_;
 
-    # TODO implement using stored procedure;
-    my $new_rating = ($self->rating * $self->voted + $vote) / ($self->voted + 1);
-    $self->rating( $new_rating );
-    $self->voted( $self->voted + 1 );
-    $self->update;
+    # TODO transaction ?
 
-    return $self->rating();
+    my $browser = $self->result_source->schema->resultset('Browser')
+        ->find_or_create_unique($session_id, $ip, $useragent); 
+    
+    my $vote = $self->find_related('votes', {
+        browser_id => $browser->id,
+        date => 'now()',
+    }, { key => 'idx_vote_browser_date' });
+    
+    my $new_rating;
+    unless ($vote) {
+        $new_rating = ($self->rating * $self->voted + $rating) / ($self->voted + 1);
+        $self->rating( $new_rating );
+        $self->voted( $self->voted + 1 );
+        $self->update;
+        
+        $self->create_related('votes', {
+            browser_id => $browser->id,
+            date => 'now()',
+            rating => $rating,
+        });
+    }
+
+    return $new_rating;
 }
 
 =item default_title

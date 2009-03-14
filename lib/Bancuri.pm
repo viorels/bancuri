@@ -29,7 +29,7 @@ __PACKAGE__->config(
         expires => 86400,
         cookie_expires => 1209600,
         dbic_class => 'BancuriDB::Session',
-        id_field => 'cookie',
+        id_field => 'id',
         data_field => 'data',
     },
     authentication => {
