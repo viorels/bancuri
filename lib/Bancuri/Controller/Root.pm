@@ -76,7 +76,7 @@ sub joke_for_today : Private {
 
     my $today = $c->datetime( time_zone => $tz )->ymd;
     my $joke = $c->model('BancuriDB::Joke')->get_for_day($today)
-        or $c->model('BancuriDB::Joke')->set_for_day($today);
+        || $c->model('BancuriDB::Joke')->set_for_day($today);
 
     $c->stash->{'joke'} = $joke;
     $c->forward($c->controller('Show'));

@@ -44,20 +44,20 @@ searched and set.
 sub set_for_day {
     my ($self, $day, $id) = @_;
 
-    my $good_jokes = $self->search(
+    my $good_jokes_first = $self->search(
         { for_day => undef },
         { join => 'current', order_by => "rating desc" });
 
     # Search good jokes voted by many
     my $min_votes = 10; # If min votes is raised then the rating is lowered
-    my $joke = $good_jokes->search({
+    my $joke = $good_jokes_first->search({
         voted => { '>' => $min_votes }
     })->slice(0,0)->single;
 
     # If none found then lower the standards (vote count is ignored)
     # The database is not infinte so this will fail too eventually
     unless ($joke) {
-        $joke = $good_jokes->slice(0,0)->single;
+        $joke = $good_jokes_first->slice(0,0)->single;
     }
 
     # TODO use configured timezone
