@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sat Mar 14 14:33:45 2009
+--   Generated at:      Wed Mar 18 23:20:16 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -26,11 +26,12 @@ drop index idx_users_email;
 drop index idx_browser_session_ip_useragent;
 drop index idx_user_openid_user_id;
 drop index idx_vote_browser_date;
-drop index idx_tag_tag;
+drop index idx_joke_tag_unique;
 drop index idx_session_ref_id;
+drop index idx_tag_name;
 -- alter table joke_version drop constraint joke_version_fk_Joke_id-- (is implicitly done)
 -- alter table user_openid drop constraint user_openid_fk_User_id-- (is implicitly done)
--- alter table tag drop constraint tag_fk_Joke_id-- (is implicitly done)
+-- alter table joke_tag drop constraint joke_tag_fk_Joke_id-- (is implicitly done)
 -- alter table vote drop constraint vote_fk_Joke_id-- (is implicitly done)
 -- alter table browser drop constraint browser_fk_Useragent_id-- (is implicitly done)
 -- alter table change drop constraint change_fk_User_id-- (is implicitly done)
@@ -40,6 +41,7 @@ drop index idx_session_ref_id;
 -- alter table joke_version drop constraint joke_version_fk_Browser_id-- (is implicitly done)
 -- alter table vote drop constraint vote_fk_Browser_id-- (is implicitly done)
 -- alter table change drop constraint change_fk_Browser_id-- (is implicitly done)
+-- alter table joke_tag drop constraint joke_tag_fk_Tag_id-- (is implicitly done)
 
 
 -- Generated Permissions Drops
@@ -65,7 +67,7 @@ drop table users cascade ;
 drop table browser cascade ;
 drop table user_openid cascade ;
 drop table vote cascade ;
-drop table tag cascade ;
+drop table joke_tag cascade ;
 drop table change cascade ;
 drop table change_vote cascade ;
 drop table session cascade ;
@@ -74,6 +76,7 @@ drop table role cascade ;
 drop table visit cascade ;
 drop table search cascade ;
 drop table profanity cascade ;
+drop table tag cascade ;
 
 
 -- Generated SQL Schema
@@ -164,8 +167,8 @@ create table user_openid (
 ) ;
 
 -- vote
--- Historic table, but keep jokes rated with 5 for a loger time so we
--- can show similar tastes
+-- Historic table that keep jokes rated with 5 for a loger time so we
+-- can find similar tastes
 create table vote (
   joke_id                   integer not null,
   version                   smallint not null,
@@ -175,11 +178,12 @@ create table vote (
   rating                    smallint not null
 ) ;
 
--- tag
-create table tag (
+-- joke_tag
+create table joke_tag (
   joke_id                   integer not null,
+  tag_id                    integer not null,
   user_id                   integer,
-  tag                       varchar(32) not null
+  tagged                    timestamp default now()
 ) ;
 
 -- change
@@ -254,13 +258,22 @@ create table profanity (
   constraint pk_Profanity primary key (word)
 ) ;
 
+-- tag
+create table tag (
+  id                        serial not null,
+  name                      varchar(32),
+  created                   timestamp default now(),
+  constraint pk_Tag primary key (id)
+) ;
 
 
 
 
 
 
-comment on table vote is 'Historic table, but keep jokes rated with 5 for a loger time so we can show similar tastes';
+
+comment on table vote is 'Historic table that keep jokes rated with 5 for a loger time so we can find similar tastes';
+
 
 
 
@@ -323,15 +336,16 @@ create unique index idx_users_email on users  (email) ;
 create unique index idx_browser_session_ip_useragent on browser  (session_ref_id,ip,useragent_id) ;
 create index idx_user_openid_user_id on user_openid  (user_id) ;
 create unique index idx_vote_browser_date on vote  (joke_id,version,browser_id,date) ;
-create index idx_tag_tag on tag  (tag) ;
+create unique index idx_joke_tag_unique on joke_tag  (joke_id,tag_id,user_id) ;
 create unique index idx_session_ref_id on session  (ref_id) ;
+create unique index idx_tag_name on tag  (name) ;
 alter table joke_version add constraint joke_version_fk_Joke_id
   foreign key (joke_id)
   references joke (id)  ;
 alter table user_openid add constraint user_openid_fk_User_id
   foreign key (user_id)
   references users (id)  ;
-alter table tag add constraint tag_fk_Joke_id
+alter table joke_tag add constraint joke_tag_fk_Joke_id
   foreign key (joke_id)
   references joke (id)  ;
 alter table vote add constraint vote_fk_Joke_id
@@ -361,4 +375,7 @@ alter table vote add constraint vote_fk_Browser_id
 alter table change add constraint change_fk_Browser_id
   foreign key (browser_id)
   references browser (id)  ;
+alter table joke_tag add constraint joke_tag_fk_Tag_id
+  foreign key (tag_id)
+  references tag (id)  ;
 

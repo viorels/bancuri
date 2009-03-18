@@ -45,6 +45,7 @@ my $bancuri = $old_schema->resultset('Bancuri')->search();
 # Remove all jokes, versions, redirects and tags
 $new_schema->resultset('JokeVersion')->delete();
 $new_schema->resultset('Redirect')->delete();
+$new_schema->resultset('JokeTag')->delete();
 $new_schema->resultset('Tag')->delete();
 $new_schema->resultset('Profanity')->delete();
 
@@ -88,7 +89,6 @@ while ( my $banc = $bancuri->next ) {
     # add tags (do in memory join of tables to find old category)
 	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
 	push @tags, 'obscen' if $obscen and none { $_ eq 'obscen' } @tags;
-	my @tag_rows = map { {tag => $_} } @tags; # structure to insert in db
 
 	print "~ @tags\n";
 
@@ -107,8 +107,9 @@ while ( my $banc = $bancuri->next ) {
 			old_voted => $banc->voturi,
 			old_visited => $banc->vizite,
 		}],
-		tags => \@tag_rows,
 	});
+    
+    $new_joke->add_tags_by_user(\@tags);
 
 	$new_joke->current->title( $new_joke->current->default_title );
 	$new_joke->link( $new_joke->default_link );

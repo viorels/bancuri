@@ -8,19 +8,19 @@ use base 'DBIx::Class';
 __PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("session");
 __PACKAGE__->add_columns(
-  "ref_id",
-  {
-    data_type => "integer",
-    default_value => "nextval('session_ref_id_seq'::regclass)",
-    is_nullable => 0,
-    size => 4,
-  },
   "id",
   {
     data_type => "character",
     default_value => undef,
     is_nullable => 0,
     size => 72,
+  },
+  "ref_id",
+  {
+    data_type => "integer",
+    default_value => "nextval('session_ref_id_seq'::regclass)",
+    is_nullable => 0,
+    size => 4,
   },
   "data",
   {
@@ -32,13 +32,13 @@ __PACKAGE__->add_columns(
   "expires",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
 );
-__PACKAGE__->set_primary_key("ref_id");
-__PACKAGE__->add_unique_constraint("pk_session", ["ref_id"]);
-__PACKAGE__->add_unique_constraint("idx_session_id", ["id"]);
+__PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("pk_session", ["id"]);
+__PACKAGE__->add_unique_constraint("idx_session_ref_id", ["ref_id"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-14 13:05:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mzxM6BG2dYz2TOkqNIbmUQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-18 23:12:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1tpF7k2yLpVhYXHGsnVSDA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

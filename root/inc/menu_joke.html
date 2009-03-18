@@ -12,14 +12,14 @@
 
 				<h4><span>detalii</span> banc</h4>
 				<div id="info">
-					<strong>Modificat</strong> [% joke.changed.dmy %]<br />
-					<strong>Varianta curenta</strong> [% joke.version %]<br />
-					[% IF joke.version != joke_version.version %]
-					<strong>Varianta afisata</strong> [% joke_version.version %]<br />
-					[% END %]
+					<strong>Autor :</strong> <br />
+					<strong>Adaugat :</strong> <br />
+					<strong>Modificat :</strong> [% joke.changed.dmy %]<br />
+					<strong>Varianta :</strong> [% joke_version.version %]<br />
+					<strong>Vazut de :</strong> [% joke_version.visited %]<br />
 					<strong>Etichete</strong> 
 					[% FOR tag = joke.tags %]
-					[% tag.tag %]
+					[% tag.name %]
 					[% END %]
 					<br />
 				</div>

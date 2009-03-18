@@ -46,19 +46,19 @@ __PACKAGE__->add_unique_constraint("idx_joke_for_day", ["for_day"]);
 __PACKAGE__->add_unique_constraint("pk_joke", ["id"]);
 __PACKAGE__->add_unique_constraint("idx_joke_link", ["link"]);
 __PACKAGE__->has_many(
+  "joke_tags",
+  "Bancuri::Schema::Result::JokeTag",
+  { "foreign.joke_id" => "self.id" },
+);
+__PACKAGE__->has_many(
   "joke_versions",
   "Bancuri::Schema::Result::JokeVersion",
   { "foreign.joke_id" => "self.id" },
 );
-__PACKAGE__->has_many(
-  "tags",
-  "Bancuri::Schema::Result::Tag",
-  { "foreign.joke_id" => "self.id" },
-);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-28 01:38:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x0lAhN4fKXwMZ8uh+TLT1g
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-18 23:12:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n5GyMdz176am7Kuo2G1jfg
 
 __PACKAGE__->mk_group_accessors('simple' => qw/position text_snippet/);
 
@@ -68,6 +68,8 @@ __PACKAGE__->has_one(
   { "foreign.joke_id" => "self.id",
     "foreign.version" => "self.version" },
 );
+
+__PACKAGE__->many_to_many(tags => 'joke_tags', 'tag_id');
 
 use List::Util qw(sum);
 use Search::Tools::Transliterate;
@@ -111,6 +113,24 @@ sub default_link {
     } while ( $self->result_source->resultset->find({ link => $link }) );
 
     return $link;
+}
+
+sub add_tags_by_user {
+    my ( $self, $tags, $user ) = @_;
+
+    my $user_id = $user ? $user->id : undef;
+    my $schema = $self->result_source->schema;
+
+    for my $tag_name ( @$tags ) {
+        my $tag = $schema->resultset('Tag')->find_or_create({ name => $tag_name });
+        $schema->resultset('JokeTag')->find_or_create({ 
+            joke_id => $self->id,
+            tag_id => $tag->id, 
+            user_id => $user_id 
+        }, { key => 'idx_joke_tag_unique' });
+    }
+
+    return;
 }
 
 1;
