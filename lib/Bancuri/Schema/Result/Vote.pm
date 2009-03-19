@@ -36,6 +36,11 @@ __PACKAGE__->add_unique_constraint(
   ["joke_id", "version", "browser_id", "date"],
 );
 __PACKAGE__->belongs_to(
+  "user_id",
+  "Bancuri::Schema::Result::Users",
+  { id => "user_id" },
+);
+__PACKAGE__->belongs_to(
   "joke_version",
   "Bancuri::Schema::Result::JokeVersion",
   { joke_id => "joke_id", version => "version" },
@@ -47,8 +52,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 23:58:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UelZ0Rh9ntjpa7IL9tlRXQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XD8nBz+gFlI2H0/P/2WmBA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

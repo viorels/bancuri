@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Wed Mar 18 23:20:16 2009
+--   Generated at:      Fri Mar 20 00:26:40 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -27,6 +27,7 @@ drop index idx_browser_session_ip_useragent;
 drop index idx_user_openid_user_id;
 drop index idx_vote_browser_date;
 drop index idx_joke_tag_unique;
+drop index idx_change_joke_id;
 drop index idx_session_ref_id;
 drop index idx_tag_name;
 -- alter table joke_version drop constraint joke_version_fk_Joke_id-- (is implicitly done)
@@ -42,6 +43,12 @@ drop index idx_tag_name;
 -- alter table vote drop constraint vote_fk_Browser_id-- (is implicitly done)
 -- alter table change drop constraint change_fk_Browser_id-- (is implicitly done)
 -- alter table joke_tag drop constraint joke_tag_fk_Tag_id-- (is implicitly done)
+-- alter table change_vote drop constraint change_vote_fk_Change_id-- (is implicitly done)
+-- alter table change drop constraint change_fk_Joke_id-- (is implicitly done)
+-- alter table visit drop constraint visit_fk_Joke_id-- (is implicitly done)
+-- alter table vote drop constraint vote_fk_User_id-- (is implicitly done)
+-- alter table visit drop constraint visit_fk_User_id-- (is implicitly done)
+-- alter table change_vote drop constraint change_vote_fk_User_id-- (is implicitly done)
 
 
 -- Generated Permissions Drops
@@ -100,7 +107,6 @@ create table joke_version (
   version                   smallint default 1 not null,
   text                      text,
   title                     character varying(64),
-  comment                   character varying(255),
   created                   timestamp default now(),
   parent_version            integer,
   user_id                   integer,
@@ -112,7 +118,6 @@ create table joke_version (
   old_voted                 integer,
   old_visited               integer,
   last_visit                date,
-  banned                    boolean default false,
   constraint pk_Joke_version primary key (joke_id,version)
 ) ;
 
@@ -188,19 +193,20 @@ create table joke_tag (
 
 -- change
 create table change (
+  id                        serial not null,
   joke_id                   integer not null,
-  type                      varchar(8),
-  to_version                smallint,
   from_version              smallint,
-  from_joke_id              integer,
-  user_id                   integer not null,
+  to_version                smallint,
+  type                      varchar(8) not null,
+  comment                   character varying(255),
+  user_id                   integer,
   browser_id                integer,
   rating                    smallint default 0 not null,
   proposed                  timestamp default now(),
   approved                  timestamp,
   rejected                  timestamp,
   verified                  timestamp,
-  constraint pk_Change primary key (joke_id,user_id)
+  constraint pk_Change primary key (id)
 ) ;
 
 -- change_vote
@@ -208,7 +214,7 @@ create table change_vote (
   change_id                 integer not null,
   user_id                   integer not null,
   vote                      smallint,
-  time                      timestamp default now(),
+  voted                     timestamp default now(),
   constraint pk_Change_vote primary key (change_id,user_id)
 ) ;
 
@@ -292,12 +298,11 @@ comment on table vote is 'Historic table that keep jokes rated with 5 for a loge
 
 -- joke_current
 create view joke_current as
-  select joke.*, version.text, version.title, version.comment, version.created, version.parent_version, version.user_id, version.browser_id, version.rating, version.voted, version.visited, version.last_visit, version.banned
+  select joke.*, version.text, version.title, version.created, version.parent_version, version.user_id, version.browser_id, version.rating, version.voted, version.visited, version.last_visit
   from joke,
     joke_version version
   where (joke.id = version.joke_id and joke.version = version.version)
     and (not joke.deleted)
-    and (not version.banned)
 ;
 
 
@@ -337,6 +342,7 @@ create unique index idx_browser_session_ip_useragent on browser  (session_ref_id
 create index idx_user_openid_user_id on user_openid  (user_id) ;
 create unique index idx_vote_browser_date on vote  (joke_id,version,browser_id,date) ;
 create unique index idx_joke_tag_unique on joke_tag  (joke_id,tag_id,user_id) ;
+create index idx_change_joke_id on change  (joke_id) ;
 create unique index idx_session_ref_id on session  (ref_id) ;
 create unique index idx_tag_name on tag  (name) ;
 alter table joke_version add constraint joke_version_fk_Joke_id
@@ -378,4 +384,22 @@ alter table change add constraint change_fk_Browser_id
 alter table joke_tag add constraint joke_tag_fk_Tag_id
   foreign key (tag_id)
   references tag (id)  ;
+alter table change_vote add constraint change_vote_fk_Change_id
+  foreign key (change_id)
+  references change (id)  ;
+alter table change add constraint change_fk_Joke_id
+  foreign key (joke_id)
+  references joke (id)  ;
+alter table visit add constraint visit_fk_Joke_id
+  foreign key (joke_id)
+  references joke (id)  ;
+alter table vote add constraint vote_fk_User_id
+  foreign key (user_id)
+  references users (id)  ;
+alter table visit add constraint visit_fk_User_id
+  foreign key (user_id)
+  references users (id)  ;
+alter table change_vote add constraint change_vote_fk_User_id
+  foreign key (user_id)
+  references users (id)  ;
 

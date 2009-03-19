@@ -17,10 +17,20 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("joke_id", "user_id");
 __PACKAGE__->add_unique_constraint("pk_visit", ["joke_id", "user_id"]);
+__PACKAGE__->belongs_to(
+  "user_id",
+  "Bancuri::Schema::Result::Users",
+  { id => "user_id" },
+);
+__PACKAGE__->belongs_to(
+  "joke_id",
+  "Bancuri::Schema::Result::Joke",
+  { id => "joke_id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ENFzHMCcaCYmi4A6MVUdUA
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xicmm2CulvvfgLI598D7NQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

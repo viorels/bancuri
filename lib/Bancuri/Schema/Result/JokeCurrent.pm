@@ -49,13 +49,6 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 64,
   },
-  "comment",
-  {
-    data_type => "character varying",
-    default_value => undef,
-    is_nullable => 1,
-    size => 255,
-  },
   "created",
   {
     data_type => "timestamp without time zone",
@@ -77,13 +70,11 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "last_visit",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
-  "banned",
-  { data_type => "boolean", default_value => undef, is_nullable => 1, size => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-02-22 14:13:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W8qTj8vhdQHSsW4JDN2HSw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lIAfvrIN2we5E9HvnD0L8Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

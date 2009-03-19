@@ -26,13 +26,6 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 64,
   },
-  "comment",
-  {
-    data_type => "character varying",
-    default_value => undef,
-    is_nullable => 1,
-    size => 255,
-  },
   "created",
   {
     data_type => "timestamp without time zone",
@@ -60,13 +53,6 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "last_visit",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
-  "banned",
-  {
-    data_type => "boolean",
-    default_value => "false",
-    is_nullable => 1,
-    size => 1,
-  },
 );
 __PACKAGE__->set_primary_key("joke_id", "version");
 __PACKAGE__->add_unique_constraint("pk_joke_version", ["joke_id", "version"]);
@@ -95,8 +81,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 22:40:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5Tg2k5q4jwqrGGyz9BOG/w
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:V0EHHD12U6+NdGLoWdH63A
 
 __PACKAGE__->mk_group_accessors('simple' => qw/text_cleaned profanity/);
 

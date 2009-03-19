@@ -87,6 +87,11 @@ __PACKAGE__->has_many(
   { "foreign.user_id" => "self.id" },
 );
 __PACKAGE__->has_many(
+  "change_votes",
+  "Bancuri::Schema::Result::ChangeVote",
+  { "foreign.user_id" => "self.id" },
+);
+__PACKAGE__->has_many(
   "joke_versions",
   "Bancuri::Schema::Result::JokeVersion",
   { "foreign.user_id" => "self.id" },
@@ -101,10 +106,20 @@ __PACKAGE__->has_many(
   "Bancuri::Schema::Result::UserRole",
   { "foreign.user_id" => "self.id" },
 );
+__PACKAGE__->has_many(
+  "visits",
+  "Bancuri::Schema::Result::Visit",
+  { "foreign.user_id" => "self.id" },
+);
+__PACKAGE__->has_many(
+  "votes",
+  "Bancuri::Schema::Result::Vote",
+  { "foreign.user_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-01 19:33:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BszHZwxx2i1U1Iasrda/aw
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MgSeBmX0d96sw3SzdR1ctA
 
 __PACKAGE__->many_to_many(roles => 'user_roles', 'role_id');
 

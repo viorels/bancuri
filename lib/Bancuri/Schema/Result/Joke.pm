@@ -46,6 +46,11 @@ __PACKAGE__->add_unique_constraint("idx_joke_for_day", ["for_day"]);
 __PACKAGE__->add_unique_constraint("pk_joke", ["id"]);
 __PACKAGE__->add_unique_constraint("idx_joke_link", ["link"]);
 __PACKAGE__->has_many(
+  "changes",
+  "Bancuri::Schema::Result::Change",
+  { "foreign.joke_id" => "self.id" },
+);
+__PACKAGE__->has_many(
   "joke_tags",
   "Bancuri::Schema::Result::JokeTag",
   { "foreign.joke_id" => "self.id" },
@@ -55,10 +60,15 @@ __PACKAGE__->has_many(
   "Bancuri::Schema::Result::JokeVersion",
   { "foreign.joke_id" => "self.id" },
 );
+__PACKAGE__->has_many(
+  "visits",
+  "Bancuri::Schema::Result::Visit",
+  { "foreign.joke_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-18 23:12:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n5GyMdz176am7Kuo2G1jfg
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BMyTTmNaSa/TvEQbdB1GiQ
 
 __PACKAGE__->mk_group_accessors('simple' => qw/position text_snippet/);
 
@@ -67,6 +77,13 @@ __PACKAGE__->has_one(
   "Bancuri::Schema::Result::JokeVersion",
   { "foreign.joke_id" => "self.id",
     "foreign.version" => "self.version" },
+);
+
+__PACKAGE__->has_one(
+  "first",
+  "Bancuri::Schema::Result::JokeVersion",
+  { "foreign.joke_id" => "self.id",
+    "foreign.version" => 1 },
 );
 
 __PACKAGE__->many_to_many(tags => 'joke_tags', 'tag_id');

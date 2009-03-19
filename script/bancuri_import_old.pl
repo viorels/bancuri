@@ -43,6 +43,7 @@ while ( my $cat = $banc_cat->next ) {
 my $bancuri = $old_schema->resultset('Bancuri')->search();
 
 # Remove all jokes, versions, redirects and tags
+$new_schema->resultset('Change')->delete();
 $new_schema->resultset('JokeVersion')->delete();
 $new_schema->resultset('Redirect')->delete();
 $new_schema->resultset('JokeTag')->delete();
@@ -92,12 +93,13 @@ while ( my $banc = $bancuri->next ) {
 
 	print "~ @tags\n";
 
+	my $version = 1;
 	my $new_joke = $joke->create({
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
 
 		link => undef,
 		joke_versions => [{
-			version => 1,
+			version => $version,
 			text => $banc_text,
 			created => $banc->data,
 			rating => $banc->nota/2,
@@ -108,6 +110,14 @@ while ( my $banc = $bancuri->next ) {
 			old_visited => $banc->vizite,
 		}],
 	});
+    
+    unless ($banc->ok) {
+        $new_joke->create_related('changes', {
+            type => 'add',
+            to_version => $version,
+            proposed => $banc->data,
+        });
+    }
     
     $new_joke->add_tags_by_user(\@tags);
 

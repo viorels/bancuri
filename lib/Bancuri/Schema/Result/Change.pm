@@ -8,14 +8,21 @@ use base 'DBIx::Class';
 __PACKAGE__->load_components("InflateColumn::DateTime", "Core");
 __PACKAGE__->table("change");
 __PACKAGE__->add_columns(
+  "id",
+  {
+    data_type => "integer",
+    default_value => "nextval('change_id_seq'::regclass)",
+    is_nullable => 0,
+    size => 4,
+  },
   "joke_id",
   { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
-  "type",
+  "from_version",
   {
-    data_type => "character varying",
+    data_type => "smallint",
     default_value => undef,
     is_nullable => 1,
-    size => 8,
+    size => 2,
   },
   "to_version",
   {
@@ -24,17 +31,22 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 2,
   },
-  "from_version",
+  "type",
   {
-    data_type => "smallint",
+    data_type => "character varying",
+    default_value => undef,
+    is_nullable => 0,
+    size => 8,
+  },
+  "comment",
+  {
+    data_type => "character varying",
     default_value => undef,
     is_nullable => 1,
-    size => 2,
+    size => 255,
   },
-  "from_joke_id",
-  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "user_id",
-  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "browser_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "rating",
@@ -68,8 +80,8 @@ __PACKAGE__->add_columns(
     size => 8,
   },
 );
-__PACKAGE__->set_primary_key("joke_id", "user_id");
-__PACKAGE__->add_unique_constraint("pk_change", ["joke_id", "user_id"]);
+__PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("pk_change", ["id"]);
 __PACKAGE__->belongs_to(
   "user_id",
   "Bancuri::Schema::Result::Users",
@@ -80,10 +92,20 @@ __PACKAGE__->belongs_to(
   "Bancuri::Schema::Result::Browser",
   { id => "browser_id" },
 );
+__PACKAGE__->belongs_to(
+  "joke_id",
+  "Bancuri::Schema::Result::Joke",
+  { id => "joke_id" },
+);
+__PACKAGE__->has_many(
+  "change_votes",
+  "Bancuri::Schema::Result::ChangeVote",
+  { "foreign.change_id" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-13 22:40:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fln5yvWbJIEwLikYDz8LYQ
+# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6zojRNhLtRmDJgXcwWJWYA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
