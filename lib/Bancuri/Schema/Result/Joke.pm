@@ -79,17 +79,20 @@ __PACKAGE__->has_one(
     "foreign.version" => "self.version" },
 );
 
-__PACKAGE__->has_one(
-  "first",
-  "Bancuri::Schema::Result::JokeVersion",
-  { "foreign.joke_id" => "self.id",
-    "foreign.version" => 1 },
-);
-
 __PACKAGE__->many_to_many(tags => 'joke_tags', 'tag_id');
 
 use List::Util qw(sum);
 use Search::Tools::Transliterate;
+
+sub first {
+    my ($self) = @_;
+    
+    my $first = $self->find_related('joke_versions', {
+        version => 1,
+    });
+    
+    return $first; 
+}
 
 sub default_link {
     my ($self) = @_;
