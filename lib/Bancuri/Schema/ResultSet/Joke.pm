@@ -81,15 +81,23 @@ sub add {
 	my ($self, $text) = @_;
 	return if $self->bad_joke($text);
 
+    my $version = 1;
 	my $joke = $self->create({
 		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
 
         link => undef,
 		joke_versions => [{
-			version => 1,
+			version => $version,
 			text => $text,
 		}],
 	});
+	
+    $joke->create_related('changes', {
+        type => 'add',
+        to_version => $version,
+    });
+    
+    #$joke->add_tags_by_user(\@tags);
 	
 	$joke->current->title( $joke->current->default_title );
 	$joke->link( $joke->default_link );
