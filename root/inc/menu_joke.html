@@ -12,12 +12,12 @@
 
 				<h4><span>detalii</span> banc</h4>
 				<div id="info">
-					<strong>Autor :</strong> [% joke.current.user_id.name || 'anonim' %]<br />
-					<strong>Adaugat :</strong> [% joke.first.created.dmy %]<br />
-					<strong>Modificat :</strong> [% joke.changed.dmy %]<br />
-					<strong>Varianta :</strong> [% joke_version.version %]<br />
-					<strong>Vazut de :</strong> [% joke_version.visited %]<br />
-					<strong>Etichete :</strong> 
+					<strong>autor :</strong> [% joke.current.user_id.name || 'anonim' %]<br />
+					<strong>adaugat :</strong> [% joke.first.created.dmy %]<br />
+					<strong>modificat :</strong> [% joke.changed.dmy %]<br />
+					<strong>varianta :</strong> [% joke_version.version %]<br />
+					<strong>vazut de :</strong> [% joke_version.visited %]<br />
+					<strong>etichete :</strong> 
 					[% FOR tag = joke.tags %]
 					[% tag.name %]
 					[% END %]
