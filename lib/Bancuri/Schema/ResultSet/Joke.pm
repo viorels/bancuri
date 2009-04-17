@@ -95,6 +95,7 @@ sub add {
     $joke->create_related('changes', {
         type => 'add',
         to_version => $version,
+        # TODO user, browser 
     });
     
     #$joke->add_tags_by_user(\@tags);

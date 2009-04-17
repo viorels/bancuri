@@ -94,6 +94,20 @@ sub first {
     return $first; 
 }
 
+sub remove {
+    my ($self) = @_;
+    
+    unless ( $self->deleted ) {
+        $self->deleted(1);
+        $self->update;
+        $self->create_related('changes', {
+            type => 'delete',
+            from_version => $self->version,
+            # TODO user, browser 
+        });
+    }    
+}
+
 sub default_link {
     my ($self) = @_;
     

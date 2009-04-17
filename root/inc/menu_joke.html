@@ -15,11 +15,13 @@
 					<strong>autor :</strong> [% joke.current.user_id.name || 'anonim' %]<br />
 					<strong>adaugat :</strong> [% joke.first.created.dmy %]<br />
 					<strong>modificat :</strong> [% joke.changed.dmy %]<br />
-					<strong>varianta :</strong> [% joke_version.version %]<br />
-					<strong>vazut de :</strong> [% joke_version.visited %]<br />
-					<strong>etichete :</strong> 
-					[% FOR tag = joke.tags %]
-					[% tag.name %]
+					[% UNLESS joke.deleted %]
+						<strong>varianta :</strong> [% joke_version.version %]<br />
+						<strong>vazut de :</strong> [% joke_version.visited %]<br />
+						<strong>etichete :</strong> 
+						[% FOR tag = joke.tags %]
+						[% tag.name %]
+						[% END %]
 					[% END %]
 					<br />
 				</div>

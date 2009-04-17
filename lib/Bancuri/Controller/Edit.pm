@@ -57,9 +57,9 @@ sub add : Global {
 
 =cut
 
-sub edit : Chained('/joke') PathPart('edit') Args(0) {
+sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
 	my ( $self, $c ) = @_;
-	my $joke= $c->stash->{'joke'};
+	my $joke = $c->stash->{'joke'};
 
 	# TODO cook joke content before setting it into <textarea>content<textarea> to avoid "</textarea>"
 
@@ -73,6 +73,7 @@ sub edit : Chained('/joke') PathPart('edit') Args(0) {
 			preview => 'preview',
 			save 	=> 'save',
 			cancel 	=> 'redir_show',
+			delete  => 'delete',
 		);
 		for my $a ( keys %actions ) {
 			$c->forward($actions{$a}) if $c->req->params->{$a};
@@ -115,6 +116,14 @@ sub redir_show : Private {
 	my ( $self, $c ) = @_;
 	my $node = $c->stash->{'node'};
 	$c->response->redirect( q{/} . $node, 303 );
+}
+
+sub delete : Private {
+    my ( $self, $c ) = @_;
+    my $joke = $c->stash->{'joke'};
+    
+    $joke->remove;
+    $c->forward('/redirect', [ '/' . $joke->link ]);
 }
 
 sub rating : Local {
