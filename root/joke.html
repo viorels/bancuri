@@ -27,10 +27,8 @@ _joke_link = "[% joke.link %]";
 					</span>
 				</div>
 				
-				<form method="post" action="[% c.uri_for('/' _ joke.link _ '/edit') %]">
-					<input type="submit" name="delete" value="Sterge">
-				</form>
-				
+				<a href="[% '/' _ joke.link _ '/edit' %]">Modifica</a>
+					
 				[% ELSE %]
 				<h3>banc sters</h3>
 				[% END %]

@@ -108,6 +108,45 @@ sub remove {
     }    
 }
 
+=item add_version
+
+Adds a new version to the current joke, including entry in the change table
+Parameters (hash) :
+    - text
+    - title
+    - parent_version
+    - user_id
+    - browser_id
+    - comment
+Returns : undef
+
+=cut 
+
+sub add_version {
+    my ($self, %new_version) = @_;
+    
+    # XXX: version race condition !
+    $new_version{'version'} = $self->search_related('joke_versions')
+        ->get_column('version')->max + 1;
+
+    my %change = (
+        from_version    => $self->version,
+        to_version      => $new_version{'version'},
+        type            => 'edit', 
+    );
+    $change{$_} = $new_version{$_} for qw(user_id browser_id comment);
+        
+    # We need change comment but not version comment
+    delete $new_version{'comment'};
+    
+    $self->create_related('joke_versions', \%new_version);
+    $self->create_related('changes', \%change);
+    $self->version($new_version{'version'});
+    $self->update;
+    
+    return;
+}
+
 sub default_link {
     my ($self) = @_;
     

@@ -35,6 +35,8 @@ sub add : Global {
         }
         
         if ( $c->request->params->{'save'} ) {
+            # TODO check checksum of previous version
+
             my $new_joke = $c->model('BancuriDB::Joke')->add($joke);
             if ($new_joke) {
                 my $link = '/' . $new_joke->link;
@@ -78,18 +80,30 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
             my $new_joke = $c->model('BancuriDB::Joke')->new_result({
                 link => undef,
                 current => {
-                    text => $joke_text, 
+                    text => $joke_text,
                 },
             });
             $c->stash->{'joke_preview'} = $new_joke;
         }
         
         if ( $c->request->params->{'save'} ) {
-            my $new_joke = $c->model('BancuriDB::Joke')->add_version($joke);
-            if ($new_joke) {
-                my $link = '/' . $new_joke->link;
-                $c->forward('/redirect', [ $link ]);
-            }
+            $joke->add_version(
+                text => $joke_text,
+                title => $joke_title,
+                parent_version => $joke->version,
+                comment => $c->request->params->{'comment'},
+#                user => ...
+#                browser => ...
+            );
+            
+            # Redirect to show the (new) joke
+            my $link = '/' . $joke->link;
+            $c->forward('/redirect', [ $link ]);
+        }
+        
+        if ( $c->request->params->{'delete'} ) {
+		    $joke->remove;
+		    $c->forward('/redirect', [ '/' . $joke->link ]);
         }
         
         if ( $c->request->params->{'cancel'} ) {
@@ -101,19 +115,14 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         }
 	}
 
-	$c->stash( 
+	$c->stash(
+		joke => $joke,
+		joke_version => $joke->current,
 		joke_text => $joke_text,
 	   	joke_title => $joke_title,
+	   	comment => $c->request->params->{'comment'},
     );
 	$c->stash->{'template'} = 'edit.html';
-}
-
-sub delete : Private {
-    my ( $self, $c ) = @_;
-    my $joke = $c->stash->{'joke'};
-    
-    $joke->remove;
-    $c->forward('/redirect', [ '/' . $joke->link ]);
 }
 
 sub rating : Local {

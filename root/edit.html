@@ -10,9 +10,14 @@
 
 <div id="ctrl">
 <input type="hidden" name="checksum" value="[% checksum %]" />
+
+Motivul modificarii:<br>
+<input type="text" name="comment" value="[% comment %]">
 <input type="submit" name="preview" value="Verifica" />
 <input type="submit" name="save" value="Salveaza" />
 <input type="submit" name="cancel" value="Anuleaza" />
+<br>
+<input type="submit" name="delete" value="Sterge">
 </div>
 
 </form>
@@ -29,14 +34,3 @@
 </tr></tbody></table>
 
 [% END %]
-
-<div id="moderate">
-<h2>Recent</h2>
-[% FOR change IN recent %]
-<a href="/[% change.name %]/rev/[% change.version %]">[% change.name %] versiunea [% change.version %]</a><br>
-[% END %]
-<h2>Unmoderated</h2>
-[% FOR node IN unmoderated %]
-<a href="/[% node.name %]">[% node.node_id %]. [% node.name %]</a><br>
-[% END %]
-</div>
