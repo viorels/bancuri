@@ -2,23 +2,34 @@
     nojs = 1 
 %]
 
-<h1>Bancuri</h1>
+
 <form method="POST">
-<div id="banc" class="edit">
-<textarea name="raw">[% raw %]</textarea>
-</div>
+
+<h3><input type="text" name="title" value="[% joke_title %]" style="width: 100%"></h3>
+<textarea name="joke" class="edit">[% joke_text %]</textarea>
+
 <div id="ctrl">
 <input type="hidden" name="checksum" value="[% checksum %]" />
 <input type="submit" name="preview" value="Verifica" />
 <input type="submit" name="save" value="Salveaza" />
 <input type="submit" name="cancel" value="Anuleaza" />
 </div>
-<div id="info">
-<h2>Info</h2>
-last_modified [% last_modified %]<br />
-version [% version %]<br />
-metadata [% metadata %]<br />
-</div>
+
+</form>
+
+[% IF joke_preview %]
+
+<br>
+<h3>Verificare</h3>
+
+<table id="banc" class="banc edit"><tbody><tr>
+  <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+  <td class="columnText">[% joke_preview.current.text_clean | html_entity | html_line_break %]</td>
+  <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+</tr></tbody></table>
+
+[% END %]
+
 <div id="moderate">
 <h2>Recent</h2>
 [% FOR change IN recent %]
@@ -29,4 +40,3 @@ metadata [% metadata %]<br />
 <a href="/[% node.name %]">[% node.node_id %]. [% node.name %]</a><br>
 [% END %]
 </div>
-</form>

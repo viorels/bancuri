@@ -55,10 +55,10 @@ sub all_versions : Chained('/joke_link') PathPart('v/all') Args(0) {
 
 sub show : Private {
 	my ( $self, $c, $version ) = @_;
+    my $joke = $c->stash->{'joke'};
 	
 	$c->session->{'last_page'} = $c->request->uri;
 	
-    my $joke = $c->stash->{'joke'};
     my $joke_version;
     unless ($joke->deleted) {
     	if ( looks_like_number $version ) {

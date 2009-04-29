@@ -24,6 +24,7 @@ sub add : Global {
         $c->stash->{'joke'} = $joke;
 
         if ( $c->request->params->{'preview'} ) {
+        	# Create a new database object without storing it
             my $new_joke = $c->model('BancuriDB::Joke')->new_result({
                 link => undef,
                 current => {
@@ -63,59 +64,48 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
 
 	# TODO cook joke content before setting it into <textarea>content<textarea> to avoid "</textarea>"
 
+	my ($joke_text, $joke_title);
 	if ( $c->req->method() eq 'GET' ) {
-		$c->stash->{'template'} = 'edit.html';
-		my $joke_data = $c->model('BancuriDB::Joke')->retrieve($joke);
-
+        $joke_text = $joke->current->text;
+        $joke_title = $joke->current->title;
 	}
 	elsif ( $c->req->method() eq 'POST' ) {
-		my %actions = (
-			preview => 'preview',
-			save 	=> 'save',
-			cancel 	=> 'redir_show',
-			delete  => 'delete',
-		);
-		for my $a ( keys %actions ) {
-			$c->forward($actions{$a}) if $c->req->params->{$a};
-		}
-	}
-}
+        $joke_text = $c->request->params->{'joke'};
+        $joke_title = $c->request->params->{'title'};
+        
+        if ( $c->request->params->{'preview'} ) {
+        	# Create a new database object without storing it
+            my $new_joke = $c->model('BancuriDB::Joke')->new_result({
+                link => undef,
+                current => {
+                    text => $joke_text, 
+                },
+            });
+            $c->stash->{'joke_preview'} = $new_joke;
+        }
+        
+        if ( $c->request->params->{'save'} ) {
+            my $new_joke = $c->model('BancuriDB::Joke')->add_version($joke);
+            if ($new_joke) {
+                my $link = '/' . $new_joke->link;
+                $c->forward('/redirect', [ $link ]);
+            }
+        }
+        
+        if ( $c->request->params->{'cancel'} ) {
+            my $back = '/';
+            $back = $c->session->{'last_page'} 
+                if exists $c->session->{'last_page'};
 
-sub preview : Private {
-	my ( $self, $c ) = @_;
-	my $wiki = $c->stash->{'wiki'};
-	
-	$c->stash->{'template'} = 'preview.html';
-    my $raw = $c->req->params->{'raw'};
-    my $cooked = $wiki->format($raw);
-	# my $ok = $wiki->verify_checksum($node, $checksum);
-    $c->stash( 
-    	raw => $raw, 
-    	text => $cooked,
-    	checksum => $c->req->params->{'checksum'},
+            $c->forward('/redirect', [ $back ]);
+        }
+	}
+
+	$c->stash( 
+		joke_text => $joke_text,
+	   	joke_title => $joke_title,
     );
-}
-
-sub save : Private {
-	my ( $self, $c ) = @_;
-	my $wiki = $c->stash->{'wiki'};
-	my $node = $c->stash->{'node'};
-
-	my $raw = $c->req->params->{'raw'};
-	my $checksum = $c->req->params->{'checksum'};
-	my $written = $wiki->write_node($node, $raw, $checksum, { username => 'vio' }, 1 );
-	if ( $written ) {
-		$c->forward('redir_show');
-	}
-	else {
-		$c->log->info("CONFLICT!!!");
-	}
-}
-
-sub redir_show : Private {
-	my ( $self, $c ) = @_;
-	my $node = $c->stash->{'node'};
-	$c->response->redirect( q{/} . $node, 303 );
+	$c->stash->{'template'} = 'edit.html';
 }
 
 sub delete : Private {
