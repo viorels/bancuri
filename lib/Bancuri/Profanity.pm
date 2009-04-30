@@ -1,5 +1,5 @@
 package Bancuri::Profanity;
-use Squirrel;
+use Any::Moose;
 
 use Regexp::Assemble;
 
