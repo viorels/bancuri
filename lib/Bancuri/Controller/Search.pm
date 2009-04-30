@@ -77,7 +77,7 @@ sub results : Private {
     if (@ids) {
         @jokes = $c->model('BancuriDB::Joke')->search_ids(\@ids)->all();
         
-        my @joke_texts = map { $_->current->text_clean } @jokes;
+        my @joke_texts = map { $_->current->text_blessed } @jokes;
         my $joke_snippets = $c->model('Xapian')->highlight(\@joke_texts, $keywords);
         
         for (my $i=0; $i<@jokes; $i++) {
