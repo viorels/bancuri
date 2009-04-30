@@ -1,10 +1,8 @@
 package Bancuri::Controller::Edit;
-BEGIN {
-    use Moose;
-    extends 'Catalyst::Controller';
-}
 
-with 'Bancuri::Controller::Role::Response';
+use strict;
+use warnings;
+use parent 'Catalyst::Controller';
 
 =head1 NAME
 
@@ -42,7 +40,7 @@ sub add : Global {
             my $new_joke = $c->model('BancuriDB::Joke')->add($joke);
             if ($new_joke) {
                 my $link = '/' . $new_joke->link;
-                $self->redirect($c, $link);
+                $c->res->redirect($link) and $c->detach;
             }
         }
         
@@ -51,7 +49,7 @@ sub add : Global {
             $back = $c->session->{'last_page'} 
                 if exists $c->session->{'last_page'};
 
-            $self->redirect($c, $back);
+            $c->res->redirect($back) and $c->detach;
         }
     }
 
@@ -100,13 +98,13 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
             
             # Redirect to show the (new) joke
             my $link = '/' . $joke->link;
-            $self->redirect($c, $link);
+            $c->res->redirect($link) and $c->detach;
         }
         
         if ( $c->request->params->{'delete'} ) {
 		    $joke->remove;
             my $link = '/' . $joke->link;
-            $self->redirect($c, $link);
+            $c->res->redirect($link) and $c->detach;
         }
         
         if ( $c->request->params->{'cancel'} ) {
@@ -114,7 +112,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
             $back = $c->session->{'last_page'} 
                 if exists $c->session->{'last_page'};
 
-            $self->redirect($c, $back);
+            $c->res->redirect($back) and $c->detach;
         }
 	}
 

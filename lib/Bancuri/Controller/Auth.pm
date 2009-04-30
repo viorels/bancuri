@@ -81,7 +81,7 @@ sub login : Local {
             };
         }
         else {
-            $c->forward('/redirect', [ '/' ]);
+            $c->res->redirect('/') and $c->detach;
         }
     }
     else {
@@ -140,7 +140,7 @@ sub rpx : Local {
     $back = $c->session->{'last_page'} 
         if exists $c->session->{'last_page'};
 
-    $c->forward('/redirect', [ $back ]);
+    $c->res->redirect($back) and $c->detach;
 }
 
 sub login_openid : Private {
@@ -196,11 +196,12 @@ sub user_info : Private {
 sub logout : Local {
     my ( $self, $c ) = @_;
    
-    $c->logout();
+    # $c->logout();
+    $c->delete_session('logout');
 
     # Send the user to the starting point
     unless ( $c->stash->{'AJAX'} ) {
-        $c->forward('/redirect', [ '/' ]);
+        $c->res->redirect('/') and $c->detach;
     }
 }
 

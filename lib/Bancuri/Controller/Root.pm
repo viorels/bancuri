@@ -116,36 +116,12 @@ sub redirect_joke : Private {
         $redirect->update();
 
         # TODO rebuild full link, e.g. /un-banc/edit
-		my $url = '/' . $redirect->new_link;
-        $c->forward('redirect', [ $url ])
+		my $new_link = '/' . $redirect->new_link;
+        $c->res->redirect($new_link) and $c->detach;
 	}
 	else {
 		$c->forward('not_found', [ $joke_link ]);
 	}
-}
-
-sub redirect : Private {
-    my ( $self, $c, $url, $status ) = @_;
-    
-	unless ( $url =~ m|^https?://| ) {
-	   $url = $c->uri_for( $url );
-	};
-
-    unless ( $status ) {
-        my $method = $c->request->method;
-        if ( $method eq 'GET' ) {
-            $status = 301; # Moved Permanently
-        }
-        elsif ( $method eq 'POST' ) {
-            $status = 303; # See Other
-        }
-        else {
-            $status = 302; # Temporary Redirect
-        }
-    }    
-    
-	$c->response->redirect( $url, $status );
-	$c->detach();
 }
 
 sub not_found : Private {

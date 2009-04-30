@@ -65,6 +65,10 @@ __PACKAGE__->config(
     },
 );
 
+# Override Catalyst::Response class
+use Bancuri::Response;
+__PACKAGE__->response_class('Bancuri::Response');
+
 #
 # Start the application
 #
