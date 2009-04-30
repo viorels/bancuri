@@ -106,7 +106,7 @@ Catalyst at startup.
 
 sub new { 
 	my ( $self, $c ) = @_;
-	$self = $self->NEXT::new($c);                                               	my %config = (
+	$self = $self->next::method($c);                                               	my %config = (
 		db         => $c->config->{home}.'/index',
 		language   => "english",
 		page_size  => 10,
