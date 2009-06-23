@@ -21,26 +21,51 @@ sub search_openid {
     return $user;
 }
 
+=item register
+Assume nothing ! It can be an email user or openid user.
+=cut
+
 sub register {
     my ( $self, $profile ) = @_;
     
+    my $email = $profile->{'verifiedEmail'} || $profile->{'email'};
+    my $identifier = $profile->{'identifier'};
+    
+    my $existing_user = $self->find({ email => $email });
+
     my $new_user = {
-        email => ($profile->{'verifiedEmail'} || $profile->{'email'}),
+        email => $email,
         password => $profile->{'password'},
         name => $profile->{'displayName'},
         birth => $profile->{'birthday'},
         gender => $profile->{'gender'},
         country => $profile->{'address'}{'country'},
     };
-    if ( my $identifier = $profile->{'identifier'} ) {
-        $new_user->{'user_openids'} = [
-            { identifier => $identifier }
-        ];
-    }
     
-    my $user = $self->create($new_user);
+    my $registered_user;    
+    unless ($existing_user) {
+        if ( $identifier ) {
+            $new_user->{'user_openids'} = [
+                { identifier => $identifier }
+            ];
+        }
+        
+        $registered_user = $self->create($new_user);
+    }
+    else {
+        if ( $identifier ) {
+            $existing_user->create_related('user_openids', {
+                identifier => $identifier,
+            })
+            # TODO update profile also ?
+        }
+        
+        $registered_user = $existing_user;
+        
+    }
 
-    return $user;
+    return $registered_user;
 }
+
 
 1;
