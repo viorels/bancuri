@@ -12,19 +12,16 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
   "user_id",
   { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
-  "vote",
+  "browser_id",
+  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
+  "date",
+  { data_type => "date", default_value => "now()", is_nullable => 1, size => 4 },
+  "rating",
   {
     data_type => "smallint",
     default_value => undef,
-    is_nullable => 1,
+    is_nullable => 0,
     size => 2,
-  },
-  "voted",
-  {
-    data_type => "timestamp without time zone",
-    default_value => "now()",
-    is_nullable => 1,
-    size => 8,
   },
 );
 __PACKAGE__->set_primary_key("change_id", "user_id");

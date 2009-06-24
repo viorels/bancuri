@@ -141,6 +141,26 @@ sub rating : Local {
     $c->response->body($new_rating);
 }
 
+=item change_vote
+Vote the change specified by id with -5/+5
+Return JSON with ... ?
+=cut
+
+sub change_vote : Local {
+    my ( $self, $c ) = @_;
+    
+    my $change_id = $c->request->params->{'change_id'};
+    my $vote = $c->request->params->{'vote'};
+    
+    # TODO is he allowed to vote this ?
+    my $change = $c->model('BancuriDB::Change')->find($change_id);
+    my $new_rating = $change->vote($vote, $c->user->id,
+            $c->sessionid, $c->req->address, $c->req->user_agent);
+    $new_rating = 0 unless defined $new_rating;
+    
+    $c->stash( json_change_rating => $new_rating );
+}
+
 =head1 AUTHOR
 
 Viorel,,,

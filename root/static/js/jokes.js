@@ -23,6 +23,7 @@ $(document).ready(function() {
 	
 	$('#rating').rater({ postHref: '/edit/rating', id: joke_id() });
 
+	// Show versions
     var got_versions = false;
     $("#btn_versions").toggle(
         function() {
@@ -39,6 +40,7 @@ $(document).ready(function() {
         }
     );
 	
+	// Profile
 	$("#btn_profile").click(function() {
 		$("#authentication").load('/auth/form', {}, 
 			function (responseText, textStatus, XMLHttpRequest) {
@@ -52,7 +54,15 @@ $(document).ready(function() {
 			}
 		);
 		return false;
-	})
+	});
+	
+	// Vote a change
+	$("#change_no").click( function() {
+		change_vote( $(this).attr('name'), -5 );
+	});
+	$("#change_yes").click( function() {
+		change_vote( $(this).attr('name'), 5 );
+	});
 	
 	setup_logout();
 });
@@ -164,4 +174,16 @@ function setup_logout() {
 			window.location.reload()
 		})
 	})
+}
+
+function change_vote(btn_name, rating) {
+	var change_id = btn_name.match(/[0-9]+$/);
+	var vote = {
+		change_id: change_id,
+		vote: rating,
+	};
+
+	$.post('/edit/change_vote', vote, function(data) {
+		alert(data);
+	}, 'JSON');
 }

@@ -27,7 +27,31 @@ _joke_link = "[% joke.link %]";
 					</span>
 				</div>
 				
-				<a href="[% '/' _ joke.link _ '/edit' %]">Modifica</a>
+				<a href="[% '/' _ joke.link _ '/edit' %]">Modifica</a><br>
+
+				[% IF change %]
+	                <h3>
+	                Acest banc a fost [% change_type %] de curand.<br>
+	                [% IF change.type != 'add' %] Inainte arata asa: [% END %]
+	                </h3><br>
+	                
+	                [% IF change.type != 'add' %]
+	                <table class="banc"><tbody><tr>
+	                    <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+	                    <td class="columnText">
+	                        [% change.from.text_blessed | html_entity | html_line_break %]
+	                    </td>
+	                    <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+	                </tr></tbody></table>
+	                [% END %]
+
+					<h3>	                
+		                Se aproba ?
+		                <input type="button" id="change_no" name="change_no_[% change.id %]" value="Nu">
+		                <input type="button" id="change_yes" name="change_yes_[% change.id %]" value="Da">
+	                </h3>
+				[% END %]
+
 					
 				[% ELSE %]
 				<h3>banc sters</h3>

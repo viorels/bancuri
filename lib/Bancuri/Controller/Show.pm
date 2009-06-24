@@ -5,6 +5,7 @@ use warnings;
 use base 'Catalyst::Controller';
 
 use Scalar::Util qw(looks_like_number);
+use Data::Dump qw(pp);
 
 =head1 NAME
 
@@ -53,6 +54,32 @@ sub all_versions : Chained('/joke_link') PathPart('v/all') Args(0) {
     };
 }
 
+sub show_change : Private {
+    my ( $self, $c, $version ) = @_;
+    my $joke = $c->stash->{'joke'};
+
+	# node_required_moderation ?
+	my @changes = $joke->search_related('changes', {
+        approved => undef,
+    });
+    warn @changes." changes";
+
+    my %change_types = (
+        add => 'adaugat',
+        edit => 'modificat',
+        delete => 'sters',
+    );
+    
+    if (@changes) {
+        my $change = $changes[0];
+
+        $c->stash( 
+            change => $change,
+            change_type => $change_types{$change->type}, 
+        );
+    }
+}
+
 sub show : Private {
 	my ( $self, $c, $version ) = @_;
     my $joke = $c->stash->{'joke'};
@@ -74,9 +101,10 @@ sub show : Private {
     	}
     }
 
+    $c->forward('show_change', [$version]);
+
 	# TODO check if there is no such version
     # node is not deleted ?
-	# node_required_moderation
 
     my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke()->single();
 
