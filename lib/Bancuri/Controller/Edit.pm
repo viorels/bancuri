@@ -156,9 +156,13 @@ sub change_vote : Local {
     my $change = $c->model('BancuriDB::Change')->find($change_id);
     my $new_rating = $change->vote($vote, $c->user->id,
             $c->sessionid, $c->req->address, $c->req->user_agent);
-    $new_rating = 0 unless defined $new_rating;
     
-    $c->stash( json_change_rating => $new_rating );
+    if (defined $new_rating) {
+        $c->stash( json_change_rating => $new_rating );
+    }
+    else {
+        $c->stash( json_change_error => 'Ai mai votat ?' );
+    }
 }
 
 =head1 AUTHOR
