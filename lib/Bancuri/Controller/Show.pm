@@ -54,15 +54,25 @@ sub all_versions : Chained('/joke_link') PathPart('v/all') Args(0) {
     };
 }
 
+=item show_change
+Show moderation options, but only if user is logged in.
+=cut
+
 sub show_change : Private {
     my ( $self, $c, $version ) = @_;
     my $joke = $c->stash->{'joke'};
 
+    return unless $c->user;
+
 	# node_required_moderation ?
+	# not approved and proposed by other then current user
 	my @changes = $joke->search_related('changes', {
         approved => undef,
+        -or => [ 
+            user_id => { '!=' => $c->user->id },
+            user_id => { '=' => undef }, 
+        ],
     });
-    warn @changes." changes";
 
     my %change_types = (
         add => 'adaugat',
