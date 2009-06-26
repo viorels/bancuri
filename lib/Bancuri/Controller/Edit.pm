@@ -74,6 +74,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
 	elsif ( $c->req->method() eq 'POST' ) {
         $joke_text = $c->request->params->{'joke'};
         $joke_title = $c->request->params->{'title'};
+        my $user_id = $c->user ? $c->user->id : undef;
         
         if ( $c->request->params->{'preview'} ) {
         	# Create a new database object without storing it
@@ -92,7 +93,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
                 title => $joke_title,
                 parent_version => $joke->version,
                 comment => $c->request->params->{'comment'},
-#                user => ...
+                user_id => $user_id,
 #                browser => ...
             );
             
