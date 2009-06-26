@@ -104,6 +104,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         
         if ( $c->request->params->{'delete'} ) {
 		    $joke->remove;
+		    
             my $link = '/' . $joke->link;
             $c->res->redirect($link) and $c->detach;
         }

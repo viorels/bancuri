@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use base 'Catalyst::Controller';
 
-use Scalar::Util qw(looks_like_number);
+use Scalar::Util qw( looks_like_number );
+use String::Diff qw( diff_merge );
 use Data::Dump qw(pp);
 
 =head1 NAME
@@ -82,9 +83,20 @@ sub show_change : Private {
     
     if (@changes) {
         my $change = $changes[0];
+        
+        my $diff;
+        if ( $change->from and $change->to ) {
+            $diff = diff_merge($change->from->text, $change->to->text,
+                remove_open => '<strike>',
+                remove_close => '</strike>',
+                append_open => '<strong>',
+                append_close => '</strong>',
+            );
+        };
 
         $c->stash( 
             change => $change,
+            change_text => $diff, # TODO | html_entity !!!
             change_type => $change_types{$change->type}, 
         );
     }
