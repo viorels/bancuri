@@ -12,5 +12,5 @@ Model::BancuriDB:
             - SET client_encoding=UTF8
 Model::RPX:
     args:
-        api_key: b5cc4fa0a04cb0c290942a009fa342c17a2d4d00
+        api_key: b054be909133182f273dd1aef62c4c781b0d7724
 
