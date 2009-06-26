@@ -51,6 +51,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "rating",
   { data_type => "real", default_value => 0, is_nullable => 0, size => 4 },
+  "approved",
+  { data_type => "boolean", default_value => undef, is_nullable => 1, size => 1 },
   "proposed",
   {
     data_type => "timestamp without time zone",
@@ -58,11 +60,12 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 8,
   },
-  "approved",
+  "decided",
   {
-    data_type => "boolean",
+    data_type => "timestamp without time zone",
     default_value => undef,
     is_nullable => 1,
+    size => 8,
   },
   "verified",
   {
@@ -96,8 +99,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6zojRNhLtRmDJgXcwWJWYA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-26 17:42:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LfapE+zql3TFBuVrHaCxVg
 
 __PACKAGE__->has_one(
   "from",

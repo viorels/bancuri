@@ -21,8 +21,6 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "browser_id",
   { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
-  "date",
-  { data_type => "date", default_value => "now()", is_nullable => 1, size => 4 },
   "rating",
   {
     data_type => "smallint",
@@ -30,6 +28,8 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 2,
   },
+  "date",
+  { data_type => "date", default_value => "now()", is_nullable => 1, size => 4 },
 );
 __PACKAGE__->add_unique_constraint(
   "idx_vote_browser_date",
@@ -52,8 +52,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XD8nBz+gFlI2H0/P/2WmBA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-26 17:42:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:23gc8j1a/kDvviWdNhx1lQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

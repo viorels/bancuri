@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Fri Jun 26 13:41:26 2009
+--   Generated at:      Fri Jun 26 17:50:08 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -214,7 +214,7 @@ create table change_vote (
   change_id                 integer not null,
   user_id                   integer not null,
   browser_id                int not null,
-  rating                    smallint,
+  rating                    smallint not null,
   date                      timestamp default now(),
   constraint pk_Change_vote primary key (change_id,user_id)
 ) ;
