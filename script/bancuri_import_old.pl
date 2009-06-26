@@ -69,7 +69,7 @@ $profanity_regex = qr/^$profanity_regex$/i;
 while ( my $banc = $bancuri->next ) {
     # Skip bad jokes
     next if $joke->bad_joke( $banc->banc );
-#	next if $banc->id < 4540;
+#	next if $banc->id != 7531;
 
     print q{+ } . $banc->id . "\n";
 	
@@ -114,8 +114,11 @@ while ( my $banc = $bancuri->next ) {
     # add tags (do in memory join of tables to find old category)
 	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
 
-    $obscen = $new_joke->has_profanity unless $obscen;
-	push @tags, 'obscen' if $obscen and none { $_ eq 'obscen' } @tags;
+    $obscen = $new_joke->current->has_profanity unless $obscen;
+    if ( $obscen and 
+            ( not @tags or none { $_ eq 'obscen' } @tags ) ) {
+        push @tags, 'obscen';
+    };
 
 	print "~ @tags\n";
     $new_joke->add_tags_by_user(\@tags);
@@ -299,6 +302,7 @@ sub profanity {qw(
     violeze
 )};
 
+# Must be defined otherwise List::MoreUtils->none returns undef
 sub profanity_rare {qw(
     pisa
     pise
