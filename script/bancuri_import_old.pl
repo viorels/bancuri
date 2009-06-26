@@ -87,16 +87,8 @@ while ( my $banc = $bancuri->next ) {
     my $obscen;
     ( $banc_text, $obscen ) = unfilter_joke($banc_text);
 
-    # add tags (do in memory join of tables to find old category)
-	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
-	push @tags, 'obscen' if $obscen and none { $_ eq 'obscen' } @tags;
-
-	print "~ @tags\n";
-
 	my $version = 1;
 	my $new_joke = $joke->create({
-		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
-
 		link => undef,
 		joke_versions => [{
 			version => $version,
@@ -119,6 +111,13 @@ while ( my $banc = $bancuri->next ) {
         });
     }
     
+    # add tags (do in memory join of tables to find old category)
+	my @tags = @{$tags{ $banc_tag{ $banc->id } }};
+
+    $obscen = $new_joke->has_profanity unless $obscen;
+	push @tags, 'obscen' if $obscen and none { $_ eq 'obscen' } @tags;
+
+	print "~ @tags\n";
     $new_joke->add_tags_by_user(\@tags);
 
 	$new_joke->current->title( $new_joke->current->default_title );

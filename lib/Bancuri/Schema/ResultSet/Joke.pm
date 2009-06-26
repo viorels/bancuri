@@ -15,12 +15,22 @@ Search a random joke with preference for higher rating ones
 sub search_random_joke {
     my ($self) = @_;
 
-    my $count = $self->count();
-    
+    my $jokes_obscen = $self->search({
+        'tag_id.name' => { '=' => 'obscen' },
+    },
+    {
+        join => { joke_tags => 'tag_id' }
+    });
+
+    my $jokes = $self->search({
+        'me.id' => { -not_in => $jokes_obscen->get_column('id')->as_query }
+    });        
+
+    my $count = $jokes->count();
     # random_beta count=1, a=1.75, b=0.75 => sanse mai mari spre 1 decat spre 0
     my $offset = int( random_beta(1, 1.75, 0.75) * $count );
 
-    my $joke = $self->search( undef, {
+    my $joke = $jokes->search( undef, {
         join    => 'current',
         order_by => 'current.rating ASC',  
     })->slice($offset, $offset);
