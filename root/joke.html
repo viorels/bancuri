@@ -29,6 +29,10 @@ _joke_link = "[% joke.link %]";
 				
 				<a href="[% '/' _ joke.link _ '/edit' %]">Modifica</a><br>
 
+				[% ELSE %]
+				<h3>banc sters</h3>
+				[% END %]
+
 				[% IF change %]
 	                <h3>
 	                Acest banc a fost [% change_type %] de curand.<br>
@@ -50,11 +54,6 @@ _joke_link = "[% joke.link %]";
 		                <input type="button" id="change_no" name="change_no_[% change.id %]" value="Nu">
 		                <input type="button" id="change_yes" name="change_yes_[% change.id %]" value="Da">
 	                </h3>
-				[% END %]
-
-					
-				[% ELSE %]
-				<h3>banc sters</h3>
 				[% END %]
 
 				<br class="clear" />
