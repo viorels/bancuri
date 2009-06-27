@@ -102,6 +102,8 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-26 17:42:11
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LfapE+zql3TFBuVrHaCxVg
 
+use List::MoreUtils;
+
 __PACKAGE__->has_one(
   "from",
   "Bancuri::Schema::Result::JokeVersion",
@@ -147,6 +149,28 @@ sub vote {
     }
 
     return $new_rating;
+}
+
+=item decide
+Decide if the vote is over.
+If so return accepted 1/0, otherwise return undef
+=cut
+
+sub decide {
+    my ($self) = @_;
+
+    my $approved = undef;
+    my @votes = $self->search_related('change_votes')->all;
+    
+    # XXX compare with float rating ?
+    if (@votes >= 2 and $self->rating != 0) {
+        $approved = $self->rating > 0;
+        $self->approved($approved);
+        $self->decided('now()');
+        $self->update;
+    }
+    
+    return $approved;
 }
 
 # You can replace this text with custom content, and it will be preserved on regeneration

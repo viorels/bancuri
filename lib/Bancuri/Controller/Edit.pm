@@ -158,13 +158,22 @@ sub change_vote : Local {
     my $change = $c->model('BancuriDB::Change')->find($change_id);
     my $new_rating = $change->vote($vote, $c->user->id,
             $c->sessionid, $c->req->address, $c->req->user_agent);
-    
-    if (defined $new_rating) {
-        $c->stash( json_change_rating => $new_rating );
+    my $approved = $change->decide;
+
+    my $message = '';
+    if ( defined $new_rating ) {
+        my $you_agree = $vote * $new_rating > 0;
+        $message = $you_agree ? 'Esti de acord cu majoritatea.'
+                : 'Majoritatea nu este de acord cu tine.';
     }
     else {
-        $c->stash( json_change_error => 'Ai mai votat ?' );
+        $message = 'Ai mai votat ?';
+    };
+    if ( defined $approved ) {
+        $message .= $approved ? 'S-a aprobat !' : 'S-a anulat !'; 
     }
+    
+    $c->stash( json_change_msg => $message );
 }
 
 =head1 AUTHOR

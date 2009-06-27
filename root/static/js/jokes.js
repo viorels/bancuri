@@ -184,21 +184,7 @@ function change_vote(btn_name, rating) {
 	};
 
 	$.post('/edit/change_vote', vote, function(data) {
-		var text;
-		if (data['json_change_error']) {
-			text = data['json_change_error'];
-		}
-		else {
-			// Do you agree with the majority ?
-			var agree = rating * data['json_change_rating'] > 0;
-			if (agree) {
-				text = 'Esti de acord cu majoritatea';
-			}
-			else {
-				text = 'Majoritatea nu este de acord cu tine';
-			}
-		}
-	
+		var text = data['json_change_msg'];
 		$("#change_question").empty().append(text);
 	}, 'json');
 }

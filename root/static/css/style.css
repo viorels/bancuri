@@ -14,6 +14,10 @@
     text-align: justify;
 }
 
+.banc .columnText strong, .banc .columnText strike { 
+	background-color: #ffff00;
+}
+	
 .rating {
 	text-align: right;
 }
