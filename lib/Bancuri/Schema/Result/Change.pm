@@ -153,7 +153,7 @@ sub vote {
 
 =item decide
 Decide if the vote is over.
-If so return accepted 1/0, otherwise return undef
+If so return approved=1/0, otherwise return undef
 =cut
 
 sub decide {
@@ -164,13 +164,46 @@ sub decide {
     
     # XXX compare with float rating ?
     if (@votes >= 2 and $self->rating != 0) {
-        $approved = $self->rating > 0;
+        $approved = $self->rating > 0 ? 1 : 0;
+
         $self->approved($approved);
         $self->decided('now()');
         $self->update;
+
+        $self->joke_rollback unless $approved;
     }
     
     return $approved;
+}
+
+=item joke_rollback
+Rollback the joke change if it was not approved
+=cut
+
+sub joke_rollback {
+    my ($self) = @_;
+    
+    my $approved = $self->approved;
+    if (defined $approved and not $approved) {
+        my $joke = $self->joke_id;
+            
+        # Rollback change
+        if ($self->type eq 'add') {
+            $joke->deleted(1);
+        }
+        elsif ($self->type eq 'delete') {
+            $joke->deleted(0);
+        }
+        elsif ($self->type eq 'edit') {
+            warn "ROLLBACK edit";
+            if (defined $self->from_version and $self->to_version == $joke->version) {
+                warn "FROM ". $self->from_version. " TO ". $self->to_version;
+                $joke->version( $self->from_version );
+            }
+        }
+
+        $joke->update;
+    }
 }
 
 # You can replace this text with custom content, and it will be preserved on regeneration

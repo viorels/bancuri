@@ -170,7 +170,7 @@ sub change_vote : Local {
         $message = 'Ai mai votat ?';
     };
     if ( defined $approved ) {
-        $message .= $approved ? 'S-a aprobat !' : 'S-a anulat !'; 
+        $message .= $approved ? ' S-a aprobat !' : ' S-a anulat !'; 
     }
     
     $c->stash( json_change_msg => $message );
