@@ -20,15 +20,15 @@ sub add : Global {
     my ( $self, $c ) = @_;
 
     if ( $c->request->method eq 'POST' ) {
-        my $joke = $c->request->params->{'joke'};
-        $c->stash->{'joke'} = $joke;
+        my $joke_text = $c->request->params->{'joke'};
+        $c->stash->{'joke'} = $joke_text;
 
         if ( $c->request->params->{'preview'} ) {
         	# Create a new database object without storing it
             my $new_joke = $c->model('BancuriDB::Joke')->new_result({
                 link => undef,
                 current => {
-                    text => $joke, 
+                    text => $joke_text, 
                 },
             });
             $c->stash->{'joke_preview'} = $new_joke;
@@ -37,7 +37,12 @@ sub add : Global {
         if ( $c->request->params->{'save'} ) {
             # TODO check checksum of previous version
 
-            my $new_joke = $c->model('BancuriDB::Joke')->add($joke);
+            my $user_id = $c->user ? $c->user->id : undef;
+            my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+                $c->sessionid, $c->req->address, $c->req->user_agent)->id;
+
+            my $new_joke = $c->model('BancuriDB::Joke')
+                ->add($joke_text, $user_id, $browser_id);
             if ($new_joke) {
                 my $link = '/' . $new_joke->link;
                 $c->res->redirect($link) and $c->detach;
@@ -75,6 +80,8 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         $joke_text = $c->request->params->{'joke'};
         $joke_title = $c->request->params->{'title'};
         my $user_id = $c->user ? $c->user->id : undef;
+        my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+                $c->sessionid, $c->req->address, $c->req->user_agent)->id;
         
         if ( $c->request->params->{'preview'} ) {
         	# Create a new database object without storing it
@@ -94,7 +101,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
                 parent_version => $joke->version,
                 comment => $c->request->params->{'comment'},
                 user_id => $user_id,
-#                browser => ...
+                browser_id => $browser_id, 
             );
             
             # Redirect to show the (new) joke
@@ -103,7 +110,11 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         }
         
         if ( $c->request->params->{'delete'} ) {
-		    $joke->remove;
+		    $joke->remove(
+                user_id => $user_id,
+                browser_id => $browser_id, 		    
+                comment => $c->request->params->{'comment'},
+		    );
 		    
             my $link = '/' . $joke->link;
             $c->res->redirect($link) and $c->detach;
@@ -134,10 +145,16 @@ sub rating : Local {
     my $id = $c->request->params->{'id'};
     my $vote = $c->request->params->{'rating'};
     
+    my $user_id = $c->user ? $c->user->id : undef;
+    my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+            $c->sessionid, $c->req->address, $c->req->user_agent)->id;
+                    
     # TODO It's WRONG to assume current version
     my $joke_version = $c->model('BancuriDB::Joke')->find({ id => $id })->current;
     my $new_rating = $joke_version
-        ->vote($vote, $c->sessionid, $c->req->address, $c->req->user_agent);
+        ->vote($vote, $user_id, $browser_id);
+    
+    # XXX undefined means that the user has already voted (today)
     $new_rating = 0 unless defined $new_rating;
 
     $c->response->body($new_rating);
@@ -154,10 +171,13 @@ sub change_vote : Local {
     my $change_id = $c->request->params->{'change_id'};
     my $vote = $c->request->params->{'vote'};
     
+    my $user_id = $c->user ? $c->user->id : undef;
+    my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+            $c->sessionid, $c->req->address, $c->req->user_agent)->id;
+                
     # TODO is he allowed to vote this ?
     my $change = $c->model('BancuriDB::Change')->find($change_id);
-    my $new_rating = $change->vote($vote, $c->user->id,
-            $c->sessionid, $c->req->address, $c->req->user_agent);
+    my $new_rating = $change->vote($vote, $user_id, $browser_id);
     my $approved = $change->decide;
 
     my $message = '';

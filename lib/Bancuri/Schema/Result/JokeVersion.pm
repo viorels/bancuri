@@ -126,16 +126,18 @@ sub text_teaser {
     return $text;
 };
 
+=item vote
+Vote on a joke version. Required arguments: rating, user_id, browser_id
+Returns the new average rating or undef if user has already voted.
+=cut
+
 sub vote {
-    my ($self, $rating, $session_id, $ip, $useragent, $weight ) = @_;
+    my ($self, $rating, $user_id, $browser_id) = @_;
 
     # TODO transaction ?
-
-    my $browser = $self->result_source->schema->resultset('Browser')
-        ->find_or_create_unique($session_id, $ip, $useragent); 
     
     my $vote = $self->find_related('votes', {
-        browser_id => $browser->id,
+        browser_id => $browser_id,
         date => 'now()',
     }, { key => 'idx_vote_browser_date' });
     
@@ -147,9 +149,10 @@ sub vote {
         $self->update;
         
         $self->create_related('votes', {
-            browser_id => $browser->id,
-            date => 'now()',
             rating => $rating,
+            date => 'now()',
+            user_id => $user_id,
+            browser_id => $browser_id,
         });
     }
 

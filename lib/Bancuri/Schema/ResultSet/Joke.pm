@@ -87,25 +87,33 @@ sub search_ids {
     return $jokes;
 }
 
+=item add
+Add a joke with these params:
+- text
+- user_id
+- browser_id
+=cut
+
 sub add {
-	my ($self, $text) = @_;
+	my ($self, $text, $user_id, $browser_id) = @_;
 	return if $self->bad_joke($text);
 
     my $version = 1;
 	my $joke = $self->create({
-		# TODO pentru bancurile not $banc->ok fa o cerere de moderare
-
         link => undef,
 		joke_versions => [{
 			version => $version,
 			text => $text,
+            user_id => $user_id,
+            browser_id => $browser_id,
 		}],
 	});
 	
     $joke->create_related('changes', {
         type => 'add',
         to_version => $version,
-        # TODO user, browser 
+        user_id => $user_id,
+        browser_id => $browser_id,
     });
     
     #$joke->add_tags_by_user(\@tags);

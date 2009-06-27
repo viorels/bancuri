@@ -94,8 +94,13 @@ sub first {
     return $first; 
 }
 
+=item remove
+Remove a joke (mark as deleted).
+Required argument hash keys: user_id, browser_id, comment 
+=cut
+
 sub remove {
-    my ($self) = @_;
+    my ($self, %params) = @_;
     
     unless ( $self->deleted ) {
         $self->deleted(1);
@@ -103,7 +108,7 @@ sub remove {
         $self->create_related('changes', {
             type => 'delete',
             from_version => $self->version,
-            # TODO user, browser 
+            %params,
         });
     }    
 }

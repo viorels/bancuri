@@ -118,17 +118,19 @@ __PACKAGE__->has_one(
     "foreign.version" => "self.to_version" },
 );
 
+=item vote
+Vote on a change. Required arguments: rating, user_id, browser_id
+Returns the new average rating or undef if user has already voted.
+=cut
+
 sub vote {
-    my ($self, $rating, $user_id, $session_id, $ip, $useragent) = @_;
+    my ($self, $rating, $user_id, $browser_id) = @_;
 
     # TODO check if user_id is defined !
-
-    my $browser = $self->result_source->schema->resultset('Browser')
-        ->find_or_create_unique($session_id, $ip, $useragent); 
     
     my $vote = $self->find_related('change_votes', {
         user_id => $user_id,
-        browser_id => $browser->id,
+        browser_id => $browser_id,
         date => 'now()',
     }, { key => 'pk_change_vote' });
     
@@ -136,7 +138,7 @@ sub vote {
     unless ($vote) {
         $self->create_related('change_votes', {
             user_id => $user_id,
-            browser_id => $browser->id,
+            browser_id => $browser_id,
             date => 'now()',
             rating => $rating,
         });
@@ -163,7 +165,7 @@ sub decide {
     my @votes = $self->search_related('change_votes')->all;
     
     # XXX compare with float rating ?
-    if (@votes >= 2 and $self->rating != 0) {
+    if (@votes >= 1 and $self->rating != 0) {
         $approved = $self->rating > 0 ? 1 : 0;
 
         $self->approved($approved);
