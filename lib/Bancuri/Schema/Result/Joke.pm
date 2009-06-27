@@ -147,6 +147,38 @@ sub add_version {
     return;
 }
 
+=item requires_moderation
+Does the node require moderation ? 
+If so then return change object. Otherwise return undef. 
+=cut
+
+sub requires_moderation {
+    my ($self, $current_user) = @_;
+    
+    # Current version or undef if deleted
+    my $curent_version = $self->deleted ? undef : $self->version;
+
+    # Search for the latest change request leading to current version
+    # Assume that it can only return an unmoderated change or an accepted one
+    # as rejected changes do not lead to current versions
+	my $change = $self->search_related('changes', {
+	    to_version => $curent_version,
+        -or => [
+            approved => 1,
+            approved => undef,
+        ],
+    }, {
+        order_by => 'proposed DESC',
+    })->slice(0,0)->single;
+
+    # If we've found an approved change then there's no need for moderation
+    if (defined $change and $change->approved) {
+        $change = undef;
+    }
+    
+    return $change;
+}
+
 sub default_link {
     my ($self) = @_;
     

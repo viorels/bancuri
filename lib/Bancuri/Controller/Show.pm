@@ -63,43 +63,32 @@ sub show_change : Private {
     my ( $self, $c, $version ) = @_;
     my $joke = $c->stash->{'joke'};
 
-    return unless $c->user;
-
-	# node_required_moderation ?
-	# not approved and proposed by other then current user
-	my @changes = $joke->search_related('changes', {
-        approved => undef,
-        -or => [ 
-            user_id => { '!=' => $c->user->id },
-            user_id => { '=' => undef }, 
-        ],
-    });
-
-    my %change_types = (
-        add => 'adaugat',
-        edit => 'modificat',
-        delete => 'sters',
-    );
-    
-    if (@changes) {
-        my $change = $changes[0];
-        
-        my $diff;
-        if ( $change->from and $change->to ) {
-            $diff = diff_merge($change->from->text, $change->to->text,
+    # Only authenticated users are allowed to moderate
+	if ( $c->user and my $change = $joke->requires_moderation ) {
+	    # Proposed by other then current user ?
+        unless ( defined $change->user_id and $c->user->id != $change->user_id ) {
+            my %change_types = (
+                add => 'adaugat',
+                edit => 'modificat',
+                delete => 'sters',
+            );
+            
+            my $from_text = $change->from ? $change->from->text : '';
+            my $to_text = $change->to ? $change->to->text : '';
+            my $diff = diff_merge($from_text, $to_text,
                 remove_open => '<strike>',
                 remove_close => '</strike>',
                 append_open => '<strong>',
                 append_close => '</strong>',
             );
-        };
-
-        $c->stash( 
-            change => $change,
-            change_text => $diff, # TODO | html_entity !!!
-            change_type => $change_types{$change->type}, 
-        );
-    }
+            
+            $c->stash( 
+                change => $change,
+                change_text => $diff, # TODO | html_entity !!!
+                change_type => $change_types{$change->type}, 
+            );
+        }
+	}
 }
 
 sub show : Private {
