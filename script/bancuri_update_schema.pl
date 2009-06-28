@@ -19,7 +19,7 @@ make_schema_at(
         dump_directory => "$FindBin::Bin/../lib",
         constraint     => $constraint,
     },
-    [ "dbi:Pg:dbname=bancuri;host=localhost", "bancuri", "gSj0wGSH" ]
+    [ "dbi:Pg:dbname=bancuri;host=localhost", "bancuri", "zeque2Oh" ]
 );
 
 
