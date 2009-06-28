@@ -1,0 +1,16 @@
+[%
+	menu = 'inc/menu_profile.html',
+	tab_active = 'profile',
+%]
+
+<h3>[% c.user.name %]</h3>
+
+<p>
+	Email: [% c.user.email %]<br>
+	Karma: [% c.user.karma || 0 %]<br>
+	Nascut: [% c.user.birth.dmy || 'N/A' %]<br>
+	Sex: [% c.user.gender || 'N/A' %]<br>
+	Tara: [% c.user.country || 'N/A' %]<br>
+</p>
+			
+<br class="clear" />

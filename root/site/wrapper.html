@@ -1,7 +1,8 @@
-[% UNLESS nowrap %]
+[%- UNLESS nowrap %]
 [%- DEFAULT
   title = 'Enciclopedia de bancuri',
   menu = 'inc/menu_joke.html',
+  tab_active = 'bancuri',
 -%]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
@@ -40,12 +41,17 @@
 		
 		<div id="menu">
 			<ul>
-				<li><a id="btn_profile" href="/profile">[% c.user.name || anonymous %]</a></li>
-				<li><a href="#" class="active">Bancuri</a></li>
-				<li><a href="/blog">Blog</a></li>
-				<li><a href="/contact">Contacteaza-ma</a></li>
+				<li><a id="btn_profile" href="/profile" [% IF tab_active == 'profile' %]class="active"[% END %]>
+					[% c.user.name || anonymous %]</a></li>
+				<li><a href="/" [% IF tab_active == 'bancuri' %]class="active"[% END %]>
+					Bancuri</a></li>
+				<li><a href="/blog" [% IF tab_active == 'blog' %]class="active"[% END %]>
+					Blog</a></li>
+				<li><a href="/contact" [% IF tab_active == 'contact' %]class="active"[% END %]>
+					Contacteaza-ma</a></li>
                 [% IF c.user %]
-				<li><a id="btn_logout" href="#">Logout</a></li>
+				<li><a id="btn_logout" href="#">
+					Logout</a></li>
                 [% END %]
 			</ul>
 		</div>
@@ -121,4 +127,4 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 </body>
 </html>
-[% END %]
+[% END -%]

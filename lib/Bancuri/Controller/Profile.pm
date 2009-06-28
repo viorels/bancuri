@@ -37,13 +37,29 @@ sub auto : Private {
         # Dump a log message to the development server debug output
         $c->log->debug('***Root::auto User not found, forwarding to /login');
         # Redirect the user to the login page
-        $c->response->redirect('/auth/login');
+        $c->response->redirect('/auth/form');
         # Return 0 to cancel 'post-auto' processing and prevent use of application
         return 0;
     }
 
     # User found, so return 1 to continue with processing after this 'auto'
     return 1;
+}
+
+
+sub index : Path Args(0) {
+    my ($self, $c) = @_;
+    
+    $c->stash( template => 'profile.html' );
+}
+
+sub contact : Global {
+    my ($self, $c) = @_;
+    
+    $c->stash( 
+        template => 'contact.html',
+         
+    );
 }
 
 

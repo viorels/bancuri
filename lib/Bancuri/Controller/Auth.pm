@@ -22,9 +22,12 @@ Catalyst Controller.
 sub form : Local {
     my ( $self, $c ) = @_;
     
+    my $nowrap = 1;
+    $nowrap = 0 unless $c->stash->{'AJAX'};
+    
     $c->stash(
         current_view => 'TT',
-        nowrap => 1,
+        nowrap => $nowrap,
         template => 'inc/login.html',
     );
 }
