@@ -17,6 +17,8 @@ _joke_link = "[% joke.link %]";
                   <td class="columnText">[% joke_version.text_blessed | html_entity | html_line_break %]</td>
                   <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
                 </tr></tbody></table>
+                
+                <!-- img id="edit_icon" src="/static/img/edit.png" width="20" height="20"  -->
 
 				<div id="rating" class="rating">
 					<span class="ui-rater">
@@ -27,14 +29,17 @@ _joke_link = "[% joke.link %]";
 					</span>
 				</div>
 				
-				<a href="[% '/' _ joke.link _ '/edit' %]">Modifica</a><br>
+				<div style="float: right;">
+					<a href="[% '/' _ joke.link _ '/edit' %]">Editeaza banc</a><br>
+				</div>
 
 				[% ELSE %]
 				<h3>banc sters</h3>
 				[% END %]
 
-				[% IF change %]
 				<br class="clear" />
+
+				[% IF change %]
 				<div class="post">
 	                <h3>
 	                Acest banc a fost [% change_type %] de [% change.user_id.name || 'un anonim' %]<br>
