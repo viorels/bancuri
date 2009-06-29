@@ -200,16 +200,20 @@ sub user_info : Private {
 
 sub logout : Local {
     my ( $self, $c ) = @_;
+
+    my $back = '/';
+    $back = $c->session->{'last_page'} 
+        if exists $c->session->{'last_page'};
+    warn "*** last_page ".$back; 
+     
+    $back = $c->req->referer if $back eq '/';
+    warn "*** referer ".$back;
    
     # $c->logout();
     $c->delete_session('logout');
 
     # Send the user to the starting point
     unless ( $c->stash->{'AJAX'} ) {
-        my $back = '/';
-        $back = $c->session->{'last_page'} 
-            if exists $c->session->{'last_page'};        
-
         $c->res->redirect($back) and $c->detach;
     }
 }
