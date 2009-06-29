@@ -41,20 +41,9 @@ $(document).ready(function() {
     );
 	
 	// Profile
-	$("#btn_profile").click(function() {
-		$("#authentication").load('/auth/form', {}, 
-			function (responseText, textStatus, XMLHttpRequest) {
-				$(this).slideDown();
-				$("#id").blur(check_id);
-				$("#login_form").ajaxForm({
-					beforeSubmit: login_pre,
-					success: login_cb,
-					dataType: 'json',
-				});
-			}
-		);
-		return false;
-	});
+	if (!_user_exists) {
+		$("#btn_profile").click(btn_login_click);
+	}
 	
 	// Vote a change
 	$("#change_no").click( function() {
@@ -66,6 +55,21 @@ $(document).ready(function() {
 	
 	setup_logout();
 });
+
+function btn_login_click() {
+	$("#authentication").load('/auth/form', {}, 
+		function (responseText, textStatus, XMLHttpRequest) {
+			$(this).slideDown();
+			$("#id").blur(check_id);
+			$("#login_form").ajaxForm({
+				beforeSubmit: login_pre,
+				success: login_cb,
+				dataType: 'json',
+			});
+		}
+	);
+	return false;
+}
 
 function joke_id() {
     return _joke_id;
@@ -151,7 +155,8 @@ function login_cb(data, status) {
 			// add message and change the class of the box and start fading
 			$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1,
 			function() {
-				$("#btn_profile").text(name);
+				_user_exists = true;
+				$("#btn_profile").unbind('click', btn_login_click).text(name);
 				$("#menu").children("ul")
 					.append('<li><a id="btn_logout" href="#">Logout</a></li>');
 				setup_logout();

@@ -28,9 +28,11 @@ sub auto : Private {
     #   if ($c->action eq $c->controller('Login')->action_for('index'))
     # to only allow unauthenticated access to the 'index' action we
     # added above.
-    if ($c->controller eq $c->controller('Login')) {
-        return 1;
-    }
+
+#   Not needed as /login is in another controller ;)
+#    if ($c->controller eq $c->controller('Login')) {
+#        return 1;
+#    }
 
     # If a user doesn't exist, force login
     if (!$c->user_exists) {
@@ -51,15 +53,6 @@ sub index : Path Args(0) {
     my ($self, $c) = @_;
     
     $c->stash( template => 'profile.html' );
-}
-
-sub contact : Global {
-    my ($self, $c) = @_;
-    
-    $c->stash( 
-        template => 'contact.html',
-         
-    );
 }
 
 

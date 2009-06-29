@@ -138,6 +138,14 @@ sub blog : Local {
     $c->stash->{'template'} = 'blog.html';
 }
 
+sub contact : Global {
+    my ($self, $c) = @_;
+    
+    $c->stash( 
+        template => 'contact.html',
+    );
+}
+
 sub end : ActionClass('RenderView') {
 	my ( $self, $c ) = @_;
 	
