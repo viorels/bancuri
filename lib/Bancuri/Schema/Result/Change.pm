@@ -173,10 +173,22 @@ sub decide {
         $self->update;
 
         $self->joke_rollback unless $approved;
+        
+        # Increment/decrement karma with the change's rating
+        $self->change_proposer_karma($self->rating);
     }
     
     return $approved;
 }
+
+sub change_proposer_karma {
+    my ($self, $change) = @_;
+    
+    my $old_karma = $self->user_id->karma || 0;
+    warn "*** CHANGE karma $old_karma + $change";
+    $self->user_id->karma($old_karma + $change);
+    $self->user_id->update;
+} 
 
 =item joke_rollback
 Rollback the joke change if it was not approved
