@@ -31,7 +31,10 @@ sub register {
     my $email = $profile->{'verifiedEmail'} || $profile->{'email'};
     my $identifier = $profile->{'identifier'};
     
-    my $existing_user = $self->find({ email => $email });
+    my $existing_user;
+    
+    # Only search existing email if email is defined !
+    $existing_user = $self->find({ email => $email }) if $email;
 
     my $new_user = {
         email => $email,
