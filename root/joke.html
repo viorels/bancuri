@@ -34,10 +34,15 @@ _joke_link = "[% joke.link %]";
 				[% END %]
 
 				[% IF change %]
+				<br class="clear" />
+				<div class="post">
 	                <h3>
-	                Acest banc a fost [% change_type %] de un anonim.<br>
-	                [% IF change.type != 'add' %] Iata diferentele: [% END %]
-	                </h3><br>
+	                Acest banc a fost [% change_type %] de [% change.user_id.name || 'un anonim' %]<br>
+	                </h3>
+   					<ul class="post_info">
+						<li class="date">Propus de <a href="#">[% change.user_id.name || 'un anonim' %]</a> pe [% change.proposed %]</li>
+						<li class="comments">[% change.comment %]</li>
+					</ul>		
 	                
 	                [% IF change.type != 'add' %]
 	                <table class="banc"><tbody><tr>
@@ -54,13 +59,13 @@ _joke_link = "[% joke.link %]";
 		                <input type="button" id="change_no" name="change_no_[% change.id %]" value="Nu">
 		                <input type="button" id="change_yes" name="change_yes_[% change.id %]" value="Da">
 	                </h3>
+				</div>
 				[% END %]
 
 				<br class="clear" />
-			
-				<div id="versions">
-                <h3>Variante</h3>
 
+				<div id="versions">
+	                <h3>Variante</h3>
 				</div>
 
                 <div id="teaser" class="banc">

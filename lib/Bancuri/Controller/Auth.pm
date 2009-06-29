@@ -206,7 +206,11 @@ sub logout : Local {
 
     # Send the user to the starting point
     unless ( $c->stash->{'AJAX'} ) {
-        $c->res->redirect('/') and $c->detach;
+        my $back = '/';
+        $back = $c->session->{'last_page'} 
+            if exists $c->session->{'last_page'};        
+
+        $c->res->redirect($back) and $c->detach;
     }
 }
 

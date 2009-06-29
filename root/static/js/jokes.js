@@ -41,7 +41,10 @@ $(document).ready(function() {
     );
 	
 	// Profile
-	if (!_user_exists) {
+	if (_user_exists) {
+		setup_logout();
+	}
+	else {
 		$("#btn_profile").click(btn_login_click);
 	}
 	

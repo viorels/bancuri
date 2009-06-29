@@ -66,7 +66,7 @@ sub show_change : Private {
     # Only authenticated users are allowed to moderate
 	if ( $c->user and my $change = $joke->requires_moderation ) {
 	    # Proposed by other then current user ?
-        unless ( defined $change->user_id and $c->user->id != $change->user_id ) {
+        unless ( defined $change->user_id and $change->user_id->id == $c->user->id ) {
             my %change_types = (
                 add => 'adaugat',
                 edit => 'modificat',
