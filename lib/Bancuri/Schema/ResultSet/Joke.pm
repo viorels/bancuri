@@ -59,6 +59,7 @@ sub get_all_for_days {
     }, { 
         key => 'idx_joke_for_day',
         order_by => 'for_day desc',
+        prefetch => [ 'current' ],
     });
     
     return $all_jokes;

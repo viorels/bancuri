@@ -45,9 +45,13 @@ sub rss :Local {
     # Process the entries
     while( my $entry = $c->stash->{entries}->next ) {
         my $feed_entry = XML::Feed::Entry->new('RSS');
-        $feed_entry->content($entry->current->text);
-        $feed_entry->title($entry->current->title);
-        $feed_entry->link( $c->uri_for($entry->link) );
+        
+        my $text = $entry->current->text_blessed;
+        #$text =~ s/\n/<br>/g;
+        $feed_entry->content( $text );
+        
+        $feed_entry->title( $entry->current->title );
+        $feed_entry->link( $c->uri_for('/', $entry->link) );
         $feed_entry->issued( $entry->for_day );
         $feed->add_entry($feed_entry);
     }
