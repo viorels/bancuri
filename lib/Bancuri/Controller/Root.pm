@@ -54,6 +54,15 @@ sub index : Path Args(0) {
 	if ( my $id = $c->request->params->{id} ) {
         $c->forward('load_joke', [ link => $id ]);
 	}
+	# Redirect for legacy search
+	elsif ( my $keywords = $c->request->params->{'cautare'} ) {
+	    my $start = $c->request->params->{'start'};
+	    my $page = $start ? $start/10 + 1 : 1;
+
+		my $new_link = "/search/$keywords";
+		$new_link .= "/$page" if $page > 1;
+        $c->res->redirect($new_link) and $c->detach;	    
+	}
 	else {
 	    $c->forward('joke_for_today');
 	}
