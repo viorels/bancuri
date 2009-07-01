@@ -66,6 +66,9 @@ sub results : Private {
     
     my $page = $c->stash->{'page'} || 1;
     my $perpage = 10;
+    
+    # Save the search
+    $c->model('BancuriDB::Search')->save_search($keywords);
 
     my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
     # hits querytime struct search pager query query_obj mset page page_size    
@@ -116,7 +119,9 @@ sub results : Private {
 sub all : Private {
     my ( $self, $c ) = @_;
     
-    $c->response->body('ALL');
+    # TODO list all jokes, one per page
+    # for now just redirect to home page
+    $c->res->redirect('/') and $c->detach;
 }
 
 sub update_index : Private {

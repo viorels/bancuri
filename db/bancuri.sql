@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Fri Jun 26 17:50:08 2009
+--   Generated at:      Wed Jul  1 22:12:07 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -253,7 +253,7 @@ create table visit (
 -- search
 create table search (
   keywords                  character varying(255) not null,
-  times                     integer default 1,
+  times                     integer default 0 not null,
   last                      date,
   constraint pk_Search primary key (keywords)
 ) ;
