@@ -44,6 +44,26 @@ sub get_for_day {
     return $self->find({ for_day => $day }, { key => 'idx_joke_for_day' });
 }
 
+=item get_all_for_days
+Get all jokes of the day (but not from future)
+=cut
+
+sub get_all_for_days {
+    my ($self) = @_;
+    
+    my $all_jokes = $self->search({
+        -and => [
+            for_day => { '!=' => undef },
+            for_day => { '<=' => 'now()' },
+        ]
+    }, { 
+        key => 'idx_joke_for_day',
+        order_by => 'for_day desc',
+    });
+    
+    return $all_jokes;
+}
+
 =item set_for_day 
 
 Set the default joke for_day. If no joke_id specified then a good one is 
