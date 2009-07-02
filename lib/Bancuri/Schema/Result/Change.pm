@@ -184,10 +184,11 @@ sub decide {
 sub change_proposer_karma {
     my ($self, $change) = @_;
     
-    my $old_karma = $self->user_id->karma || 0;
-    warn "*** CHANGE karma $old_karma + $change";
-    $self->user_id->karma($old_karma + $change);
-    $self->user_id->update;
+    if (defined $self->user_id) {
+        my $old_karma = $self->user_id->karma || 0;
+        $self->user_id->karma($old_karma + $change);
+        $self->user_id->update;
+    }
 } 
 
 =item joke_rollback
