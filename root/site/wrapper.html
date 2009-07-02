@@ -20,7 +20,7 @@
   <meta name="description" content="" />
   <link rel="stylesheet" type="text/css" href="/static/css/template.css" />
   <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
-  <link rel="alternate" type="application/atom+xml" title="Bancul zilei" href="http://feeds.feedburner.com/BancuriCom" />
+  <link rel="alternate" type="application/atom+xml" title="Bancul zilei" href="[% c.uri_for('/feed', 'rss') %]" />
   [% UNLESS nojs %]
   <script type="text/javascript" src="/static/js/jquery.js"></script>
   <script type="text/javascript" src="/static/js/jq-editable.js"></script>

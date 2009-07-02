@@ -29,6 +29,15 @@ sub index :Path :Args(0) {
     $c->res->redirect($c->uri_for('rss'));
 }
 
+=head2 burner
+Special url /feed/burner for google/feedburner in order to avoid redirects
+=cut
+
+sub burner :Local {
+    my ($self, $c) = @_;
+    $c->forward('rss');
+}
+
 =head2 rss
 RSS feed
 =cut
