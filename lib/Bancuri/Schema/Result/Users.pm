@@ -121,12 +121,30 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MgSeBmX0d96sw3SzdR1ctA
 
+use DateTime;
+use DateTime::Duration;
+
 __PACKAGE__->many_to_many(roles => 'user_roles', 'role_id');
 
 sub age {
-    my ($self) = @_;
+    my ($self, $age) = @_;
+    
+    if (@_ >= 2 and defined $age) {
+        my $dt_age = DateTime::Duration->new( years => $age );
+        my $birth_year = (DateTime->now - $dt_age)->truncate( to => 'year' );
+        $self->update({ birth => $birth_year });
+    }
+    elsif (defined $self->birth) {
+        $age = (DateTime->now - $self->birth)->years;
+    }
 
-    # TODO Return DateTime diff in years. Also make this a setter for birth.
+    return $age;
+}
+
+sub is_underage {
+    my ($self) = @_;
+    
+    return defined $self->age && $self->age < 18;
 }
 
 sub update_last_login {

@@ -111,25 +111,33 @@ sub show : Private {
     	    $c->stash( profanity => 1 );
     	}
     }
+	# TODO check if there is no such version
 
     $c->forward('show_change', [$version]);
-
-	# TODO check if there is no such version
-    # node is not deleted ?
-
-    my $next_joke = $c->model('BancuriDB::Joke')->search_random_joke()->single();
-
-    if ( $next_joke->current->has_profanity ) {
-        $c->stash( profanity => 1 );
-    }
+    $c->forward('show_next_joke');
 
 	$c->stash(
         joke => $joke,
         joke_version => $joke_version,
-        next_joke => $next_joke,
     );
 
 	$c->stash->{template} = 'joke.html';
+}
+
+sub show_next_joke :Private {
+    my ($self, $c) = @_;
+    
+    my $jokes = $c->model('BancuriDB::Joke')->search_not_deleted;
+    $jokes = $jokes->search_clean if not $c->user or $c->user->is_underage;
+
+    my $next_joke = $jokes->random_beta_single;
+
+    # TODO joke might still have profanity so repeat search a few times
+    if ( $next_joke->current->has_profanity ) {
+        $c->stash( profanity => 1 );
+    }
+    
+    $c->stash( next_joke => $next_joke );
 }
 
 =head1 AUTHOR

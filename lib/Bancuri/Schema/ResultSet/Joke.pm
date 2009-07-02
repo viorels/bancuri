@@ -12,7 +12,7 @@ Search a random joke with preference for higher rating ones
 
 =cut
 
-sub search_random_joke {
+sub search_clean {
     my ($self) = @_;
 
     my $jokes_obscen = $self->search({
@@ -26,17 +26,31 @@ sub search_random_joke {
         'me.id' => { -not_in => $jokes_obscen->get_column('id')->as_query }
     });        
 
-    my $count = $jokes->count();
+    return $jokes;
+};
+
+sub search_not_deleted {
+    my ($self) = @_;
+
+    return $self->search({
+        deleted => 0,
+    });
+}
+
+sub random_beta_single {
+    my ($self) = @_;
+    
+    my $count = $self->count();
     # random_beta count=1, a=1.75, b=0.75 => sanse mai mari spre 1 decat spre 0
     my $offset = int( random_beta(1, 1.75, 0.75) * $count );
 
-    my $joke = $jokes->search( undef, {
+    my $joke = $self->search( undef, {
         join    => 'current',
         order_by => 'current.rating ASC',  
-    })->slice($offset, $offset);
+    })->slice($offset, $offset)->single();
 
     return $joke;
-};
+}
 
 sub get_for_day {
     my ($self, $day) = @_; 
