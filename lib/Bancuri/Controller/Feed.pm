@@ -47,7 +47,7 @@ sub rss :Local {
         my $feed_entry = XML::Feed::Entry->new('RSS');
         
         my $text = $entry->current->text_blessed;
-        #$text =~ s/\n/<br>/g;
+        $text =~ s/\n/<br>/g;
         $feed_entry->content( $text );
         
         $feed_entry->title( $entry->current->title );
