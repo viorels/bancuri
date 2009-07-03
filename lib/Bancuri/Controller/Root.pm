@@ -27,6 +27,8 @@ sub begin : Private {
 
 sub auto : Private {
 	my ( $self, $c ) = @_;
+
+    $c->forward('redirect_to_www');
 	
     # TODO test on IE
     my $req_with = $c->request->header('X-Requested-With');
@@ -130,6 +132,17 @@ sub redirect_joke : Private {
 	else {
 		$c->forward('not_found', [ $joke_link ]);
 	}
+}
+
+sub redirect_to_www : Private {
+    my ( $self, $c ) = @_;
+
+    if ( $c->req->uri->host eq 'bancuri.com' && $c->req->method ne "POST" ) {
+        my $uri = $c->req->uri->clone;
+        $uri->host('www.' . $uri->host);
+        $c->log->info("Redirect to $uri");
+        $c->res->redirect($uri, 301) && $c->detach;
+    }
 }
 
 sub not_found : Private {
