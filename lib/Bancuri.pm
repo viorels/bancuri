@@ -23,7 +23,7 @@ our $VERSION = '0.01';
 #
 __PACKAGE__->config(
     name => 'Bancuri',
-    default_view => 'Bancuri::View::TT',
+    default_view => 'TT',
     session => {
         # Session expires in one day but cookie expires in 2 weeks !
         expires => 86400,
