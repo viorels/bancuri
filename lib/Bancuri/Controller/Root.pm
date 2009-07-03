@@ -167,6 +167,18 @@ sub contact : Global {
     );
 }
 
+sub sitemap : Local {
+    my ($self, $c) = @_;
+    
+    $c->model('Sitemap')->update(
+        schema          => $c->model('BancuriDB'),
+        sitemap_file    => $c->path_to('root')->file('sitemap.xml.gz'), 
+        base_url        => $c->req->base,
+    );
+    
+    $c->response->body('Sitemap updated');
+}
+
 sub end : ActionClass('RenderView') {
 	my ( $self, $c ) = @_;
 	
