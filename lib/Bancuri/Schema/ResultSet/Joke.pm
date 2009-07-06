@@ -89,7 +89,7 @@ searched and set.
 sub set_for_day {
     my ($self, $day, $id) = @_;
 
-    my $good_jokes_first = $self->search(
+    my $good_jokes_first = $self->search_not_deleted->search_clean->search(
         { for_day => undef },
         { join => 'current', order_by => "rating desc" });
 
