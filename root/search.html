@@ -1,5 +1,5 @@
 [% 
-	title = 'bancuri - ' _ keywords, 
+	title = 'bancuri - ' _ keywords _ ' - pagina ' _ current_page, 
 	menu = 'inc/menu_search.html',
 %]
 
@@ -19,7 +19,7 @@
 				    [% ELSIF page == current_page %]
 				        <strong>[% page %]</strong>
 				    [% ELSE %]
-				        <a href="[% c.uri_for('/search', keywords, page) %]">[% page %]</a>
+				        <a href="[% page_base_url _ '/' _ page %]">[% page %]</a>
 				    [% END %]
 				[% END %]
 				</div>

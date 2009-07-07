@@ -62,7 +62,9 @@ sub results : Private {
     $c->session->{'last_page'} = $c->request->uri;
    
     my $keywords = $c->stash->{'keywords'};
-    $c->detach('all') unless length $keywords;
+    unless (length $keywords) {
+        $c->res->redirect($c->uri_for('/all'), 302) and $c->detach;
+    }
     
     my $page = $c->stash->{'page'} || 1;
     my $perpage = 10;
@@ -73,8 +75,6 @@ sub results : Private {
     my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
     # hits querytime struct search pager query query_obj mset page page_size    
 
-    $c->log->debug(pp $result);
-    
     my @ids = map { $_->{'id'} } @{ $result->hits };
     my @jokes;
     if (@ids) {
@@ -109,19 +109,13 @@ sub results : Private {
         maxPages         => 10
     });
 
-    $c->stash(
-        pages => $pages,
-    );
-    
-    $c->stash->{template} = 'search.html';
-}
+    $c->forward('page_base_url');
 
-sub all : Private {
-    my ( $self, $c ) = @_;
-    
-    # TODO list all jokes, one per page
-    # for now just redirect to home page
-    $c->res->redirect('/') and $c->detach;
+    $c->stash(
+        pages           => $pages,
+        current_page    => $page,
+        template        => 'search.html',
+    );
 }
 
 sub update_index : Private {
@@ -129,6 +123,110 @@ sub update_index : Private {
     
     
 }
+
+### listing functions begin here, they should be joined with search though ...
+
+sub all : Chained('/') CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    
+    $c->stash->{'jokes'} = $c->model('BancuriDB::Joke')
+        ->search_not_deleted->search_clean;
+}
+
+sub all_page_number : Chained('all') PathPart('') Args(1) {                                                                                                 
+    my ( $self, $c, $page ) = @_;
+
+    $c->stash->{'page'} = $page;
+    $c->forward('show_list');
+}
+
+sub all_first_page : Chained('all') PathPart('') Args(0) {                                                                                                  
+    my ( $self, $c ) = @_;
+
+    $c->forward('show_list');
+}
+
+sub tag : Chained('/') CaptureArgs(1) {
+    my ( $self, $c, $tag ) = @_;
+
+    $c->stash->{'tags'} = $tag;
+    $c->stash->{'jokes'} = $c->model('BancuriDB::Joke')
+        ->search_not_deleted->search_clean->search_with_tag($tag);
+}
+
+sub tag_page_number : Chained('tag') PathPart('') Args(1) {
+    my ( $self, $c, $page ) = @_;
+ 
+    $c->stash->{'page'} = $page;
+    $c->forward('show_list');
+}
+
+sub tag_first_page : Chained('tag') PathPart('') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->forward('show_list');
+} 
+
+sub show_list : Private {
+    my ( $self, $c ) = @_;
+
+    my $jokes = $c->stash->{'jokes'};
+    my $page = $c->stash->{'page'} || 1;
+    my $perpage = 10;
+
+    my $pages = Data::SpreadPagination->new({
+        totalEntries     => $jokes->count,
+        entriesPerPage   => $perpage,
+        currentPage      => $page,
+        maxPages         => 10
+    });
+
+    my @jokes = $jokes->search({}, { prefetch => [ 'current' ] })
+        ->slice($pages->first - 1, $pages->last - 1)->all;
+
+    for (my $i=0; $i<@jokes; $i++) {
+        $jokes[$i]->position( $pages->first + $i );
+        $jokes[$i]->text_snippet( $jokes[$i]->current->text_teaser );
+    }
+
+    $c->stash->{'profanity'} = any { $_->current->has_profanity } @jokes;
+
+    $c->forward('page_base_url');
+
+    $c->stash(
+        pages           => $pages,
+        current_page    => $page,
+        results         => \@jokes,
+        template        => 'search.html',
+    );
+}
+
+=item page_base_url
+Determine the base url used for next search/tag/all pages, e.g. /search/base_url/page
+=cut
+
+sub page_base_url : Private {
+    my ( $self, $c ) = @_;
+
+    # Current url without search query args
+    # remove ALL search args, otherwise appending '/42' will fail
+    my $page_base_url = $c->req->uri_with({ 
+        map { $_ => undef } keys %{ $c->req->params } });
+
+    # Only consider the first path segment, 
+    # that is 2 elements including the first "" that means /
+    my @path_segments = $page_base_url->path_segments;
+    @path_segments = @path_segments[0..1];
+
+    warn "*** TAGS".$c->stash->{'tags'};
+    my $keywords = $c->stash->{'keywords'} || $c->stash->{'tags'};
+    push @path_segments, $keywords if defined $keywords;
+
+    $page_base_url->path_segments(@path_segments);
+
+    $c->stash( page_base_url => $page_base_url->as_string );
+}
+
 
 =head1 AUTHOR
 

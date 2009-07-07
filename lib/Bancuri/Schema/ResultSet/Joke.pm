@@ -15,6 +15,7 @@ Search a random joke with preference for higher rating ones
 sub search_clean {
     my ($self) = @_;
 
+    # TODO use search_with_tag instead of next 6 lines and test
     my $jokes_obscen = $self->search({
         'tag_id.name' => { '=' => 'obscen' },
     },
@@ -28,6 +29,19 @@ sub search_clean {
 
     return $jokes;
 };
+
+sub search_with_tag {
+    my ($self, $tag) = @_;
+
+    my $jokes = $self->search({
+        'tag_id.name' => { '=' => $tag },
+    },
+    {
+        join => { joke_tags => 'tag_id' }
+    });
+
+    return $jokes;
+}
 
 sub search_not_deleted {
     my ($self) = @_;
