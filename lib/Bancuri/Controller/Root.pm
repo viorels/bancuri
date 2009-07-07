@@ -64,6 +64,29 @@ sub index : Path Args(0) {
 		my $new_link = $c->uri_for('/search', $keywords, $page);
         $c->res->redirect($new_link) and $c->detach;	    
 	}
+    elsif ( my $cat_id = $c->req->params->{'cat'} ) {
+        my @category_map = qw(
+            0 actori adolescente albacazapada albanezi 
+            alinuta ardeleni armata avocati balbaiti 
+            bebelusi betivi bill blonde boxeri 
+            canibali ceausescu ciobani detinuti dinozauri 
+            doctori dupa89 elefant elefant evrei 
+            fatfrumos ghid homosexuali iepuras ion 
+            judecatori ladydi leprosi marinari militieni 
+            moldoveni moscraciun nebuni negrii olteni 
+            pescari radioerevan rusi scoala scotieni 
+            scufitarosie sir soacre somalezi spermatozoizi 
+            stefancelmare steviewonder tigani unguri vamesi 
+            vampiri vanatori viagra bula sec 
+            0 psihologi);
+
+        if ( my $tag = $category_map[$cat_id] ) {
+            $c->res->redirect($c->uri_for('tag', $tag)) and $c->detach
+        }
+        else {
+            $c->res->redirect('/') and $c->detach;
+        }
+    }
 	else {
 	    $c->forward('joke_for_today');
 	}
