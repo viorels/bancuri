@@ -80,7 +80,7 @@ sub login : Local {
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
                 id => $id,
-                name => $c->user->name,
+                name => $c->user->name || 'tu',
             };
         }
         else {
