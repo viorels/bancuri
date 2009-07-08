@@ -191,7 +191,7 @@ function change_vote(btn_name, rating) {
 		vote: rating,
 	};
 
-	$.post('/edit/change_vote', vote, function(data) {
+	$.post('/moderate/change_vote', vote, function(data) {
 		var text = data['json_change_msg'];
 		$("#change_question").empty().append(text);
 	}, 'json');
