@@ -5,12 +5,22 @@
 
 <h3>[% c.user.name || 'tu' %] &gt; favorite</h3>
 
-<ol>
+<ol start="[% pager.first %]">
 [% WHILE (joke = favorites.next) %]
 	<li><a href="[% c.uri_for('/', joke.link, 'v', joke.joke_versions.version) %]">
-		[% joke.current.title %]
-	</a></li>
+		[% joke.joke_versions.title %]
+	</a> @ [% FOR vote IN joke.joke_versions.votes; '+' _ vote.rating _ '|' _ vote.joke_id _ '/' _ vote.browser_id.id _ ' '; END %]</li>
 [% END %]
 </ol>
+<br>
+<div id="pager">
+[% FOREACH page IN [pager.first_page .. pager.last_page] %]
+    [% IF page == pager.current_page %]
+        <strong>[% page %]</strong>
+    [% ELSE %]
+        <a href="[% c.req.uri_with(page => page) %]">[% page %]</a>
+    [% END %]
+[% END %]
+</div>
 
 <br class="clear" />

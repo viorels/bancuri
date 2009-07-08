@@ -58,11 +58,18 @@ sub index : Path Args(0) {
 sub favorites : Global {
     my ($self, $c) = @_;
     
+    my $page = $c->req->params->{'page'} || 1;
+    my $per_page = 10;
+    
     my $favorites = $c->model('BancuriDB::Joke')
-        ->favorites_for( user_id => $c->user->id );
+        ->favorites_for( user_id => $c->user->id )
+        ->search(undef, {
+            rows    => $per_page,
+        })->page($page);
     
     $c->stash( 
         favorites   => $favorites,
+        pager       => $favorites->pager,
         template    => 'profile/favorites.html', 
     );
 }
