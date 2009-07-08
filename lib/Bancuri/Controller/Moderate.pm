@@ -16,6 +16,17 @@ Catalyst Controller.
 
 =cut
 
+sub auto : Private {
+    my ($self, $c) = @_;
+
+    # If a user doesn't exist, force login
+    if (!$c->user_exists) {
+        $c->response->redirect('/auth/form');
+        return 0;
+    }
+
+    return 1;
+}
 
 =head2 index
 
@@ -27,7 +38,7 @@ sub index :Path :Args(0) {
     $c->response->body('Matched Bancuri::Controller::Moderate in Moderate.');
 }
 
-=item change_vote
+=head2 change_vote
 Vote the change specified by id with -5/+5
 Return JSON with ... ?
 =cut

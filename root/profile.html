@@ -3,7 +3,7 @@
 	tab_active = 'profile',
 %]
 
-<h3>[% c.user.name %]</h3>
+<h3>[% c.user.name || 'tu' %]</h3>
 
 <p>
 	Email: [% c.user.email %]<br>
@@ -13,5 +13,7 @@
 	Tara: [% c.user.country || 'N/A' %]<br>
 	ID: [% c.user.id %]
 </p>
+
+<a href="/favorites">Bancuri favorite</a>, la care ai dat 5 stele.<br>
 			
 <br class="clear" />

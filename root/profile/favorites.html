@@ -1,0 +1,16 @@
+[%
+	menu = 'inc/menu_profile.html',
+	tab_active = 'profile',
+%]
+
+<h3>[% c.user.name || 'tu' %] &gt; favorite</h3>
+
+<ol>
+[% WHILE (joke = favorites.next) %]
+	<li><a href="[% c.uri_for('/', joke.link, 'v', joke.joke_versions.version) %]">
+		[% joke.current.title %]
+	</a></li>
+[% END %]
+</ol>
+
+<br class="clear" />

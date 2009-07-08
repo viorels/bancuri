@@ -55,6 +55,18 @@ sub index : Path Args(0) {
     $c->stash( template => 'profile.html' );
 }
 
+sub favorites : Global {
+    my ($self, $c) = @_;
+    
+    my $favorites = $c->model('BancuriDB::Joke')
+        ->favorites_for( user_id => $c->user->id );
+    
+    $c->stash( 
+        favorites   => $favorites,
+        template    => 'profile/favorites.html', 
+    );
+}
+
 
 =head1 AUTHOR
 
