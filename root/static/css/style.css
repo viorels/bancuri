@@ -100,3 +100,14 @@ textarea.edit {
 .ui-rater-starsHover {background-position: 0 -18px!important;}
 
 /* END RATING */
+
+/* start counting at 5
+OL#page_two { counter-reset: item 5 }
+*/
+LI { display: block }
+LI:before {
+	content: counter(item) ". ";
+	counter-increment: item;
+	}
+
+		

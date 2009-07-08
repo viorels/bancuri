@@ -5,7 +5,7 @@
 
 <h3>[% c.user.name || 'tu' %] &gt; favorite</h3>
 
-<ol start="[% pager.first %]">
+<ol style="counter-reset: item [% pager.first - 1 %];">
 [% WHILE (joke = favorites.next) %]
 	<li><a href="[% c.uri_for('/', joke.link, 'v', joke.joke_versions.version) %]">
 		[% joke.joke_versions.title %]
