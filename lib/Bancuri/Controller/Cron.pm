@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use DateTime;
+
 =head1 NAME
 
 Bancuri::Controller::Cron - Catalyst Controller
@@ -23,6 +25,15 @@ Catalyst Controller.
 sub email_joke_for_today :Local :Args(0) {
     my ( $self, $c ) = @_;
 
+    my $today_gmt = DateTime->now->ymd;
+    my $users = $c->model('BancuriDB::Users')->search_needing_email();
+
+    while (my $user = $users->next) {
+        # send email
+    }
+    
+    $users->update({ sent_for_day => $today_gmt });
+    
     $c->response->body('email_joke_for_today');
 }
 

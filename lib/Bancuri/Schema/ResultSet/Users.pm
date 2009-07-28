@@ -70,5 +70,29 @@ sub register {
     return $registered_user;
 }
 
+=head2 search_needing_email
+
+Search users that prefer to receive the daily joke by email but where only sent
+the joke for yesterday (GMT time). 
+
+=cut
+
+sub search_needing_email {
+    my ( $self ) = @_;
+    
+    my $today = $self->result_source->schema->today;
+    my $users = $self->search({
+        -or => [
+            sent_for_day => { '<' => $today },
+            sent_for_day => undef,
+        ],
+        'user_preferences.key' => 'email_joke_for_today',
+        'user_preferences.value' => '1',
+    }, {
+        join => 'user_preferences',
+    });
+    
+    return $users;
+}
 
 1;
