@@ -77,6 +77,8 @@ __PACKAGE__->add_columns(
   },
   "last_login",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
+  "sent_for_day",
+  { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_users", ["id"]);
@@ -102,6 +104,11 @@ __PACKAGE__->has_many(
   { "foreign.user_id" => "self.id" },
 );
 __PACKAGE__->has_many(
+  "user_preferences",
+  "Bancuri::Schema::Result::UserPreference",
+  { "foreign.user_id" => "self.id" },
+);
+__PACKAGE__->has_many(
   "user_roles",
   "Bancuri::Schema::Result::UserRole",
   { "foreign.user_id" => "self.id" },
@@ -118,8 +125,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MgSeBmX0d96sw3SzdR1ctA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-07-28 22:44:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hIaZqtmzHCjlDGv7XrM3KA
 
 use DateTime;
 use DateTime::Duration;

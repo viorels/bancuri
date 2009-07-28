@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Wed Jul  1 22:12:07 2009
+--   Generated at:      Tue Jul 28 22:40:19 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -30,6 +30,7 @@ drop index idx_joke_tag_unique;
 drop index idx_change_joke_id;
 drop index idx_session_ref_id;
 drop index idx_tag_name;
+drop index idx_user_preference_key;
 -- alter table joke_version drop constraint joke_version_fk_Joke_id-- (is implicitly done)
 -- alter table user_openid drop constraint user_openid_fk_User_id-- (is implicitly done)
 -- alter table joke_tag drop constraint joke_tag_fk_Joke_id-- (is implicitly done)
@@ -49,6 +50,7 @@ drop index idx_tag_name;
 -- alter table vote drop constraint vote_fk_User_id-- (is implicitly done)
 -- alter table visit drop constraint visit_fk_User_id-- (is implicitly done)
 -- alter table change_vote drop constraint change_vote_fk_User_id-- (is implicitly done)
+-- alter table user_preference drop constraint user_preference_fk_User_id-- (is implicitly done)
 
 
 -- Generated Permissions Drops
@@ -84,6 +86,7 @@ drop table visit cascade ;
 drop table search cascade ;
 drop table profanity cascade ;
 drop table tag cascade ;
+drop table user_preference cascade ;
 
 
 -- Generated SQL Schema
@@ -151,6 +154,7 @@ create table users (
   comment                   text default '',
   created                   timestamp default now(),
   last_login                date,
+  sent_for_day              date,
   constraint pk_Users primary key (id)
 ) ;
 
@@ -273,6 +277,15 @@ create table tag (
   constraint pk_Tag primary key (id)
 ) ;
 
+-- user_preference
+create table user_preference (
+  id                        serial not null,
+  user_id                   integer,
+  key                       varchar(32),
+  value                     text,
+  constraint pk_User_preference primary key (id)
+) ;
+
 
 
 
@@ -280,6 +293,7 @@ create table tag (
 
 
 comment on table vote is 'Historic table that keep jokes rated with 5 for a loger time so we can find similar tastes';
+
 
 
 
@@ -346,6 +360,7 @@ create unique index idx_joke_tag_unique on joke_tag  (joke_id,tag_id,user_id) ;
 create index idx_change_joke_id on change  (joke_id) ;
 create unique index idx_session_ref_id on session  (ref_id) ;
 create unique index idx_tag_name on tag  (name) ;
+create index idx_user_preference_key on user_preference  (key) ;
 alter table joke_version add constraint joke_version_fk_Joke_id
   foreign key (joke_id)
   references joke (id)  ;
@@ -401,6 +416,9 @@ alter table visit add constraint visit_fk_User_id
   foreign key (user_id)
   references users (id)  ;
 alter table change_vote add constraint change_vote_fk_User_id
+  foreign key (user_id)
+  references users (id)  ;
+alter table user_preference add constraint user_preference_fk_User_id
   foreign key (user_id)
   references users (id)  ;
 
