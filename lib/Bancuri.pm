@@ -11,6 +11,7 @@ use Catalyst qw/ConfigLoader
 				Authorization::Roles
                 Unicode
                 DateTime
+                Scheduler
 
                 Static::Simple
                 StackTrace

@@ -1,0 +1,8 @@
+---
+- at: '@weekly'
+  event: /cron/delete_sessions
+- at: '@hourly'
+  event: /cron/email_joke_for_today
+- at: '@daily'
+  event: /cron/rebuild_search_index
+  auto_run: 0
