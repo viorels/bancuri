@@ -165,7 +165,7 @@ sub decide {
     my @votes = $self->search_related('change_votes')->all;
     
     # XXX compare with float rating ?
-    if (@votes >= 1 and $self->rating != 0) {
+    if (@votes >= 2 and $self->rating != 0) {
         $approved = $self->rating > 0 ? 1 : 0;
 
         $self->approved($approved);
