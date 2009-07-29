@@ -5,6 +5,7 @@ use warnings;
 use parent 'Catalyst::Controller';
 
 use DateTime;
+use Email::Stuff;
 
 =head1 NAME
 
@@ -25,14 +26,31 @@ Catalyst Controller.
 sub email_joke_for_today :Local :Args(0) {
     my ( $self, $c ) = @_;
 
-    my $today_gmt = DateTime->now->ymd;
-    my $users = $c->model('BancuriDB::Users')->search_needing_email();
+    my $latest_joke_for_day = $c->model('BancuriDB::Joke')
+        ->search({ for_day => { '!=' => undef } }, { order_by => 'for_day desc' })
+        ->slice(0, 0)->single;
+    my $day = $latest_joke_for_day->for_day;
+
+    my $joke_version = $latest_joke_for_day->current;
+    my $text = $joke_version->text . "\n"
+        . $c->uri_for("/" . $latest_joke_for_day->link);
+
+    my $users = $c->model('BancuriDB::Users')
+        ->search_needing_joke_for_day($day);
 
     while (my $user = $users->next) {
-        # send email
+        my $email = $user->email;
+        next unless $email;
+        
+        $c->log->info("sending joke for $day to $email");
+        Email::Stuff->from($c->config->{'webmaster'})
+            ->to($email)
+            ->subject($joke_version->title)
+            ->text_body($text)
+            ->send;
     }
     
-    $users->update({ sent_for_day => $today_gmt });
+    $users->update({ sent_for_day => $day });
     
     $c->response->body('email_joke_for_today');
 }
