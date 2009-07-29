@@ -75,7 +75,7 @@ Fill stash with recent jokes of the day (but not from future)
 sub jokes_for_days :Private {
     my ($self, $c) = @_;
     
-    $c->stash->{'entries'} = $c->model('BancuriDB::Joke')->get_all_for_days();
+    $c->stash->{'entries'} = $c->model('DB::Joke')->get_all_for_days();
 }
 
 

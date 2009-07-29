@@ -1,4 +1,4 @@
-package Bancuri::Model::BancuriDB;
+package Bancuri::Model::DB;
 
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
@@ -22,7 +22,7 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-Bancuri::Model::BancuriDB - Catalyst DBIC Schema Model
+Bancuri::Model::DB - Catalyst DBIC Schema Model
 =head1 SYNOPSIS
 
 See L<Bancuri>

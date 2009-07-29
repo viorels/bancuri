@@ -1,7 +1,7 @@
 ---
 time_zone: Europe/Bucharest
 webmaster: '"Bula" <bula@bancuri.com>'
-Model::BancuriDB:
+Model::DB:
     connect_info:
         - dbi:Pg:dbname=bancuri;host=localhost
         - bancuri

@@ -50,11 +50,11 @@ sub change_vote : Local {
     my $vote = $c->request->params->{'vote'};
     
     my $user_id = $c->user ? $c->user->id : undef;
-    my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+    my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
             $c->sessionid, $c->req->address, $c->req->user_agent)->id;
                 
     # TODO is he allowed to vote this ?
-    my $change = $c->model('BancuriDB::Change')->find($change_id);
+    my $change = $c->model('DB::Change')->find($change_id);
     my $new_rating = $change->vote($vote, $user_id, $browser_id);
     my $approved = $change->decide;
 

@@ -5,9 +5,9 @@ use Test::More tests => 6;
 use DateTime;
 use DateTime::Duration;
 
-BEGIN { use_ok 'Bancuri::Model::BancuriDB' }
+BEGIN { use_ok 'Bancuri::Model::DB' }
 
-my $schema = new Bancuri::Model::BancuriDB;
+my $schema = new Bancuri::Model::DB;
 
 my $user = $schema->resultset('Users')->new_result({});
 

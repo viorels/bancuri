@@ -61,7 +61,7 @@ sub favorites : Global {
     my $page = $c->req->params->{'page'} || 1;
     my $per_page = 10;
     
-    my $favorites = $c->model('BancuriDB::Joke')
+    my $favorites = $c->model('DB::Joke')
         ->favorites_for( user_id => $c->user->id )
         ->search(undef, {
             rows    => $per_page,

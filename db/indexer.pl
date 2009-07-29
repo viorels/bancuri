@@ -6,7 +6,7 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use strict;
 
-use Bancuri::Model::BancuriDB;
+use Bancuri::Model::DB;
 
 use Search::Xapian qw(:db);
 use String::Tokenizer;
@@ -38,7 +38,7 @@ open CONF, '>'.$config->{ts_file} or die "Could not open ".$config->{ts_file}.':
 print CONF $now;
 close CONF;
 
-my $schema = new Bancuri::Model::BancuriDB;
+my $schema = new Bancuri::Model::DB;
 my $items = $schema->resultset('JokeCurrent')->search({changed=>{'>',$ts}});
 while ( my $item=$items->next ) {
     my $doc=Search::Xapian::Document->new();

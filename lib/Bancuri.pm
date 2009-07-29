@@ -29,7 +29,7 @@ __PACKAGE__->config(
         # Session expires in one day but cookie expires in 2 weeks !
         expires => 86400,
         cookie_expires => 1209600,
-        dbic_class => 'BancuriDB::Session',
+        dbic_class => 'DB::Session',
         id_field => 'id',
         data_field => 'data',
     },
@@ -44,7 +44,7 @@ __PACKAGE__->config(
                 },
                 store => {
                     class => 'DBIx::Class',
-                    user_class => 'BancuriDB::Users',
+                    user_class => 'DB::Users',
                     role_relation => 'roles',
                     role_field => 'role',
                 }
@@ -57,7 +57,7 @@ __PACKAGE__->config(
                 },
                 store => {
                     class => 'DBIx::Class',
-                    user_class => 'BancuriDB::Users',
+                    user_class => 'DB::Users',
                     role_relation => 'roles',
                     role_field => 'role',
                 }

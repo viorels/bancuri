@@ -11,9 +11,9 @@ use List::MoreUtils qw(none);
 use FindBin;
 
 use lib "$FindBin::Bin/../lib";
-use Bancuri::Model::BancuriDB;
+use Bancuri::Model::DB;
 
-my $new_schema = new Bancuri::Model::BancuriDB;
+my $new_schema = new Bancuri::Model::DB;
 
 my $old_schema = My::Schema->connect( 
   "dbi:mysql:dbname=bancuri;host=dmz",

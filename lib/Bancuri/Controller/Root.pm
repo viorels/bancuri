@@ -108,8 +108,8 @@ sub joke_for_today : Private {
     my $tz = $c->config->{'time_zone'};
 
     my $today = $c->datetime( time_zone => $tz )->ymd;
-    my $joke = $c->model('BancuriDB::Joke')->get_for_day($today)
-        || $c->model('BancuriDB::Joke')->set_for_day($today);
+    my $joke = $c->model('DB::Joke')->get_for_day($today)
+        || $c->model('DB::Joke')->set_for_day($today);
 
     $c->stash->{'joke'} = $joke;
     $c->forward($c->controller('Show'));
@@ -125,7 +125,7 @@ It tries to redirect for links (that includes legacy ids).
 sub load_joke : Private {
     my ( $self, $c, $field, $value ) = @_;
     
-    my $joke = $c->model('BancuriDB::Joke')->find({ $field => $value });
+    my $joke = $c->model('DB::Joke')->find({ $field => $value });
 
 	unless ( $joke ) {
 	    if ( $field eq 'link' ) {
@@ -142,7 +142,7 @@ sub load_joke : Private {
 sub redirect_joke : Private {
     my ( $self, $c, $joke_link ) = @_;
     
-	my $redirect = $c->model('BancuriDB::Redirect')->find($joke_link);
+	my $redirect = $c->model('DB::Redirect')->find($joke_link);
 	if ( $redirect ) {
         # Update last used
         $redirect->last_used('now()');
@@ -194,7 +194,7 @@ sub sitemap : Local {
     my ($self, $c) = @_;
     
     $c->model('Sitemap')->update(
-        schema          => $c->model('BancuriDB'),
+        schema          => $c->model('DB'),
         sitemap_file    => $c->path_to('root')->file('sitemap.xml.gz'), 
         base_url        => $c->req->base,
     );

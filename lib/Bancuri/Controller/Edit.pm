@@ -25,7 +25,7 @@ sub add : Global {
 
         if ( $c->request->params->{'preview'} ) {
         	# Create a new database object without storing it
-            my $new_joke = $c->model('BancuriDB::Joke')->new_result({
+            my $new_joke = $c->model('DB::Joke')->new_result({
                 link => undef,
                 current => {
                     text => $joke_text, 
@@ -38,10 +38,10 @@ sub add : Global {
             # TODO check checksum of previous version
 
             my $user_id = $c->user ? $c->user->id : undef;
-            my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+            my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
                 $c->sessionid, $c->req->address, $c->req->user_agent)->id;
 
-            my $new_joke = $c->model('BancuriDB::Joke')
+            my $new_joke = $c->model('DB::Joke')
                 ->add($joke_text, $user_id, $browser_id);
             if ($new_joke) {
                 my $link = '/' . $new_joke->link;
@@ -80,12 +80,12 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         $joke_text = $c->request->params->{'joke'};
         $joke_title = $c->request->params->{'title'};
         my $user_id = $c->user ? $c->user->id : undef;
-        my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+        my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
                 $c->sessionid, $c->req->address, $c->req->user_agent)->id;
         
         if ( $c->request->params->{'preview'} ) {
         	# Create a new database object without storing it
-            my $new_joke = $c->model('BancuriDB::Joke')->new_result({
+            my $new_joke = $c->model('DB::Joke')->new_result({
                 link => undef,
                 current => {
                     text => $joke_text,
@@ -146,11 +146,11 @@ sub rating : Local {
     my $vote = $c->request->params->{'rating'};
     
     my $user_id = $c->user ? $c->user->id : undef;
-    my $browser_id = $c->model('BancuriDB::Browser')->find_or_create_unique(
+    my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
             $c->sessionid, $c->req->address, $c->req->user_agent)->id;
                     
     # TODO It's WRONG to assume current version
-    my $joke_version = $c->model('BancuriDB::Joke')->find({ id => $id })->current;
+    my $joke_version = $c->model('DB::Joke')->find({ id => $id })->current;
     my $new_rating = $joke_version
         ->vote($vote, $user_id, $browser_id);
     

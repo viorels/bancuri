@@ -46,7 +46,7 @@ sub login : Local {
             my $name = $c->request->params->{'name'};
 
             my $error;
-            my $user = $c->model('BancuriDB::Users')->find({ email => $id });
+            my $user = $c->model('DB::Users')->find({ email => $id });
             if ( $user ) {
                 $error = "$id e deja inregistrat";
             }
@@ -111,7 +111,7 @@ sub id_exists : Local {
     my ( $self, $c ) = @_;
 
     my $id = $c->request->params->{'id'};
-    my $user = $c->model('BancuriDB::Users')->search_email_or_openid($id);
+    my $user = $c->model('DB::Users')->search_email_or_openid($id);
     
     $c->stash->{'json_id_exists'} = $user ? $id : 0;
 }
@@ -129,7 +129,7 @@ sub rpx : Local {
 
     if ( $user_data ) {
         my $identifier = $user_data->{'profile'}{'identifier'};
-        my $user = $c->model('BancuriDB::Users')->search_openid($identifier);
+        my $user = $c->model('DB::Users')->search_openid($identifier);
         unless ( $user ) {
             $user = $c->forward('register', [ $user_data->{'profile'} ]);
         }
@@ -174,7 +174,7 @@ sub register : Private {
     my ( $self, $c, $profile ) = @_;
     
     # TODO merge with a possible previous account
-    return $c->model('BancuriDB::Users')->register($profile);
+    return $c->model('DB::Users')->register($profile);
 }
 
 sub user_info : Private {

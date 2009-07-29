@@ -26,7 +26,7 @@ Catalyst Controller.
 sub email_joke_for_today :Local :Args(0) {
     my ( $self, $c ) = @_;
 
-    my $latest_joke_for_day = $c->model('BancuriDB::Joke')
+    my $latest_joke_for_day = $c->model('DB::Joke')
         ->search({ for_day => { '!=' => undef } }, { order_by => 'for_day desc' })
         ->slice(0, 0)->single;
     my $day = $latest_joke_for_day->for_day;
@@ -35,7 +35,7 @@ sub email_joke_for_today :Local :Args(0) {
     my $text = $joke_version->text . "\n"
         . $c->uri_for("/" . $latest_joke_for_day->link);
 
-    my $users = $c->model('BancuriDB::Users')
+    my $users = $c->model('DB::Users')
         ->search_needing_joke_for_day($day);
 
     while (my $user = $users->next) {

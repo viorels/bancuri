@@ -70,7 +70,7 @@ sub results : Private {
     my $perpage = 10;
     
     # Save the search
-    $c->model('BancuriDB::Search')->save_search($keywords);
+    $c->model('DB::Search')->save_search($keywords);
 
     my $result = $c->model('Xapian')->search($keywords, $page, $perpage);
     # hits querytime struct search pager query query_obj mset page page_size    
@@ -78,7 +78,7 @@ sub results : Private {
     my @ids = map { $_->{'id'} } @{ $result->hits };
     my @jokes;
     if (@ids) {
-        @jokes = $c->model('BancuriDB::Joke')->search_ids(\@ids)->all();
+        @jokes = $c->model('DB::Joke')->search_ids(\@ids)->all();
         
         my @joke_texts = map { $_->current->text_blessed } @jokes;
         my $joke_snippets = $c->model('Xapian')->highlight(\@joke_texts, $keywords);
@@ -129,7 +129,7 @@ sub update_index : Private {
 sub all : Chained('/') CaptureArgs(0) {
     my ( $self, $c ) = @_;
     
-    $c->stash->{'jokes'} = $c->model('BancuriDB::Joke')
+    $c->stash->{'jokes'} = $c->model('DB::Joke')
         ->search_not_deleted->search_clean;
 }
 
@@ -150,7 +150,7 @@ sub tag : Chained('/') CaptureArgs(1) {
     my ( $self, $c, $tag ) = @_;
 
     $c->stash->{'tags'} = $tag;
-    $c->stash->{'jokes'} = $c->model('BancuriDB::Joke')
+    $c->stash->{'jokes'} = $c->model('DB::Joke')
         ->search_not_deleted->search_clean->search_with_tag($tag);
 }
 

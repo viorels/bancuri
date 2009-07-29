@@ -127,7 +127,7 @@ sub show : Private {
 sub show_next_joke :Private {
     my ($self, $c) = @_;
     
-    my $jokes = $c->model('BancuriDB::Joke')->search_not_deleted;
+    my $jokes = $c->model('DB::Joke')->search_not_deleted;
     $jokes = $jokes->search_clean if not $c->user or $c->user->is_underage;
 
     my $next_joke = $jokes->random_beta_single;
