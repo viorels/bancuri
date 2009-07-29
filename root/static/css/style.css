@@ -104,8 +104,8 @@ textarea.edit {
 /* start counting at 5
 OL#page_two { counter-reset: item 5 }
 */
-LI { display: block }
-LI:before {
+OL LI { display: block }
+OL LI:before {
 	content: counter(item) ". ";
 	counter-increment: item;
 	}
