@@ -13,9 +13,9 @@ _joke_link = "[% joke.link %]";
 				<h3>[% joke_version.title | html_entity %]</h3>
 
                 <table id="banc" class="banc edit"><tbody><tr>
-                  <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+                  <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""/></td>
                   <td class="columnText">[% joke_version.text_blessed | html_entity | html_line_break %]</td>
-                  <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+                  <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""/></td>
                 </tr></tbody></table>
                 
                 <!-- img id="edit_icon" src="/static/img/edit.png" width="20" height="20"  -->
@@ -30,7 +30,7 @@ _joke_link = "[% joke.link %]";
 				</div>
 				
 				<div style="float: right;">
-					<a href="[% '/' _ joke.link _ '/edit' %]">Editeaza banc</a><br>
+					<a href="[% '/' _ joke.link _ '/edit' %]">Editeaza banc</a><br/>
 				</div>
 
 				[% ELSE %]
@@ -42,7 +42,7 @@ _joke_link = "[% joke.link %]";
 				[% IF change %]
 				<div class="post">
 	                <h3>
-	                Acest banc a fost [% change_type %] de [% change.user_id.name || 'un anonim' %]<br>
+	                Acest banc a fost [% change_type %] de [% change.user_id.name || 'un anonim' %]<br/>
 	                </h3>
    					<ul class="post_info">
 						<li class="date">Propus de <a href="#">[% change.user_id.name || 'un anonim' %]</a> pe [% change.proposed %]</li>
@@ -77,11 +77,11 @@ _joke_link = "[% joke.link %]";
                     <h3>[% next_joke.current.title | html_entity %]</h3>
 
                     <table><tbody><tr>
-                        <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""></td>
+                        <td class="columnLeftQuote"><img src="/static/img/leftquote.gif" alt=""/></td>
                         <td class="columnText"><a href="[% c.uri_for('/' _ next_joke.link) %]">
                             [% next_joke.current.text_teaser | html_entity | html_line_break %]
                         </a></td>
-                        <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""></td>
+                        <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""/></td>
                     </tr></tbody></table>
                 </div>
 

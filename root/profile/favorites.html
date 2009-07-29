@@ -12,7 +12,7 @@
 	</a> @ [% FOR vote IN joke.joke_versions.votes; '+' _ vote.rating _ '|' _ vote.joke_id _ '/' _ vote.browser_id.id _ ' '; END %]</li>
 [% END %]
 </ol>
-<br>
+<br/>
 <div id="pager">
 [% FOREACH page IN [pager.first_page .. pager.last_page] %]
     [% IF page == pager.current_page %]
