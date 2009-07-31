@@ -5,7 +5,7 @@ use warnings;
 use parent 'Catalyst::Controller';
 
 use DateTime;
-use Email::Stuff;
+use MIME::Lite::TT::HTML; 
 
 =head1 NAME
 
@@ -32,8 +32,6 @@ sub email_joke_for_today :Local :Args(0) {
     my $day = $latest_joke_for_day->for_day;
 
     my $joke_version = $latest_joke_for_day->current;
-    my $text = $joke_version->text . "\n"
-        . $c->uri_for("/" . $latest_joke_for_day->link);
 
     my $users = $c->model('DB::Users')
         ->search_needing_joke_for_day($day);
@@ -43,11 +41,25 @@ sub email_joke_for_today :Local :Args(0) {
         next unless $email;
         
         $c->log->info("sending joke for $day to $email");
-        Email::Stuff->from($c->config->{'webmaster'})
-            ->to($email)
-            ->subject($joke_version->title)
-            ->text_body($text)
-            ->send;
+        my $msg = MIME::Lite::TT::HTML->new( 
+            From        => $c->config->{'webmaster'},
+            To          => $email, 
+            Subject     => $joke_version->title, 
+            Template    => {
+                text    => 'joke_for_day.txt',
+                html    => 'joke_for_day.html',
+            },
+            TimeZone    => $c->config->{'time_zone'},
+            Charset     => 'utf8',
+            TmplOptions => { INCLUDE_PATH => $c->path_to('root', 'email') }, 
+            TmplParams  => {
+                c       => $c,
+                text    => $joke_version->text,
+                link    => $c->uri_for("/" . $latest_joke_for_day->link),
+            },
+        );
+        
+        $msg->send;
     }
     
     $users->update({ sent_for_day => $day });
