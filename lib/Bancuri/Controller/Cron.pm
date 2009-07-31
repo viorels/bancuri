@@ -76,6 +76,7 @@ sub delete_sessions :Local :Args(0) {
     my ( $self, $c ) = @_;
 
     $c->delete_expired_sessions;
+    $c->response->body('delete_sessions');
 }
 
 =head2 rebuild_search_index

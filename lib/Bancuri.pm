@@ -26,9 +26,9 @@ __PACKAGE__->config(
     name => 'Bancuri',
     default_view => 'TT',
     session => {
-        # Session expires in one day but cookie expires in 2 weeks !
-        expires => 86400,
-        cookie_expires => 1209600,
+        # Session and cookie expire in one week
+        expires => 604800,
+        cookie_expires => 604800,
         dbic_class => 'DB::Session',
         id_field => 'id',
         data_field => 'data',
