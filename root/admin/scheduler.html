@@ -1,0 +1,24 @@
+<table border="1">
+  <thead>
+    <tr>
+      [% FOR key IN event_keys %]
+      <td>[% key %]</td>
+      [% END %]
+    </tr>
+  </thead>
+  <tbody>
+    [% FOR event IN state %]
+    <tr>
+      [% FOR key IN event_keys %]
+      <td>
+	    [% IF key == 'event' %]
+	      <a href="[% c.uri_for(event.event) %]">[% event.event %]</a>
+	    [% ELSE %]
+          [% event.$key %]
+	    [% END %]
+      </td>
+      [% END %]
+    </tr>
+    [% END %]
+  </tbody>
+</table>
