@@ -79,6 +79,16 @@ sub delete_sessions :Local :Args(0) {
     $c->response->body('delete_sessions');
 }
 
+=head2 cleanup_database
+
+=cut
+
+sub cleanup_database :Local :Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->response->body('cleanup_database');
+}
+
 =head2 rebuild_search_index
 
 =cut

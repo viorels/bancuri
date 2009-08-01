@@ -25,6 +25,7 @@ our $VERSION = '0.01';
 __PACKAGE__->config(
     name => 'Bancuri',
     default_view => 'TT',
+    time_zone => 'Europe/Bucharest',
     session => {
         # Session and cookie expire in one week
         expires => 604800,
@@ -63,6 +64,9 @@ __PACKAGE__->config(
                 }
             },
         },
+    },
+    scheduler => {
+        time_zone => 'Europe/Bucharest',
     },
 );
 

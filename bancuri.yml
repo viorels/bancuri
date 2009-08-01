@@ -1,5 +1,4 @@
 ---
-time_zone: Europe/Bucharest
 webmaster: '"Bula" <bula@bancuri.com>'
 Model::DB:
     connect_info:
