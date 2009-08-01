@@ -10,7 +10,11 @@
 	    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
             <label for="id">Email :</label><br />
           	<input id="id" type="text" name="id" size="25" />
-			<span id="id_res" style="display:none"></span><br />
+			<span id="id_res" style="display:none"></span>
+			[% IF login_error %]
+			<span class="messagebox_error">[% login_error %]</span><br />
+			[% END %]
+			<br />
 
             <label for="password">Parola :</label><br />
           	<input id="password" type="password" name="password" size="25" />

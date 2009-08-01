@@ -22,13 +22,13 @@ Catalyst Controller.
 sub form : Local {
     my ( $self, $c ) = @_;
     
-    my $nowrap = 1;
-    $nowrap = 0 unless $c->stash->{'AJAX'};
+    my $nowrap = $c->stash->{'AJAX'};
     
     $c->stash(
         current_view => 'TT',
         nowrap => $nowrap,
         template => 'inc/login.html',
+        login_error => $c->flash->{'login_error'},
     );
 }
 
@@ -90,6 +90,10 @@ sub login : Local {
     else {
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_error'} ||= 'Ai uitat parola ?';
+        }
+        else {
+            $c->flash->{'login_error'} = 'Ai uitat parola ?';
+            $c->res->redirect('form') && $c->detach;
         }
     }
 }

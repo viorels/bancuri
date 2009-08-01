@@ -64,7 +64,7 @@ sub email_joke_for_today :Local :Args(0) {
     
     $users->update({ sent_for_day => $day });
     
-    $c->response->body('email_joke_for_today');
+    $c->response->body('OK');
 }
 
 
@@ -76,7 +76,7 @@ sub delete_sessions :Local :Args(0) {
     my ( $self, $c ) = @_;
 
     $c->delete_expired_sessions;
-    $c->response->body('delete_sessions');
+    $c->response->body('OK');
 }
 
 =head2 cleanup_database
@@ -86,7 +86,7 @@ sub delete_sessions :Local :Args(0) {
 sub cleanup_database :Local :Args(0) {
     my ( $self, $c ) = @_;
 
-    $c->response->body('cleanup_database');
+    $c->response->body('OK');
 }
 
 =head2 rebuild_search_index
@@ -96,7 +96,7 @@ sub cleanup_database :Local :Args(0) {
 sub rebuild_search_index :Local :Args(0) {
     my ( $self, $c ) = @_;
 
-    $c->response->body('rebuild_search_index');
+    $c->response->body('OK');
 }
 
 =head1 AUTHOR

@@ -1,7 +1,7 @@
 ---
 - at: '@hourly'
   event: /cron/email_joke_for_today
-- at: '* * * * *'
+- at: '@daily'
   event: /cron/delete_sessions
 - at: '@daily'
   event: /cron/cleanup_database
