@@ -192,24 +192,4 @@ sub bad_joke {
     return $bad;
 }
 
-sub favorites_for {
-    my ($self, %args) = @_;
-    my $user_id = $args{'user_id'};
-
-    my $favorites = $self->search({
-        # TODO unique jokes, not one for each version ?
-        -and => [
-            'votes.user_id' => $user_id,
-            'votes.user_id' => { '!=' => undef }, # XXX useless !!!
-        ],
-        'votes.rating'   => 5,
-    }, {
-        join => { joke_versions => 'votes' },
-        prefetch => { joke_versions => 'votes' },
-#        columns => [qw(me.id me.link me.version joke_versions.version votes.date)],
-    });
-    
-    return $favorites;
-}
-
 1;

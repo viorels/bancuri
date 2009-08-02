@@ -6,10 +6,14 @@
 <h3>[% c.user.name || 'tu' %] &gt; favorite</h3>
 
 <ol style="counter-reset: item [% pager.first - 1 %];">
-[% WHILE (joke = favorites.next) %]
-	<li><a href="[% c.uri_for('/', joke.link, 'v', joke.joke_versions.version) %]">
-		[% joke.joke_versions.title %]
-	</a> @ [% FOR vote IN joke.joke_versions.votes; '+' _ vote.rating _ '|' _ vote.joke_id _ '/' _ vote.browser_id.id _ ' '; END %]</li>
+[% WHILE (joke_version = favorites.next) %]
+	<li><a href="[% c.uri_for('/', joke_version.joke_id.link, 'v', joke_version.version) %]">
+		[% joke_version.title %]</a>
+		[% IF joke_version.version != joke_version.joke_id.version %]
+		  varianta [% joke_version.version %]
+		[% END %]
+		votat pe [% joke_version.votes.date.dmy %]
+	</li>
 [% END %]
 </ol>
 <br/>
