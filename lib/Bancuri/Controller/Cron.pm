@@ -86,6 +86,7 @@ sub delete_sessions :Local :Args(0) {
 sub cleanup_database :Local :Args(0) {
     my ( $self, $c ) = @_;
 
+    die "Testin 1 2 3 ...";
     $c->response->body('OK');
 }
 
