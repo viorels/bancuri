@@ -71,8 +71,10 @@ __PACKAGE__->config(
 );
 
 # Configure the logger
-use Catalyst::Log::Log4perl;
-__PACKAGE__->log(Catalyst::Log::Log4perl->new('bancuri_log.conf', watch_delay => 10));
+require Catalyst::Log::Log4perl;
+__PACKAGE__->log(
+    Catalyst::Log::Log4perl->new(
+        __PACKAGE__->path_to('bancuri_log.conf')->stringify, watch_delay => 10));
 
 # Override Catalyst::Response class
 use Bancuri::Response;
