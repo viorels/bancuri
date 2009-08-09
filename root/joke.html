@@ -8,7 +8,11 @@ _joke_link = "[% joke.link %]";
 				<div id="authentication">
 				</div>
 
-				[% UNLESS joke.deleted %]
+				[% IF joke.deleted %]
+				<h3>acest banc a fost sters</h3>
+				[% ELSIF profanity %]
+				<h3>acest banc are un limbaj nepotrivit</h3>
+				[% ELSE %]
 		
 				<h3>[% joke_version.title | html_entity %]</h3>
 
@@ -33,8 +37,6 @@ _joke_link = "[% joke.link %]";
 					<a href="[% '/' _ joke.link _ '/edit' %]">Editeaza banc</a><br/>
 				</div>
 
-				[% ELSE %]
-				<h3>banc sters</h3>
 				[% END %]
 
 				<br class="clear" />
