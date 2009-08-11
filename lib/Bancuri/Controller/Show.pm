@@ -107,7 +107,7 @@ sub show : Private {
     	    $joke_version = $joke->current;
     	}
     	
-    	if ( $joke_version->has_profanity ) {
+    	if ( $joke_version->has_profanity && !$c->user_exists ) {
     	    $c->stash( profanity => 1 );
     	}
     }

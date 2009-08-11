@@ -10,7 +10,7 @@ _joke_link = "[% joke.link %]";
 
 				[% IF joke.deleted %]
 				<h3>acest banc a fost sters</h3>
-				[% ELSIF profanity AND !c.user_exists %]
+				[% ELSIF profanity %]
 				<h3>acest banc are un limbaj nepotrivit</h3>
 				[% ELSE %]
 		
