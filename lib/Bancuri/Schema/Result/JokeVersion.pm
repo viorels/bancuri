@@ -126,6 +126,12 @@ sub text_teaser {
     return $text;
 };
 
+sub rating_round_to_half {
+    my ($self) = @_;
+    
+    return int($self->rating * 2 + .5) / 2;
+}
+
 =item vote
 Vote on a joke version. Required arguments: rating, user_id, browser_id
 Returns the new average rating or undef if user has already voted.

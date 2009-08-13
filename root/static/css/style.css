@@ -19,7 +19,10 @@
 }
 	
 .rating {
-	text-align: right;
+	float: right;
+}
+.rating .rating-value {
+	padding-left: 0.5em;
 }
 
 #versions {
@@ -90,16 +93,6 @@ textarea.edit {
  font-weight:bold;
  color:#CC0000;
 }
-
-/* RATING */
-
-.ui-rater>span {vertical-align:top;}
-.ui-rater-rating {margin-left:.8em}
-.ui-rater-starsOff, .ui-rater-starsOn {display:inline-block; height:18px; background:url(/static/img/stars.png) repeat-x 0 0px;}
-.ui-rater-starsOn {display:block; max-width:90px; top:0; background-position: 0 -36px;}
-.ui-rater-starsHover {background-position: 0 -18px!important;}
-
-/* END RATING */
 
 /* start counting at 5
 OL#page_two { counter-reset: item 5 }

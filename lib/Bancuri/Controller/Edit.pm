@@ -152,13 +152,19 @@ sub rating : Local {
     my $user_id = $c->user ? $c->user->id : undef;
     my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
             $c->sessionid, $c->req->address, $c->req->user_agent)->id;
-                    
-    # TODO It's WRONG to assume current version
-    my $joke_version = $c->model('DB::Joke')->find({ id => $id })->current;
-    my $new_rating = $joke_version
-        ->vote($vote, $user_id, $browser_id);
+
+    # TODO implement vote canceling ($vote == 0)
+ 
+    my $new_rating;
+    if ($id) {
+        # TODO It's WRONG to assume current version
+        my $joke_version = $c->model('DB::Joke')->find({ id => $id })->current;
+        if ($joke_version && $vote) {
+            $new_rating = $joke_version->vote($vote, $user_id, $browser_id);
+        }
+    }
     
-    # XXX undefined means that the user has already voted (today)
+    # undefined means that the user has already voted (today)
     $new_rating = 0 unless defined $new_rating;
 
     $c->response->body($new_rating);

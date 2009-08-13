@@ -20,8 +20,7 @@ function finishEdit(me) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-61552.html
 
 $(document).ready(function() {
-	
-	$('#rating').rater({ postHref: '/edit/rating', id: joke_id() });
+	setup_rating();
 
 	// Show versions
     var got_versions = false;
@@ -58,6 +57,55 @@ $(document).ready(function() {
 	
 	setup_logout();
 });
+
+function setup_rating() {
+	var rating_url = '/edit/rating';
+	var ratings = ['Nasol', 'Plictisitor', 'OK', 'Bun', 'Tare'];
+	$('input[name="joke_rating"]').rating({
+		callback: function(value, link) {
+			var $rating_value = $('#rating').find('.rating-value');
+			var $rating_count = $('#rating').find('.rating-count');
+			$rating_value.fadeTo(600, 0.4);
+	        $.ajax({
+	            url: rating_url,
+	            type: "POST",
+	            data: 'id=' + joke_id() + '&rating=' + value,
+	            complete: function(req) {
+	                if (req.status == 200) { // success
+	                    var rating = parseFloat(req.responseText);
+	                    $rating_value.fadeTo(600, 0.1, function() {
+		                    if (rating > 0) {
+		                    	$rating_value.text(rating.toFixed(2));
+		                        $rating_count.text(parseInt($rating_count.text()) + 1);
+		                        $rating_value.fadeTo(500, 1);
+		                        // alert('Ai votat: ' + opts.ratings[rating.toFixed(1)-1]);
+		                    }
+			                else {
+		                        $rating_value.fadeTo(500, 1);
+		                        // alert('Ai mai votat acest banc azi !');
+		                    }
+	                    });
+	                } 
+	                else { // failure
+	                    // alert(req.responseText);
+	                    $rating_value.fadeTo(2200, 1);
+	                }
+	            }	            
+	        });
+        },
+/*        
+		focus: function(value, link){ 
+			var tip = $(this).find('#rating_msg');
+			tip[0].data = tip[0].data || tip.html(); 
+			tip.html(link.title || 'value: '+value); 
+		}, 
+		blur: function(value, link){ 
+			var tip = $(this).find('#rating_msg');
+			$('#hover-test').html(tip[0].data || ''); 
+		}         
+*/
+	});
+}
 
 function btn_login_click() {
 	$("#authentication").load('/auth/form', {}, 

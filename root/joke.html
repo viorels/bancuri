@@ -1,5 +1,10 @@
 [% title = 'bancuri - ' _ joke_version.title %]
 
+[% MACRO round(n) 
+	GET n + 0.5 
+	FILTER format("%d");
+%]
+
 <script type="text/javascript">
 _joke_id = [% joke.id %];
 _joke_link = "[% joke.link %]";
@@ -22,19 +27,20 @@ _joke_link = "[% joke.link %]";
                   <td class="columnRightQuote"><img src="/static/img/rightquote.gif" alt=""/></td>
                 </tr></tbody></table>
                 
-                <!-- img id="edit_icon" src="/static/img/edit.png" width="20" height="20"  -->
-
 				<div id="rating" class="rating">
-					<span class="ui-rater">
-						<span class="ui-rater-starsOff" style="width:90px;">
-							<span class="ui-rater-starsOn" style="width:[% joke_version.rating * 18 %]px"></span>
-						</span>
-						<span class="ui-rater-rating">[% joke_version.rating | format('%.2f') %]</span>&nbsp;(<span class="ui-rater-rateCount">[% joke_version.voted %]</span> voturi)
-					</span>
+					[% FOR rating = [1 .. 10] -%]
+					  [% IF (joke_version.rating_round_to_half * 2 == rating) %]
+						<input checked="checked" name="joke_rating" value="[% round(rating / 2) %]" type="radio" class="{split:2}"/> 
+					  [% ELSE %]
+					    <input name="joke_rating" value="[% round(rating / 2) %]" type="radio" class="{split:2}"/> 
+					  [% END %]
+					[%- END %]
+					<span class="rating-value">[% joke_version.rating | format('%.2f') %]</span>
+					(<span class="rating-count">[% joke_version.voted %]</span> voturi)
 				</div>
 				
-				<div style="float: right;">
-					<a href="[% '/' _ joke.link _ '/edit' %]">Editeaza banc</a><br/>
+				<div>
+					<a href="[% '/' _ joke.link _ '/edit' %]">Modifica</a><br/>
 				</div>
 
 				[% END %]
