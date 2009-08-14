@@ -54,6 +54,14 @@ $(document).ready(function() {
 	$("#change_yes").click( function() {
 		change_vote( $(this).attr('name'), 5 );
 	});
+
+/*	
+	$.jGrowl("Hello world!", { 
+		header: 'Sfat',
+		sticky: true,
+//		position: 'bottom-right',
+	});
+*/	
 	
 	setup_logout();
 });
