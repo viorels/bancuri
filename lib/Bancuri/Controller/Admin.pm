@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use Digest::SHA qw(sha1_hex);
+
 =head1 NAME
 
 Bancuri::Controller::Admin - Catalyst Controller
@@ -55,6 +57,18 @@ sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
     $c->stash->{'template'} = 'admin.html';
+}
+
+sub update_joke_version_text_sha1 :Local {
+    my ( $self, $c ) = @_;
+    
+    my $all = $c->model('DB::JokeVersion')->search();
+    while (my $joke_version = $all->next) {
+        $joke_version->text_sha1(sha1_hex($joke_version->text));
+        $joke_version->update;
+    }
+    
+    $c->response->body('OK');
 }
 
 
