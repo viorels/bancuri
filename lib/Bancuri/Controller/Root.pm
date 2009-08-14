@@ -80,6 +80,7 @@ sub index : Path Args(0) {
             vampiri vanatori viagra bula sec 
             0 psihologi);
 
+        # categories with map value 0 don't have any tags
         if ( my $tag = $category_map[$cat_id] ) {
             $c->res->redirect($c->uri_for('tag', $tag)) and $c->detach
         }
@@ -175,19 +176,6 @@ sub not_found : Private {
 	# TODO add search link with words in $joke_link
 	$c->response->body("404 Joke not found. Try searching !");
 	$c->detach();
-}
-
-sub blog : Local {
-    my ( $self, $c ) = @_;
-    $c->stash->{'template'} = 'blog.html';
-}
-
-sub contact : Global {
-    my ($self, $c) = @_;
-    
-    $c->stash( 
-        template => 'contact.html',
-    );
 }
 
 sub sitemap : Local {

@@ -5,8 +5,18 @@
 
 <h3>Contact</h3>
 
-<p>
-	Spune-mi ce ai pe suflet la adresa bulă@...
-</p>
+[% UNLESS text %]
+<p>Spune-mi ce ai pe suflet ...</p>
+<form method="POST">
+  <textarea name="text" class="edit"></textarea><br/>
+  Email-ul tau: <input type="text" name="email" />
+  <input type="submit" value="Trimite">
+</form>
+[% ELSE %]
+
+<h4>Multumesc pentru mesaj !</h4>
+<p>[% text | html_entity | html_line_break %]</p>
+
+[% END %]
 			
 <br class="clear" />
