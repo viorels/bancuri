@@ -5,10 +5,10 @@
 
 <h3>Contact</h3>
 
-[% UNLESS text %]
+[% UNLESS sent %]
 <p>Spune-mi ce ai pe suflet ...</p>
 <form method="POST">
-  <textarea name="text" class="edit"></textarea><br/>
+  <textarea name="text" class="edit">[% text %]</textarea><br/>
   Email-ul tau: <input type="text" name="email" />
   <input type="submit" value="Trimite">
 </form>

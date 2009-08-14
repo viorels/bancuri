@@ -47,10 +47,11 @@ sub index :Path :Args(0) {
         );
         $msg->send;
         
-        $c->stash(text => $text); 
+        $c->stash(sent => 1); 
     }
 
     $c->stash(
+        text => $text,
         template => 'contact.html',
     );
 }
