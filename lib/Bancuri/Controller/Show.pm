@@ -133,7 +133,7 @@ sub show_next_joke :Private {
     my $next_joke = $jokes->random_beta_single;
 
     # TODO joke might still have profanity so repeat search a few times
-    if ( $next_joke->current->has_profanity ) {
+    if ( $next_joke->current->has_profanity && !$c->user_exists ) {
         $c->stash( profanity => 1 );
     }
     
