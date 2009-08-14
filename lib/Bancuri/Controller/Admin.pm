@@ -62,7 +62,7 @@ sub index :Path :Args(0) {
 sub update_joke_version_text_sha1 :Local {
     my ( $self, $c ) = @_;
     
-    my $all = $c->model('DB::JokeVersion')->search();
+    my $all = $c->model('DB::JokeVersion')->search({ text_sha1 => undef });
     while (my $joke_version = $all->next) {
         $joke_version->text_sha1(sha1_hex($joke_version->text));
         $joke_version->update;

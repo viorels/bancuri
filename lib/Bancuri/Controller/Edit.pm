@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use Digest::SHA qw(sha1_hex);
+
 =head1 NAME
 
 Bancuri::Controller::Edit - Catalyst Controller
@@ -21,6 +23,7 @@ sub add : Global {
 
     if ( $c->request->method eq 'POST' ) {
         my $joke_text = $c->request->params->{'joke'};
+        $joke_text =~ s/\r\n|\n|\r/\n/g; # convert dos/mac terminators to unix
         $c->stash->{'joke'} = $joke_text;
 
         if ( $c->request->params->{'preview'} ) {
@@ -35,8 +38,6 @@ sub add : Global {
         }
         
         if ( $c->request->params->{'save'} ) {
-            # TODO check checksum of previous version
-
             my $user_id = $c->user ? $c->user->id : undef;
             my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
                 $c->sessionid, $c->req->address, $c->req->user_agent)->id;
@@ -83,6 +84,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
 	}
 	elsif ( $c->req->method() eq 'POST' ) {
         $joke_text = $c->request->params->{'joke'};
+        $joke_text =~ s/\r\n|\n|\r/\n/g; # convert dos/mac terminators to unix
         $joke_title = $c->request->params->{'title'};
         my $user_id = $c->user ? $c->user->id : undef;
         my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
@@ -99,15 +101,20 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
             $c->stash->{'joke_preview'} = $new_joke;
         }
         
+        $c->log->debug($joke_text . " NE " . $joke->current->text);
+        $c->log->debug(sha1_hex($joke_text) . " ne " . $joke->current->text_sha1);
         if ( $c->request->params->{'save'} ) {
-            $joke->add_version(
-                text => $joke_text,
-                title => $joke_title,
-                parent_version => $joke->version,
-                comment => $c->request->params->{'comment'},
-                user_id => $user_id,
-                browser_id => $browser_id, 
-            );
+            if (sha1_hex($joke_text) ne $joke->current->text_sha1
+                or $joke_title ne $joke->current->title) {
+                $joke->add_version(
+                    text => $joke_text,
+                    title => $joke_title,
+                    parent_version => $joke->version,
+                    comment => $c->request->params->{'comment'},
+                    user_id => $user_id,
+                    browser_id => $browser_id, 
+                );
+            }
             
             # Redirect to show the (new) joke
             my $link = '/' . $joke->link;
