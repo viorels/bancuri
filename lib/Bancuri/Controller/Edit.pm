@@ -69,7 +69,8 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
 	my ( $self, $c ) = @_;
 	my $joke = $c->stash->{'joke'};
 
-	# TODO cook joke content before setting it into <textarea>content<textarea> to avoid "</textarea>"
+	# TODO cook joke content before setting it into <textarea>content<textarea> 
+	# to avoid XSS, e.g. "</textarea>"
 
 	my ($joke_text, $joke_title);
 	if ( $c->req->method() eq 'GET' ) {

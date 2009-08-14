@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Tue Jul 28 22:40:19 2009
+--   Generated at:      Fri Aug 14 20:26:10 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -109,6 +109,7 @@ create table joke_version (
   joke_id                   integer not null,
   version                   smallint default 1 not null,
   text                      text,
+  text_sha1                 character varying(40),
   title                     character varying(64),
   created                   timestamp default now(),
   parent_version            integer,

@@ -53,6 +53,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
   "last_visit",
   { data_type => "date", default_value => undef, is_nullable => 1, size => 4 },
+  "text_sha1",
+  {
+    data_type => "character varying",
+    default_value => undef,
+    is_nullable => 1,
+    size => 40,
+  },
 );
 __PACKAGE__->set_primary_key("joke_id", "version");
 __PACKAGE__->add_unique_constraint("pk_joke_version", ["joke_id", "version"]);
@@ -81,12 +88,24 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-20 00:27:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:V0EHHD12U6+NdGLoWdH63A
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-08-14 20:27:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TH2Bvf6h2oqInjYQ6W9Q+w
 
 __PACKAGE__->mk_group_accessors('simple' => qw/blessed profanity/);
 
 use List::Util qw(sum);
+use Digest::SHA qw(sha1_hex);
+
+sub store_column {
+    my ( $self, $name, $value ) = @_;
+    
+    # update digest on text update
+    if ($name eq 'text') {
+        $self->text_sha1(sha1_hex($value));
+    }
+    
+    $self->next::method($name, $value);
+}
 
 sub text_blessed {
     my $self = shift;
