@@ -4,32 +4,34 @@
 			tab_active = 'profile',
 		%]	    
 		
-	    <!-- Login form -->
-		<h3>Identifica-te</h3>
+		<h3>Login</h3>
 
 	    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
-            <label for="id">Email :</label><br />
+            <label for="id">Care este adresa ta de e-mail ?</label><br />
           	<input id="id" type="text" name="id" size="25" />
-			<span id="id_res" style="display:none"></span>
+			<span id="login_msg"></span>
 			[% IF login_error %]
 			<span class="messagebox_error">[% login_error %]</span><br />
 			[% END %]
 			<br />
 
-            <label for="password">Parola :</label><br />
-          	<input id="password" type="password" name="password" size="25" />
-			<input id="btn_login" type="submit" name="login" value="Login" /><br />
+            <label for="password">Parola pentru bancuri :</label><br />
+   	      	<input id="password" type="password" name="password" size="25" />
+			<span class="login">
+				<input id="btn_login" type="submit" name="login" value="Login" />
+				... ţi-ai uitat <a href="[% c.uri_for('/auth/password') %]">parola</a> ?<br />
+			</span>
 
 	        <div class="signup">
-				<label for="password2">Parola din nou :</label><br />
-            	<input id="password2" type="password" name="password2" size="25" /><br />
-            	<label for="name">Numele sau porecla :</label><br />
-            	<input id="name" name="name" type="text" size="25">
-				<input type="submit" name="signup" value="Sign Up" /><br />
+				<label for="password2">Repetă parola :</label><br />
+	           	<input id="password2" type="password" name="password2" size="25" /><br />
+				<label for="name">Cum te cheamă ?</label><br />
+				<input id="name" name="name" type="text" size="25">
+				<input type="submit" name="signup" value="Cont nou" /><br />
 			</div>
 	    </form>
-		
-		<h4>Sau <strong>fara sa-mi zici parola</strong> folosind doar id-ul de Yahoo!, MySpace, etc. (experimenal)</h4>
+		<br />
+		<h3>Login <strong>fără parolă</strong>,<sub> dacă ai cont la unul dintre parteneri</sub></h3>
 
 		<iframe src="https://bancuri.rpxnow.com/openid/embed?language_preference=ro&token_url=[% c.uri_for('/auth/rpx') %]" 
 		  scrolling="no" frameBorder="no" style="width:400px;height:240px;">

@@ -60,16 +60,20 @@ textarea.edit {
 }
 
 #login_form .signup {
-	display: none;
+	display: block;
 }
 
 .messagebox{
  position:absolute;
- width:100px;
+ width:auto;
  margin-left: 4px;
  border:1px solid #c93;
  background:#ffc;
  padding:3px;
+}
+#login_msg img {
+	padding: 0px;
+	border: 0px;
 }
 
 .messagebox_ok{

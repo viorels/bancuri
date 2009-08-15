@@ -55,6 +55,7 @@ $(document).ready(function() {
 		change_vote( $(this).attr('name'), 5 );
 	});
 
+	setup_login_form();
 	setup_logout();
 	
 	growl();
@@ -125,21 +126,6 @@ function growl() {
 	});
 }
 
-function btn_login_click() {
-	$("#authentication").load('/auth/form', {}, 
-		function (responseText, textStatus, XMLHttpRequest) {
-			$(this).slideDown();
-			$("#id").blur(check_id);
-			$("#login_form").ajaxForm({
-				beforeSubmit: login_pre,
-				success: login_cb,
-				dataType: 'json',
-			});
-		}
-	);
-	return false;
-}
-
 function joke_id() {
     return _joke_id;
 }
@@ -182,61 +168,92 @@ function build_version(version) {
     return html;
 }
 
-function check_id() {
-	// remove all the class add the messagebox classes and start fading
-	$("#id_res").removeClass().addClass('messagebox').text('Te cunosc ?').fadeIn("slow");
-	// check the username exists or not from ajax
-	$.getJSON("/auth/id_exists",{ id:$(this).val() } ,function(data) {
-		// TODO check if response is for current id (last request)
-		if( data["json_id_exists"] ) {
-			// start fading the messagebox
-			$("#id_res").fadeTo(200,0.1,function() {
-				//add message and change the class of the box and start fading
-				$(this).html('Te cunosc dar zi parola').addClass('messagebox_ok').fadeTo(900,1);
-				$('#login_form .signup').hide();
-				$('#btn_login').show();
-			});
-		}
-		else {
-			// start fading the messagebox
-			$("#id_res").fadeTo(200,0.1,function() {
-				// add message and change the class of the box and start fading
-		    	$(this).html('Nu te cunosc dar zi-mi o parola').addClass('messagebox_ok').fadeTo(900,1);
-				$('#login_form .signup').show();
-				$('#btn_login').hide();
-			});
-		}
-	});
-};
+// Login ...
 
-function login_pre() {
+function setup_login_form(state) {
+	// initialize
+	if (state == null) {
+		$('#login_form .signup input').attr('disabled', true);
+		
+		$id = $('#id');
+		id_exists($id);
+		$id.keyup(function () { id_exists($id) });
+		$id.change(function () { id_exists($id) });
+
+		$("#login_form").ajaxForm({
+			beforeSubmit: before_login,
+			success: after_login,
+			dataType: 'json',
+		});
+	}
+	// prepare for login
+	else if (state == 'login') {
+		$('#login_form .login input').removeAttr('disabled');
+		$('#login_form .signup input').attr('disabled', true);
+	}
+	// prepare for signup
+	else if (state == 'signup') {
+		$('#login_form .signup input').removeAttr('disabled');
+		$('#login_form .login input').attr('disabled', true);
+	}
+
+	$("#login_msg").empty();
+}
+
+function btn_login_click() {
+	$("#authentication").load('/auth/form', {}, function () {
+		setup_login_form();
+		$(this).slideDown();
+	});
+	return false;
+}
+
+function email_valid(email) {
+	var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+	return reg.test(email);
+}
+
+var id_last_checked;
+function id_exists($id) {
+	if ( $id.val() != id_last_checked && email_valid($id.val()) ) {
+		id_last_checked = $id.val();
+
+		$("#login_msg").html('<img src="/static/img/working.gif">').removeClass();
+
+		$.getJSON("/auth/id_exists", { id: $id.val() }, function(data) {
+			if ($id.val() in data["json_id_exists"]) {
+				if ( data["json_id_exists"][$id.val()] ) {
+					setup_login_form('login');
+				}
+				else {
+					setup_login_form('signup');
+				}
+			}
+		});
+	}
+}
+
+function before_login() {
 	// remove all the class add the messagebox classes and start fading
-    $("#id_res").removeClass().addClass('messagebox').text('Verific parola ...').fadeIn(1000);
+    $("#login_msg").removeClass().addClass('messagebox').text('verific ...').fadeIn(1000);
 
     // check the username exists or not from ajax
 	return true; // Allow ajax submit to continue
 };
 
-function login_cb(data, status) {
+function after_login(data, status) {
 	if ( data['json_login'] ) {
 		var name = data['json_login']['name'];
-		$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
-			// add message and change the class of the box and start fading
-			$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1,
-			function() {
-				_user_exists = true;
-				$("#btn_profile").unbind('click', btn_login_click).text(name);
-				$("#menu").children("ul")
-					.append('<li><a id="btn_logout" href="#">Logout</a></li>');
-				setup_logout();
+		$("#login_msg").fadeTo(200,0.1, function() {
+			$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1, function() {
 				$("#authentication").slideUp();
+				window.location.pathname = '/auth/redirect_back';
 			});
 		});
 	}
 	else {
 		var error = data['json_error'];
-		$("#id_res").fadeTo(200,0.1,function() { // start fading the messagebox
-			// add message and change the class of the box and start fading
+		$("#login_msg").fadeTo(200,0.1,function() {
 			$(this).html(error).addClass('messagebox_error').fadeTo(900,1);
 		});
 	}

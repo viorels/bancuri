@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
-use Math::Random qw(random_beta);
 use Email::Valid;
+use utf8;
 
 =head1 NAME
 
@@ -51,10 +51,10 @@ sub login : Local {
                 $error = "$id e deja inregistrat";
             }
             elsif ( $password ne $password2 ) {
-                $error = "Parolele nu se potrivesc";
+                $error = "parolele nu se potrivesc !";
             }
             elsif ( not length $name ) {
-                $error = "Cum te cheama ?";
+                $error = "cum te cheamă ?";
             }
             else {
                 $user = $c->forward('register', [{
@@ -84,15 +84,15 @@ sub login : Local {
             };
         }
         else {
-            $c->res->redirect('/') and $c->detach;
+            $c->forward('redirect_back');
         }
     }
     else {
         if ( $c->stash->{'AJAX'} ) {
-            $c->stash->{'json_error'} ||= 'Ai uitat parola ?';
+            $c->stash->{'json_error'} ||= 'parola greşită !';
         }
         else {
-            $c->flash->{'login_error'} = 'Ai uitat parola ?';
+            $c->flash->{'login_error'} = 'parola greşită !';
             $c->res->redirect('form') && $c->detach;
         }
     }
@@ -117,7 +117,7 @@ sub id_exists : Local {
     my $id = $c->request->params->{'id'};
     my $user = $c->model('DB::Users')->search_email_or_openid($id);
     
-    $c->stash->{'json_id_exists'} = $user ? $id : 0;
+    $c->stash->{'json_id_exists'} = { $id => $user ? 1 : 0 };
 }
 
 sub rpx : Local {
@@ -151,11 +151,7 @@ sub rpx : Local {
         $c->log->warn("RPX FAILED $token");
     }
     
-    my $back = '/';
-    $back = $c->session->{'last_page'} 
-        if exists $c->session->{'last_page'};
-
-    $c->res->redirect($back) and $c->detach;
+    $c->forward('redirect_back');
 }
 
 sub after_login : Private {
@@ -174,6 +170,16 @@ sub after_login : Private {
     return $c->user;
 }
 
+sub redirect_back :Local {
+    my ( $self, $c ) = @_;
+    
+    my $back = '/';
+    $back = $c->session->{'last_page'} 
+        if exists $c->session->{'last_page'};
+
+    $c->res->redirect($back) and $c->detach;
+}
+
 =item register
 
 Register a user (openid). Arguments are RPX stile, e.g. displayName
@@ -187,30 +193,10 @@ sub register : Private {
     return $c->model('DB::Users')->register($profile);
 }
 
-sub user_info : Private {
-    my ( $self, $c ) = @_;
-    
-    unless ($c->user) {
-        my @teasers = (
-            'Login',
-            'Nu te cunosc',
-            'Spune-mi cine esti',
-            'Identifica-te',
-            'Eu sunt Bula ... tu ?',
-        );
-        
-        # Beta probability distribution function for a=1, b=2 is f(x) = 2*(1-x) 
-        # ... in translation this means that lower numbers are more probable
-        my $rand = random_beta(1, 1, 2); # count, a, b
-        $rand = int($rand * @teasers); 
-    
-        $c->stash->{'anonymous'} = $teasers[$rand];
-    }
-}
-
 sub logout : Local {
     my ( $self, $c ) = @_;
 
+    # TODO refactor into redirect_back
     my $back = '/';
     $back = $c->session->{'last_page'} 
         if exists $c->session->{'last_page'};
@@ -221,6 +207,7 @@ sub logout : Local {
    
     # $c->logout();
     $c->delete_session('logout');
+    warn "*** last_page AFTER ".$back; # WORKS after too !!! 
 
     # Send the user to the starting point
     unless ( $c->stash->{'AJAX'} ) {

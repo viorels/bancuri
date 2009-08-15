@@ -29,9 +29,7 @@
   <script type="text/javascript" src="/static/js/jquery.MetaData.js"></script>
   <script type="text/javascript" src="/static/js/jquery.form.js"></script>
   <script type="text/javascript" src="/static/js/jquery.jgrowl.js"></script>
-	  [% IF tab_active == 'bancuri' %]
-	  <script type="text/javascript" src="/static/js/jokes.js"></script>
-	  [% END %]
+  <script type="text/javascript" src="/static/js/jokes.js"></script>
   [% END %]
   
   <script type="text/javascript">
@@ -52,7 +50,7 @@
 		<div id="menu">
 			<ul>
 				<li><a id="btn_profile" href="/profile" [% IF tab_active == 'profile' %]class="active"[% END %]>
-					[% c.user ? c.user.name || 'tu' : anonymous %]</a></li>
+					[% c.user ? c.user.name || 'tu' : 'login' %]</a></li>
 				<li><a href="/" [% IF tab_active == 'bancuri' %]class="active"[% END %]>
 					Bancuri</a></li>
 				<li><a href="/blog" [% IF tab_active == 'blog' %]class="active"[% END %]>
