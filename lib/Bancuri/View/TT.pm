@@ -13,6 +13,7 @@ __PACKAGE__->config({
     TIMER               => 0,
 #    PRE_PROCESS         => 'config/main',
     WRAPPER             => 'site/wrapper.html',
+    ENCODING            => 'utf-8', # instead of BOM in each template
 });
 
 =head1 NAME

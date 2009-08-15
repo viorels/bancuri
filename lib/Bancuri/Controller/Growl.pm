@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
-use Encode;
+use utf8;
 
 =head1 NAME
 
@@ -41,9 +41,9 @@ sub messages :Local {
     if ( @changes > 0 and not $c->session->{'growl_suppress'}{'changes'} ) {
         push @$messages, {
             header  => "Salut,",
-            message => decode_utf8("Ai făcut ".@changes." modificiari la bancuri !
+            message => "Ai făcut ".@changes." modificiari la bancuri !
                         Dacă vrei ca schimbarile să rămână atunci spune-mi te rog
-                        <a href=". $c->uri_for('/auth/form') .">cine eşti</a>."),
+                        <a href=". $c->uri_for('/auth/form') .">cine eşti</a>.",
             type    => 'changes',
         }
     }

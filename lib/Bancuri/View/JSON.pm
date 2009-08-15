@@ -7,6 +7,7 @@ use HTML::Entities;
 
 __PACKAGE__->config({
     expose_stash    => qr/^json_/,
+    encoding        => 'utf-8',
 });
 
 sub process {
