@@ -55,15 +55,9 @@ $(document).ready(function() {
 		change_vote( $(this).attr('name'), 5 );
 	});
 
-/*	
-	$.jGrowl("Hello world!", { 
-		header: 'Sfat',
-		sticky: true,
-//		position: 'bottom-right',
-	});
-*/	
-	
 	setup_logout();
+	
+	growl();
 });
 
 function setup_rating() {
@@ -112,6 +106,18 @@ function setup_rating() {
 			$('#hover-test').html(tip[0].data || ''); 
 		}         
 */
+	});
+}
+
+function growl() {
+	$.getJSON('/growl/messages', function(data) {
+		$.each(data["json_growl"], function(i, growl) {
+			$.jGrowl(growl.message, { 
+				header: growl.header,
+				sticky: true,
+//				position: 'bottom-right',
+			});
+        });
 	});
 }
 

@@ -68,6 +68,9 @@ __PACKAGE__->config(
     scheduler => {
         time_zone => 'Europe/Bucharest',
     },
+    'View::JSON' => {
+        encoding => 'utf-8',
+    }
 );
 
 # Configure the logger
