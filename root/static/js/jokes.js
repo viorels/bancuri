@@ -114,8 +114,12 @@ function growl() {
 		$.each(data["json_growl"], function(i, growl) {
 			$.jGrowl(growl.message, { 
 				header: growl.header,
+				type: growl.type,
 				sticky: true,
 //				position: 'bottom-right',
+				close: function(e,m,o) {
+					$.post("/growl/suppress", { type: o.type });
+				}
 			});
         });
 	});
