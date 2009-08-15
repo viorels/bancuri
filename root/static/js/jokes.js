@@ -55,6 +55,7 @@ $(document).ready(function() {
 		change_vote( $(this).attr('name'), 5 );
 	});
 
+	setup_login_form();
 	setup_logout();
 	
 	growl();
@@ -167,24 +168,50 @@ function build_version(version) {
     return html;
 }
 
+// Login ...
+
+function setup_login_form(state) {
+	// initialize
+	if (state == null) {
+		$('#login_form .login input, #login_form .signup input').attr('disabled', true);
+		$("#id").change(function () {
+			if (valid_email($(this).value())) {
+				check_email();
+			)
+		});
+		$("#login_form").ajaxForm({
+			beforeSubmit: login_pre,
+			success: login_cb,
+			dataType: 'json',
+		});
+	}
+	// prepare for login
+	else if (state == 'login') {
+		$('#login_form .login input').removeAttr('disabled');
+		$('#login_form .signup input').attr('disabled', true);
+	}
+	// prepare for signup
+	else if (state == 'signup') {
+		$('#login_form .login input, #login_form .signup input').removeAttr('disabled');
+	}
+}
+
 function btn_login_click() {
-	$("#authentication").load('/auth/form', {}, 
-		function (responseText, textStatus, XMLHttpRequest) {
-			$(this).slideDown();
-			$("#id").blur(check_id);
-			$("#login_form").ajaxForm({
-				beforeSubmit: login_pre,
-				success: login_cb,
-				dataType: 'json',
-			});
-		}
-	);
+	$("#authentication").load('/auth/form', {}, function () {
+		setup_login_form();
+		$(this).slideDown();
+	});
 	return false;
 }
 
 function email_valid(email) {
 	var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 	return reg.test(email);
+}
+
+function check_email(email) {
+	
+	return true;
 }
 
 function check_id() {
