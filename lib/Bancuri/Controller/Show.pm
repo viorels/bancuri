@@ -107,9 +107,8 @@ sub show : Private {
     	    $joke_version = $joke->current;
     	}
     	
-    	if ( $joke_version->has_profanity && !$c->user_exists ) {
-    	    $c->stash( profanity => 1 );
-    	}
+	    $c->stash( profanity => 1 ) if $joke_version->has_profanity;
+    	$c->stash( allow_profanity => 1 ) if $c->user_exists; # TODO and over 18
     }
 	# TODO check if there is no such version
 
@@ -133,7 +132,7 @@ sub show_next_joke :Private {
     my $next_joke = $jokes->random_beta_single;
 
     # TODO joke might still have profanity so repeat search a few times
-    if ( $next_joke->current->has_profanity && !$c->user_exists ) {
+    if ( $next_joke->current->has_profanity ) {
         $c->stash( profanity => 1 );
     }
     

@@ -2,7 +2,9 @@
     nojs = 1 
 %]
 
-[% UNLESS profanity %]
+[% IF profanity && !allow_profanity %]
+<h3>acest banc are un limbaj nepotrivit</h3>
+[% ELSE %]
 <form method="POST">
 
 <h3><input type="text" name="title" value="[% joke_title %]" style="width: 100%"></h3>
@@ -21,8 +23,6 @@ Motivul modificarii:<br>
 </div>
 
 </form>
-[% ELSE %]
-<h3>acest banc are un limbaj nepotrivit</h3>
 [% END %]
 
 [% IF joke_preview %]

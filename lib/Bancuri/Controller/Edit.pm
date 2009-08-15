@@ -78,9 +78,8 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         $joke_text = $joke->current->text;
         $joke_title = $joke->current->title;
         
-    	if ( $joke->current->has_profanity && !$c->user_exists ) {
-    	    $c->stash( profanity => 1 );
-    	}
+	    $c->stash( profanity => 1 ) if $joke->current->has_profanity;
+    	$c->stash( allow_profanity => 1 ) if $c->user_exists; # TODO and over 18    	
 	}
 	elsif ( $c->req->method() eq 'POST' ) {
         $joke_text = $c->request->params->{'joke'};
