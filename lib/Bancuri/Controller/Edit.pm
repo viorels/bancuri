@@ -42,11 +42,9 @@ sub add : Global {
             my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
                 $c->sessionid, $c->req->address, $c->req->user_agent)->id;
 
-            my ($new_joke, $change) = $c->model('DB::Joke')
+            my $new_joke = $c->model('DB::Joke')
                 ->add($joke_text, $user_id, $browser_id);
             if ($new_joke) {
-                push @{ $c->session->{'changes'} }, $change->id unless $user_id;
-                
                 my $link = '/' . $new_joke->link;
                 $c->res->redirect($link) and $c->detach;
             }
@@ -106,7 +104,7 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         if ( $c->request->params->{'save'} ) {
             if (sha1_hex($joke_text) ne $joke->current->text_sha1
                 or $joke_title ne $joke->current->title) {
-                my ($new_version, $change) = $joke->add_version(
+                $joke->add_version(
                     text => $joke_text,
                     title => $joke_title,
                     parent_version => $joke->version,
@@ -114,8 +112,6 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
                     user_id => $user_id,
                     browser_id => $browser_id, 
                 );
-
-                push @{ $c->session->{'changes'} }, $change->id unless $user_id;
             }
             
             # Redirect to show the (new) joke
@@ -124,13 +120,11 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         }
         
         if ( $c->request->params->{'delete'} ) {
-		    my $change = $joke->remove(
+		    $joke->remove(
                 user_id => $user_id,
                 browser_id => $browser_id, 		    
                 comment => $c->request->params->{'comment'},
 		    );
-		    
-		    push @{ $c->session->{'changes'} }, $change->id if $change and not $user_id;
 		    
             my $link = '/' . $joke->link;
             $c->res->redirect($link) and $c->detach;

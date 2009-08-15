@@ -102,18 +102,15 @@ Required argument hash keys: user_id, browser_id, comment
 sub remove {
     my ($self, %params) = @_;
     
-    my $change;
     unless ( $self->deleted ) {
         $self->deleted(1);
         $self->update;
-        $change = $self->create_related('changes', {
+        $self->create_related('changes', {
             type => 'delete',
             from_version => $self->version,
             %params,
         });
-    }
-    
-    return $change;    
+    }    
 }
 
 =item add_version
@@ -147,12 +144,12 @@ sub add_version {
     # We need change comment but not version comment
     delete $new_version{'comment'};
     
-    my $new_version = $self->create_related('joke_versions', \%new_version);
-    my $change = $self->create_related('changes', \%change);
+    $self->create_related('joke_versions', \%new_version);
+    $self->create_related('changes', \%change);
     $self->version($new_version{'version'});
     $self->update;
     
-    return wantarray ? ($new_version, $change) : $new_version;
+    return;
 }
 
 =item requires_moderation

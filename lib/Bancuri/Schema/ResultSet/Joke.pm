@@ -158,7 +158,7 @@ sub add {
 		}],
 	});
 	
-    my $change = $joke->create_related('changes', {
+    $joke->create_related('changes', {
         type => 'add',
         to_version => $version,
         user_id => $user_id,
@@ -171,7 +171,7 @@ sub add {
 	$joke->link( $joke->default_link );
 	$joke->update;
 
-    return wantarray ? ($joke, $change) : $joke;	
+    return $joke;	
 }
 
 sub bad_joke {

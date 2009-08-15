@@ -34,12 +34,11 @@ sub messages :Local {
     
     my $messages = [];
     
-    # TODO get changes from db associated with this browser/session
-    my @changes = @{ $c->session->{'changes'} };
+    my @changes = $c->model('DB::Change')->search_for_session($c->sessionid)->all();
     if ( @changes > 0 ) {
         push @$messages, {
             header  => "Salut,",
-            message => decode('utf-8', "Ai făcut ".@changes." modificiari la bancuri !
+            message => decode_utf8("Ai făcut ".@changes." modificiari la bancuri !
                         Dacă vrei ca schimbarile să rămână atunci spune-mi te rog
                         <a href=". $c->uri_for('/auth/form') .">cine eşti</a>."),
         }
