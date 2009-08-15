@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Fri Aug 14 20:26:10 2009
+--   Generated at:      Sat Aug 15 16:38:27 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -180,12 +180,14 @@ create table user_openid (
 -- Historic table that keep jokes rated with 5 for a loger time so we
 -- can find similar tastes
 create table vote (
+  id                        serial not null,
   joke_id                   integer not null,
   version                   smallint not null,
   user_id                   integer,
   browser_id                integer not null,
   rating                    smallint not null,
-  date                      date default now()
+  date                      date default now(),
+  constraint pk_Vote primary key (id)
 ) ;
 
 -- joke_tag

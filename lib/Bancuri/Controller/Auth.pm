@@ -75,7 +75,7 @@ sub login : Local {
     }
     
     if ( $c->user ) {
-        $c->forward('post_login');
+        $c->forward('after_login');
 
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
@@ -145,7 +145,7 @@ sub rpx : Local {
             deleted => 0,
         }, 'passwordless');
         
-        $c->forward('post_login');
+        $c->forward('after_login');
     }
     else {
         $c->log->warn("RPX FAILED $token");
@@ -158,13 +158,17 @@ sub rpx : Local {
     $c->res->redirect($back) and $c->detach;
 }
 
-sub post_login : Private {
+sub after_login : Private {
     my ( $self, $c ) = @_;
 
     $c->user->update_last_login;
 
     # assign this user to changes made before login
     $c->model('DB::Change')->search_for_session($c->sessionid)
+        ->assign_user($c->user->id);
+
+    # assign this user to votes made before login
+    $c->model('DB::Vote')->search_for_session($c->sessionid)
         ->assign_user($c->user->id);
     
     return $c->user;

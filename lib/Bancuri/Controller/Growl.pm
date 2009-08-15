@@ -34,10 +34,9 @@ sub messages :Local {
     
     my $messages = [];
     
-    # get changes for current session but without user
+    # get changes for current session with no assigned user
     my @changes = $c->model('DB::Change')->search_for_session($c->sessionid)->all();
     @changes = grep { not $_->user_id } @changes; 
-
     if ( @changes > 0 and not $c->session->{'growl_suppress'}{'changes'} ) {
         push @$messages, {
             header  => "Salut,",
@@ -45,6 +44,19 @@ sub messages :Local {
                         Dacă vrei ca schimbarile să rămână atunci spune-mi te rog
                         <a href=". $c->uri_for('/auth/form') .">cine eşti</a>.",
             type    => 'changes',
+        }
+    }
+
+    # get 5 stars votes for current session with no assigned user
+    my @votes = $c->model('DB::Vote')->search_for_session($c->sessionid)->all();
+    @votes = grep { not $_->user_id and $_->rating == 5 } @votes; 
+    if ( @votes > 0 and not $c->session->{'growl_suppress'}{'favorites'} ) {
+        push @$messages, {
+            header  => "Salut,",
+            message => "Ai votat ".@votes." bancuri cu 5 stele ! Dacă vrei să le
+                        regaseşti in colecţia ta de favorite atunci spune-mi te rog
+                        <a href=". $c->uri_for('/auth/form') .">cine eşti</a>.",
+            type    => 'favorites',
         }
     }
     
