@@ -125,21 +125,6 @@ function growl() {
 	});
 }
 
-function btn_login_click() {
-	$("#authentication").load('/auth/form', {}, 
-		function (responseText, textStatus, XMLHttpRequest) {
-			$(this).slideDown();
-			$("#id").blur(check_id);
-			$("#login_form").ajaxForm({
-				beforeSubmit: login_pre,
-				success: login_cb,
-				dataType: 'json',
-			});
-		}
-	);
-	return false;
-}
-
 function joke_id() {
     return _joke_id;
 }
@@ -180,6 +165,26 @@ function build_version(version) {
     }
 
     return html;
+}
+
+function btn_login_click() {
+	$("#authentication").load('/auth/form', {}, 
+		function (responseText, textStatus, XMLHttpRequest) {
+			$(this).slideDown();
+			$("#id").blur(check_id);
+			$("#login_form").ajaxForm({
+				beforeSubmit: login_pre,
+				success: login_cb,
+				dataType: 'json',
+			});
+		}
+	);
+	return false;
+}
+
+function email_valid(email) {
+	var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+	return reg.test(email);
 }
 
 function check_id() {
