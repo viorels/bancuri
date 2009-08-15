@@ -71,6 +71,15 @@ sub update_joke_version_text_sha1 :Local {
     $c->response->body('OK');
 }
 
+sub scheduler :Local {
+    my ( $self, $c ) = @_;
+    
+    $c->stash(
+        template    => 'admin/scheduler.html',
+        event_keys  => [qw/ event at auto_run next_run last_run last_output /],
+        state       => $c->scheduler_state,
+    );
+}
 
 =head1 AUTHOR
 
