@@ -75,8 +75,8 @@ sub login : Local {
     }
     
     if ( $c->user ) {
-        $c->user->update_last_login;
-        
+        $c->forward('post_login');
+
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
                 id => $id,
@@ -137,7 +137,15 @@ sub rpx : Local {
         unless ( $user ) {
             $user = $c->forward('register', [ $user_data->{'profile'} ]);
         }
-        $c->forward('login_openid', [ $user ]);
+
+        # Authenticate user with numeric id (not open id)
+        my $authenticated = $c->authenticate( { 
+            id => $user->id,
+            email => $user->email,
+            deleted => 0,
+        }, 'passwordless');
+        
+        $c->forward('post_login');
     }
     else {
         $c->log->warn("RPX FAILED $token");
@@ -150,20 +158,14 @@ sub rpx : Local {
     $c->res->redirect($back) and $c->detach;
 }
 
-sub login_openid : Private {
-    my ( $self, $c, $user ) = @_;
+sub post_login : Private {
+    my ( $self, $c ) = @_;
 
-    $c->log->debug("LOGIN OPENID ". $user->email);
-
-    # Authenticate user with numeric id (not open id)
-    my $authenticated = $c->authenticate( { 
-        id => $user->id,
-        email => $user->email,
-        deleted => 0,
-    }, 'passwordless');
-    $c->log->warn($authenticated ? "SUCCESS" : "FAILED");
-    
     $c->user->update_last_login;
+
+    # assign this user to changes made before login
+    $c->model('DB::Change')->search_for_session($c->sessionid)
+        ->assign_user($c->user->id);
     
     return $c->user;
 }

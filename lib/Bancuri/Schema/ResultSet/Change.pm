@@ -15,5 +15,12 @@ sub search_for_session {
     return $changes;
 }
 
+sub assign_user {
+    my ($self, $user_id) = @_;
+    
+    $self->search({ user_id => undef })->update({user_id => $user_id});
+    
+    return $self;
+}
 
 1
