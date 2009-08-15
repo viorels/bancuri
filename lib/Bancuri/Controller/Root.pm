@@ -38,8 +38,6 @@ sub auto : Private {
         $c->stash->{'AJAX'} = $req_with;
     }
     
-    $c->forward('/auth/user_info');
-    
     return 1;
 };
 
