@@ -170,16 +170,6 @@ sub after_login : Private {
     return $c->user;
 }
 
-sub redirect_back :Local {
-    my ( $self, $c ) = @_;
-    
-    my $back = '/';
-    $back = $c->session->{'last_page'} 
-        if exists $c->session->{'last_page'};
-
-    $c->res->redirect($back) and $c->detach;
-}
-
 =item register
 
 Register a user (openid). Arguments are RPX stile, e.g. displayName
@@ -196,23 +186,18 @@ sub register : Private {
 sub logout : Local {
     my ( $self, $c ) = @_;
 
-    # TODO refactor into redirect_back
-    my $back = '/';
-    $back = $c->session->{'last_page'} 
-        if exists $c->session->{'last_page'};
-    warn "*** last_page ".$back; 
-     
-    $back = $c->req->referer if $back eq '/';
-    warn "*** referer ".$back;
-   
-    # $c->logout();
     $c->delete_session('logout');
-    warn "*** last_page AFTER ".$back; # WORKS after too !!! 
+    $c->forward('redirect_back');
+}
 
-    # Send the user to the starting point
-    unless ( $c->stash->{'AJAX'} ) {
-        $c->res->redirect($back) and $c->detach;
-    }
+sub redirect_back :Local {
+    my ( $self, $c ) = @_;
+    
+    my $back = '/';
+    $back = $c->session->{'last_page'} if exists $c->session->{'last_page'}; 
+    $back = $c->req->referer if $back eq '/';
+
+    $c->res->redirect($back, 302) and $c->detach;
 }
 
 =head1 AUTHOR
