@@ -8,10 +8,10 @@
 
 	    <form id="login_form" method="post" action="[% c.uri_for('/auth/login') %]">
             <label for="id">Care este adresa ta de e-mail ?</label><br />
-          	<input id="id" type="text" name="id" size="25" />
+          	<input id="id" type="text" name="id" size="25" value="[% c.req.params.id %]" />
 			<span id="login_msg"></span>
 			[% IF login_error %]
-			<span class="messagebox_error">[% login_error %]</span><br />
+			<span class="messagebox_error">[% login_error %]</span>
 			[% END %]
 			<br />
 
@@ -26,7 +26,7 @@
 				<label for="password2">Repetă parola :</label><br />
 	           	<input id="password2" type="password" name="password2" size="25" /><br />
 				<label for="name">Cum te cheamă ?</label><br />
-				<input id="name" name="name" type="text" size="25">
+				<input id="name" name="name" type="text" size="25" value="[% c.req.params.name %]">
 				<input type="submit" name="signup" value="Cont nou" /><br />
 			</div>
 			

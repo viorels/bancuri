@@ -38,7 +38,6 @@ sub form : Local {
         current_view => 'TT',
         nowrap => $nowrap,
         template => 'inc/login.html',
-        login_error => $c->flash->{'login_error'},
         rpx_iframe_url => $rpx_iframe_url,
         next_page => $next_page, # XXX url escape ?
     );
@@ -54,7 +53,7 @@ sub login : Local {
     if ( $type eq 'email' ) {
         my $password = $c->request->params->{'password'} || "";
 
-        # first try to create user
+        # first create a new user if requested
         if ( $c->request->params->{'signup'} ) {
             my $password2 = $c->request->params->{'password2'} || "";
             my $name = $c->request->params->{'name'};
@@ -79,10 +78,9 @@ sub login : Local {
                     displayName => $name,
                 }]);
             }
-            $c->stash->{'json_error'} = $error;
         }
 
-        # then login the new or existing user
+        # then authenticate the new or existing user
         $c->authenticate( { 
             email => $id,
             password => $password,

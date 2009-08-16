@@ -197,7 +197,7 @@ function setup_login_form(state) {
 }
 
 function btn_login_click() {
-	$("#authentication").load('/auth/form', { redirect: window.location }, function () {
+	$("#authentication").load('/auth/form', { next_page: window.location }, function () {
 		setup_login_form();
 		$(this).slideDown();
 	});
@@ -243,7 +243,7 @@ function after_login(data, status) {
 		$("#login_msg").fadeTo(200,0.1, function() {
 			$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1, function() {
 				$("#authentication").slideUp();
-				window.location = $("input[name='redirect']").val();
+				window.location = $("input[name='next_page']").val();
 			});
 		});
 	}
