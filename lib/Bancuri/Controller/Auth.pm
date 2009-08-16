@@ -86,13 +86,13 @@ sub login : Local {
 
     }
     
-    if ( $c->user ) {
+    if ( $c->user_exists ) {
         $c->forward('after_login');
 
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
                 id => $id,
-                name => $c->user->name || 'tu',
+                name => $c->user->nickname,
             };
         }
         else {

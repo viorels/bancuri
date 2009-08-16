@@ -39,10 +39,6 @@ $(document).ready(function() {
         }
     );
 	
-	// Profile
-	if (!_user_exists) {
-		$("#btn_profile").click(btn_login_click);
-	}
 	
 	// Vote a change
 	$("#change_no").click( function() {
@@ -52,6 +48,10 @@ $(document).ready(function() {
 		change_vote( $(this).attr('name'), 5 );
 	});
 
+	// Login
+	if (!_user_exists) {
+		$("#btn_login").click(btn_login_click);
+	}
 	setup_login_form(); // for /auth/form page only
 	
 	growl();

@@ -133,6 +133,15 @@ use DateTime::Duration;
 
 __PACKAGE__->many_to_many(roles => 'user_roles', 'role_id');
 
+sub nickname {
+    my ($self) = @_;
+    
+    my $email = $self->email;
+    $email =~ s/\@.*// if $email;
+    
+    return $self->name || $email || 'tu';
+}
+
 sub age {
     my ($self, $age) = @_;
     

@@ -49,8 +49,17 @@
 		
 		<div id="menu">
 			<ul>
-				<li><a id="btn_profile" href="/profile" [% IF tab_active == 'profile' %]class="active"[% END %]>
-					[% c.user ? c.user.name || 'tu' : 'login' %]</a></li>
+				<li>
+				[% IF c.user_exists %]
+					<a href="[% c.uri_for('/profile') %]" 
+					[% IF tab_active == 'profile' %]class="active"[% END %]>
+					[% c.user.nickname %]</a>
+				[% ELSE %]
+					<a id="btn_login" href="[% c.uri_for('/auth/form', { redirect => c.req.uri }) %]"
+					[% IF tab_active == 'login' %]class="active"[% END %]>
+					login</a>
+				[% END %]
+				</li>
 				<li><a href="/" [% IF tab_active == 'bancuri' %]class="active"[% END %]>
 					Bancuri</a></li>
 				<li><a href="/blog" [% IF tab_active == 'blog' %]class="active"[% END %]>

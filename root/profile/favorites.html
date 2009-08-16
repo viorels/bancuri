@@ -3,7 +3,7 @@
 	tab_active = 'profile',
 %]
 
-<h3>[% c.user.name || 'tu' %] &gt; favorite</h3>
+<h3>[% c.user.nickname %] &gt; favorite</h3>
 
 <ol style="counter-reset: item [% pager.first - 1 %];">
 [% WHILE (joke_version = favorites.next) %]
