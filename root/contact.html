@@ -5,11 +5,13 @@
 
 <h3>Contact</h3>
 
+<div id="authentication"></div>
+
 [% UNLESS sent %]
 <p>Spune-mi ce ai pe suflet ...</p>
 <form method="POST">
   <textarea name="text" class="edit">[% text %]</textarea><br/>
-  Email-ul tau: <input type="text" name="email" />
+  Email-ul tau: <input type="text" name="email" value="[% c.user.email %]"/>
   <input type="submit" value="Trimite">
 </form>
 [% ELSE %]

@@ -48,6 +48,14 @@ sub index :Path :Args(0) {
         $msg->send;
         
         $c->stash(sent => 1); 
+        
+        # update profile if there was no email before
+        unless ( $c->user->email ) {
+            $c->user->update({ email => $email_from });
+        }
+        
+        # TODO also ask for name if none available
+        # TODO if we have email, then why not create the account ?!
     }
 
     $c->stash(
