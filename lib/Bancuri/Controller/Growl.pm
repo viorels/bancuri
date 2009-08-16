@@ -55,7 +55,9 @@ sub messages :Local {
             header  => "Salut,",
             message => "Ai votat ".@votes." bancuri cu 5 stele ! Dacă vrei să le
                         regaseşti in colecţia ta de favorite atunci spune-mi te rog
-                        <a href=". $c->uri_for('/auth/form') .">cine eşti</a>.",
+                        <a href=". $c->uri_for('/auth/form', {
+                            redirect => $c->uri_for('/favorites')
+                        }) .">cine eşti</a>.",
             type    => 'favorites',
         }
     }

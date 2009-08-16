@@ -19,7 +19,7 @@
    	      	<input id="password" type="password" name="password" size="25" />
 			<span class="login">
 				<input id="btn_login" type="submit" name="login" value="Login" />
-				... ţi-ai uitat <a href="[% c.uri_for('/auth/password') %]">parola</a> ?<br />
+				... ţi-ai uitat <a href="[% c.uri_for('/contact') %]">parola</a> ?<br />
 			</span>
 
 	        <div class="signup">
@@ -29,11 +29,12 @@
 				<input id="name" name="name" type="text" size="25">
 				<input type="submit" name="signup" value="Cont nou" /><br />
 			</div>
+			
+			<input type="hidden" name="redirect" value="[% redirect %]" />
 	    </form>
 		<br />
 		<h3>Login <strong>fără parolă</strong>,<sub> dacă ai cont la unul dintre parteneri</sub></h3>
 
-		<iframe src="https://bancuri.rpxnow.com/openid/embed?language_preference=ro&token_url=[% c.uri_for('/auth/rpx') %]" 
-		  scrolling="no" frameBorder="no" style="width:400px;height:260px;">
+		<iframe src="[% rpx_iframe_url %]" scrolling="no" frameBorder="no" style="width:400px;height:260px;">
 		</iframe>
 

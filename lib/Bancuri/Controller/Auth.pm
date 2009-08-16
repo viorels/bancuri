@@ -23,12 +23,24 @@ sub form : Local {
     my ( $self, $c ) = @_;
     
     my $nowrap = $c->stash->{'AJAX'};
+
+    # TODO embed referer in every /auth/form link
+    my $redirect = $c->req->params->{'redirect'}; # XXX unsafe
+    $redirect ||= $c->req->referer; # XXX unsafe
+    $redirect ||= $c->uri_for('/');
+    
+    my $rpx_token_url = $c->uri_for('/auth/rpx', { redirect => $redirect }); 
+    my $rpx_iframe_url = 'https://bancuri.rpxnow.com/openid/embed';
+    $rpx_iframe_url .= '?language_preference=ro';
+    $rpx_iframe_url .= '&token_url=' . $rpx_token_url;
     
     $c->stash(
         current_view => 'TT',
         nowrap => $nowrap,
         template => 'inc/login.html',
         login_error => $c->flash->{'login_error'},
+        rpx_iframe_url => $rpx_iframe_url,
+        redirect => $redirect, # XXX url escape ?
     );
 }
 
@@ -193,9 +205,8 @@ sub logout : Local {
 sub redirect_back :Local {
     my ( $self, $c ) = @_;
     
-    my $back = '/';
-    $back = $c->session->{'last_page'} if exists $c->session->{'last_page'}; 
-    $back = $c->req->referer if $back eq '/';
+    my $back = $c->req->params->{'redirect'};
+    $back ||= $c->uri_for('/'); # just to be safe
 
     $c->res->redirect($back, 302) and $c->detach;
 }

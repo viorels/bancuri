@@ -58,7 +58,7 @@
 				<li><a href="/contact" [% IF tab_active == 'contact' %]class="active"[% END %]>
 					Contactează-mă</a></li>
                 [% IF c.user %]
-				<li><a href="/auth/logout">
+				<li><a href="[% c.uri_for('/auth/logout', { redirect => c.req.uri }) %]">
 					Logout</a></li>
                 [% END %]
 			</ul>

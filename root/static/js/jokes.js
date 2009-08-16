@@ -243,7 +243,7 @@ function after_login(data, status) {
 		$("#login_msg").fadeTo(200,0.1, function() {
 			$(this).html('Salut '+name+' !').addClass('messagebox_ok').fadeTo(900,1, function() {
 				$("#authentication").slideUp();
-				window.location.pathname = '/auth/redirect_back';
+				window.location = $("input[name='redirect']").val();
 			});
 		});
 	}
