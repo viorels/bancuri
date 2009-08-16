@@ -16,18 +16,6 @@ Catalyst Controller.
 
 =cut
 
-sub auto : Private {
-    my ($self, $c) = @_;
-
-    # If a user doesn't exist, force login
-    if (!$c->user_exists) {
-        $c->response->redirect('/auth/form');
-        return 0;
-    }
-
-    return 1;
-}
-
 =head2 index
 
 =cut
