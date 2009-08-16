@@ -55,7 +55,7 @@
 					[% IF tab_active == 'profile' %]class="active"[% END %]>
 					[% c.user.nickname %]</a>
 				[% ELSE %]
-					<a id="btn_login" href="[% c.uri_for('/auth/form', { redirect => c.req.uri }) %]"
+					<a id="btn_login" href="[% c.uri_for('/auth/form', { next_page => c.req.uri }) %]"
 					[% IF tab_active == 'login' %]class="active"[% END %]>
 					login</a>
 				[% END %]
@@ -67,7 +67,7 @@
 				<li><a href="/contact" [% IF tab_active == 'contact' %]class="active"[% END %]>
 					Contactează-mă</a></li>
                 [% IF c.user %]
-				<li><a href="[% c.uri_for('/auth/logout', { redirect => c.req.uri }) %]">
+				<li><a href="[% c.uri_for('/auth/logout', { next_page => c.req.uri }) %]">
 					Logout</a></li>
                 [% END %]
 			</ul>

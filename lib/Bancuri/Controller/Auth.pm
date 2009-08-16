@@ -25,11 +25,11 @@ sub form : Local {
     my $nowrap = $c->stash->{'AJAX'};
 
     # TODO embed referer in every /auth/form link
-    my $redirect = $c->req->params->{'redirect'}; # XXX unsafe
-    $redirect ||= $c->req->referer; # XXX unsafe
-    $redirect ||= $c->uri_for('/');
+    my $next_page = $c->req->params->{'next_page'}; # XXX unsafe
+    $next_page ||= $c->req->referer; # XXX unsafe
+    $next_page ||= $c->uri_for('/');
     
-    my $rpx_token_url = $c->uri_for('/auth/rpx', { redirect => $redirect }); 
+    my $rpx_token_url = $c->uri_for('/auth/rpx', { next_page => $next_page }); 
     my $rpx_iframe_url = 'https://bancuri.rpxnow.com/openid/embed';
     $rpx_iframe_url .= '?language_preference=ro';
     $rpx_iframe_url .= '&token_url=' . $rpx_token_url;
@@ -40,7 +40,7 @@ sub form : Local {
         template => 'inc/login.html',
         login_error => $c->flash->{'login_error'},
         rpx_iframe_url => $rpx_iframe_url,
-        redirect => $redirect, # XXX url escape ?
+        next_page => $next_page, # XXX url escape ?
     );
 }
 
@@ -96,7 +96,7 @@ sub login : Local {
             };
         }
         else {
-            $c->forward('redirect_back');
+            $c->forward('redirect_next');
         }
     }
     else {
@@ -163,7 +163,7 @@ sub rpx : Local {
         $c->log->warn("RPX FAILED $token");
     }
     
-    $c->forward('redirect_back');
+    $c->forward('redirect_next');
 }
 
 sub after_login : Private {
@@ -199,16 +199,16 @@ sub logout : Local {
     my ( $self, $c ) = @_;
 
     $c->delete_session('logout');
-    $c->forward('redirect_back');
+    $c->forward('redirect_next');
 }
 
-sub redirect_back :Local {
+sub redirect_next :Local {
     my ( $self, $c ) = @_;
     
-    my $back = $c->req->params->{'redirect'};
-    $back ||= $c->uri_for('/'); # just to be safe
+    my $next_page = $c->req->params->{'next_page'};
+    $next_page ||= $c->uri_for('/'); # just to be safe
 
-    $c->res->redirect($back, 302) and $c->detach;
+    $c->res->redirect($next_page, 302) and $c->detach;
 }
 
 =head1 AUTHOR
