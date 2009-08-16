@@ -138,10 +138,10 @@ sub rpx : Local {
     my $token = $c->request->params->{'token'};
     
     my $user_data;
-    eval {
-        $user_data = $c->model('RPX')->auth_info({ token => $token });
-    };
-    $c->log->warn($@) if $@;
+    if ($token) {
+        $user_data = eval { $c->model('RPX')->auth_info({ token => $token }) };
+        $c->log->warn($@) if $@;
+    }
 
     if ( $user_data ) {
         my $identifier = $user_data->{'profile'}{'identifier'};
