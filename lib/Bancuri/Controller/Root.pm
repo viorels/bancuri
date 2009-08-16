@@ -188,6 +188,12 @@ sub sitemap : Local {
     $c->response->body('Sitemap updated');
 }
 
+sub privacy :Local {
+    my ($self, $c) = @_;
+    
+    $c->response->body(q{"Don't be evil"});
+}
+
 sub end : ActionClass('RenderView') {
 	my ( $self, $c ) = @_;
 	
