@@ -107,4 +107,8 @@ OL LI:before {
 	counter-increment: item;
 	}
 
-		
+.link_button {
+	background:none;
+	border:0;
+	color:#ff0000
+}

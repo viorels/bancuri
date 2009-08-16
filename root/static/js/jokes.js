@@ -40,10 +40,7 @@ $(document).ready(function() {
     );
 	
 	// Profile
-	if (_user_exists) {
-		setup_logout();
-	}
-	else {
+	if (!_user_exists) {
 		$("#btn_profile").click(btn_login_click);
 	}
 	
@@ -55,8 +52,7 @@ $(document).ready(function() {
 		change_vote( $(this).attr('name'), 5 );
 	});
 
-	setup_login_form();
-	setup_logout();
+	setup_login_form(); // for /auth/form page only
 	
 	growl();
 });
@@ -257,14 +253,6 @@ function after_login(data, status) {
 			$(this).html(error).addClass('messagebox_error').fadeTo(900,1);
 		});
 	}
-}
-
-function setup_logout() {
-	$("#btn_logout").click(function () {
-		$.post("/auth/logout", {}, function () {
-			window.location.reload()
-		})
-	})
 }
 
 function change_vote(btn_name, rating) {
