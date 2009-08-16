@@ -50,17 +50,21 @@ sub login : Local {
     my $id = $c->request->params->{id} || "";
     my $type = $c->forward('type', [ $id ]);
 
+    my $error;
     if ( $type eq 'email' ) {
-        my $password = $c->request->params->{password} || "";
+        my $password = $c->request->params->{'password'} || "";
 
+        # first try to create user
         if ( $c->request->params->{'signup'} ) {
             my $password2 = $c->request->params->{'password2'} || "";
             my $name = $c->request->params->{'name'};
 
-            my $error;
             my $user = $c->model('DB::Users')->find({ email => $id });
             if ( $user ) {
                 $error = "$id e deja inregistrat";
+            }
+            elsif ( not $password ) {
+                $error = "zi o parolă";
             }
             elsif ( $password ne $password2 ) {
                 $error = "parolele nu se potrivesc !";
@@ -78,17 +82,18 @@ sub login : Local {
             $c->stash->{'json_error'} = $error;
         }
 
+        # then login the new or existing user
         $c->authenticate( { 
             email => $id,
             password => $password,
             deleted => 0,
         }, 'email');
-
     }
     
+    # check if login was successful
     if ( $c->user_exists ) {
         $c->forward('after_login');
-
+    
         if ( $c->stash->{'AJAX'} ) {
             $c->stash->{'json_login'} = {
                 id => $id,
@@ -100,12 +105,13 @@ sub login : Local {
         }
     }
     else {
+        $error ||= 'parola greşită !';
         if ( $c->stash->{'AJAX'} ) {
-            $c->stash->{'json_error'} ||= 'parola greşită !';
+            $c->stash->{'json_error'} = $error;
         }
         else {
-            $c->flash->{'login_error'} = 'parola greşită !';
-            $c->res->redirect('form') && $c->detach;
+            $c->flash->{'login_error'} = $error;
+            $c->detach('form');
         }
     }
 }
