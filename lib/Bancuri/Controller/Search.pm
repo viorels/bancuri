@@ -59,8 +59,6 @@ sub first_page : Chained('keywords') PathPart('') Args(0) {
 sub results : Private {    
     my ( $self, $c ) = @_;
     
-    $c->session->{'last_page'} = $c->request->uri;
-   
     my $keywords = $c->stash->{'keywords'};
     unless (length $keywords) {
         $c->res->redirect($c->uri_for('/all'), 302) and $c->detach;

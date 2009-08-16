@@ -5,6 +5,7 @@ use warnings;
 use parent 'Catalyst::Controller';
 
 use Digest::SHA qw(sha1_hex);
+use List::MoreUtils qw(any);
 
 =head1 NAME
 
@@ -52,9 +53,6 @@ sub add : Global {
         
         if ( $c->request->params->{'cancel'} ) {
             my $back = '/';
-            $back = $c->session->{'last_page'} 
-                if exists $c->session->{'last_page'};
-
             $c->res->redirect($back) and $c->detach;
         }
     }
@@ -112,10 +110,6 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
                     browser_id => $browser_id, 
                 );
             }
-            
-            # Redirect to show the (new) joke
-            my $link = '/' . $joke->link;
-            $c->res->redirect($link) and $c->detach;
         }
         
         if ( $c->request->params->{'delete'} ) {
@@ -124,17 +118,11 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
                 browser_id => $browser_id, 		    
                 comment => $c->request->params->{'comment'},
 		    );
-		    
-            my $link = '/' . $joke->link;
-            $c->res->redirect($link) and $c->detach;
         }
         
-        if ( $c->request->params->{'cancel'} ) {
-            my $back = '/';
-            $back = $c->session->{'last_page'} 
-                if exists $c->session->{'last_page'};
-
-            $c->res->redirect($back) and $c->detach;
+        if ( any { exists $c->request->params->{$_} } qw(save delete cancel) ) {
+            my $link = '/' . $joke->link;
+            $c->res->redirect($link) and $c->detach;
         }
 	}
 
