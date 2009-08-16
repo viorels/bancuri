@@ -197,7 +197,7 @@ function setup_login_form(state) {
 }
 
 function btn_login_click() {
-	$("#authentication").load('/auth/form', {}, function () {
+	$("#authentication").load('/auth/form', { redirect: window.location }, function () {
 		setup_login_form();
 		$(this).slideDown();
 	});
