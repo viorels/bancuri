@@ -25,7 +25,7 @@ sub auto : Private {
     # If a user doesn't exist, force login
     if (!$c->user_exists) {
         # Redirect the user to the login page
-        $c->response->redirect('/auth/form', { next_page => $c->req->uri });
+        $c->response->redirect($c->uri_for('/auth/form', { next_page => $c->req->uri }));
         # Return 0 to cancel 'post-auto' processing and prevent use of application
         return 0;
     }
