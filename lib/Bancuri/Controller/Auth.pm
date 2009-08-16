@@ -87,6 +87,9 @@ sub login : Local {
             deleted => 0,
         }, 'email');
     }
+    else {
+        $error = 'adresă invalidă';
+    }
     
     # check if login was successful
     if ( $c->user_exists ) {
@@ -108,7 +111,8 @@ sub login : Local {
             $c->stash->{'json_error'} = $error;
         }
         else {
-            $c->flash->{'login_error'} = $error;
+            $c->log->error('WTF !!! '.$error);
+            $c->stash->{'login_error'} = $error;
             $c->detach('form');
         }
     }
