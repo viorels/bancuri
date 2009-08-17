@@ -59,7 +59,7 @@ sub index :Path :Args(0) {
     $c->stash->{'template'} = 'admin.html';
 }
 
-sub update_joke_version_text_sha1 :Local {
+sub update_joke_sha1 :Local {
     my ( $self, $c ) = @_;
     
     my $all = $c->model('DB::JokeVersion')->search({ text_sha1 => undef });
