@@ -33,11 +33,12 @@ Return JSON with ... ?
 
 sub change_vote : Local {
     my ( $self, $c ) = @_;
-    
     my $change_id = $c->request->params->{'change_id'};
     my $vote = $c->request->params->{'vote'};
     
-    my $user_id = $c->user ? $c->user->id : undef;
+    $c->session unless $c->sessionid; # init session
+
+    my $user_id = $c->user_exists ? $c->user->id : undef;
     my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
             $c->sessionid, $c->req->address, $c->req->user_agent)->id;
                 

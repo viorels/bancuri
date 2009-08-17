@@ -39,12 +39,15 @@ sub add : Global {
         }
         
         if ( $c->request->params->{'save'} ) {
-            my $user_id = $c->user ? $c->user->id : undef;
+            $c->session unless $c->sessionid; # init session
+
+            my $user_id = $c->user_exists ? $c->user->id : undef;
             my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
                 $c->sessionid, $c->req->address, $c->req->user_agent)->id;
 
             my $new_joke = $c->model('DB::Joke')
                 ->add($joke_text, $user_id, $browser_id);
+
             if ($new_joke) {
                 my $link = '/' . $new_joke->link;
                 $c->res->redirect($link) and $c->detach;
@@ -83,7 +86,10 @@ sub edit : Chained('/joke_link') PathPart('edit') Args(0) {
         $joke_text = $c->request->params->{'joke'};
         $joke_text =~ s/\r\n|\n|\r/\n/g; # convert dos/mac terminators to unix
         $joke_title = $c->request->params->{'title'};
-        my $user_id = $c->user ? $c->user->id : undef;
+        
+        $c->session unless $c->sessionid; # init session
+        
+        my $user_id = $c->user_exists ? $c->user->id : undef;
         my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
                 $c->sessionid, $c->req->address, $c->req->user_agent)->id;
         
@@ -142,7 +148,9 @@ sub rating : Local {
     my $id = $c->request->params->{'id'};
     my $vote = $c->request->params->{'rating'};
     
-    my $user_id = $c->user ? $c->user->id : undef;
+    $c->session unless $c->sessionid; # init session
+    
+    my $user_id = $c->user_exists ? $c->user->id : undef;
     my $browser_id = $c->model('DB::Browser')->find_or_create_unique(
             $c->sessionid, $c->req->address, $c->req->user_agent)->id;
 
