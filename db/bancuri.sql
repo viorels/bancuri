@@ -9,7 +9,7 @@
 --                      See http://tedia2sql.tigris.org/AUTHORS.html for tedia2sql author information
 -- 
 --   Target Database:   postgres
---   Generated at:      Sat Aug 15 16:38:27 2009
+--   Generated at:      Mon Aug 17 22:08:34 2009
 --   Input Files:       db/dia/bancuri.dia
 -- 
 -- ================================================================================
@@ -28,7 +28,6 @@ drop index idx_user_openid_user_id;
 drop index idx_vote_browser_date;
 drop index idx_joke_tag_unique;
 drop index idx_change_joke_id;
-drop index idx_session_ref_id;
 drop index idx_tag_name;
 drop index idx_user_preference_key;
 -- alter table joke_version drop constraint joke_version_fk_Joke_id-- (is implicitly done)
@@ -162,7 +161,7 @@ create table users (
 -- browser
 create table browser (
   id                        serial not null,
-  session_ref_id            integer not null,
+  session_id                character(72),
   ip                        inet,
   useragent_id              integer,
   constraint pk_Browser primary key (id)
@@ -229,7 +228,6 @@ create table change_vote (
 -- session
 create table session (
   id                        character(72) not null,
-  ref_id                    serial,
   data                      text,
   expires                   integer,
   constraint pk_Session primary key (id)
@@ -356,12 +354,11 @@ create unique index idx_joke_link on joke  (link) ;
 create unique index idx_joke_for_day on joke  (for_day) ;
 create index idx_joke_version_rating on joke_version  (rating) ;
 create unique index idx_users_email on users  (email) ;
-create unique index idx_browser_session_ip_useragent on browser  (session_ref_id,ip,useragent_id) ;
+create unique index idx_browser_session_ip_useragent on browser  (session_id,ip,useragent_id) ;
 create index idx_user_openid_user_id on user_openid  (user_id) ;
 create unique index idx_vote_browser_date on vote  (joke_id,version,browser_id,date) ;
 create unique index idx_joke_tag_unique on joke_tag  (joke_id,tag_id,user_id) ;
 create index idx_change_joke_id on change  (joke_id) ;
-create unique index idx_session_ref_id on session  (ref_id) ;
 create unique index idx_tag_name on tag  (name) ;
 create index idx_user_preference_key on user_preference  (key) ;
 alter table joke_version add constraint joke_version_fk_Joke_id

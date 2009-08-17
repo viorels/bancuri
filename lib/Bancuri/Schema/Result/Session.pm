@@ -15,13 +15,6 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 72,
   },
-  "ref_id",
-  {
-    data_type => "integer",
-    default_value => "nextval('session_ref_id_seq'::regclass)",
-    is_nullable => 0,
-    size => 4,
-  },
   "data",
   {
     data_type => "text",
@@ -34,11 +27,10 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_session", ["id"]);
-__PACKAGE__->add_unique_constraint("idx_session_ref_id", ["ref_id"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-18 23:12:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1tpF7k2yLpVhYXHGsnVSDA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-08-17 22:02:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rwftleiyh1QDu1Hdz0Mc+A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

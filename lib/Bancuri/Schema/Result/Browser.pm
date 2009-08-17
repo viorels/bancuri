@@ -15,8 +15,6 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 4,
   },
-  "session_ref_id",
-  { data_type => "integer", default_value => undef, is_nullable => 0, size => 4 },
   "ip",
   {
     data_type => "inet",
@@ -26,12 +24,19 @@ __PACKAGE__->add_columns(
   },
   "useragent_id",
   { data_type => "integer", default_value => undef, is_nullable => 1, size => 4 },
+  "session_id",
+  {
+    data_type => "character",
+    default_value => undef,
+    is_nullable => 1,
+    size => 72,
+  },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("pk_browser", ["id"]);
 __PACKAGE__->add_unique_constraint(
   "idx_browser_session_ip_useragent",
-  ["session_ref_id", "ip", "useragent_id"],
+  ["session_id", "ip", "useragent_id"],
 );
 __PACKAGE__->belongs_to(
   "useragent_id",
@@ -55,13 +60,13 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04005 @ 2009-03-18 23:12:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gzTTQ1YdwybFawBQ9q/Ckw
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-08-17 22:02:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:clu5hMAM931IwG6bytlskg
 
 __PACKAGE__->belongs_to(
-  "session_ref_id",
+  "session_id",
   "Bancuri::Schema::Result::Session",
-  { ref_id => "session_ref_id" },
+  { id => "session_id" },
 );
 
 # You can replace this text with custom content, and it will be preserved on regeneration

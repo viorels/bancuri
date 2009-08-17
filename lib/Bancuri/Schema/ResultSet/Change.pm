@@ -5,13 +5,14 @@ use base 'DBIx::Class::ResultSet';
 
 sub search_for_session {
     my ($self, $session_id) = @_;
-    
+    $session_id = "session:$session_id";
+
     my $changes = $self->search({ 
-        'session_ref_id.id' => "session:$session_id",
+        'browser_id.session_id' => $session_id,
     }, { 
-        join => { browser_id => 'session_ref_id' }, 
+        join => 'browser_id', 
     });
-        
+
     return $changes;
 }
 
