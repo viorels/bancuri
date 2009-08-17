@@ -5,7 +5,7 @@ use base 'DBIx::Class::ResultSet';
 
 sub search_for_session {
     my ($self, $session_id) = @_;
-    $session_id = "session:$session_id";
+    $session_id = 'session:' . ( $session_id ? $session_id : '' );
 
     my $votes = $self->search({ 
         'browser_id.session_id' => $session_id,
