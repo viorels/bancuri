@@ -1,17 +1,14 @@
-use inc::Module::Install;
+use strict;
+use warnings;
 
-name('Bancuri');
-abstract('Catalyst Application');
-author('vio,,,');
-version_from('lib/Bancuri.pm');
-license('perl');
+use ExtUtils::MakeMaker;
 
-include('ExtUtils::AutoInstall');
+WriteMakefile(
+  NAME         => 'Bancuri',
+  VERSION      => '1.0',
+  AUTHOR       => 'Viorel Stirbu <viorels@gmail.com>',
+  EXE_FILES    => ['bancuri.pl'],
+  PREREQ_PM    => {'Catalyst' => '5.60'},
+  test         => {TESTS => 't/*.t'}
+);
 
-requires( Catalyst => '5.60' );
-
-catalyst_files();
-
-install_script( glob('script/*.pl') );
-auto_install();
-&WriteAll;
