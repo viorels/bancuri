@@ -2,7 +2,7 @@ package Bancuri::Model::Xapian;
 use base qw/Catalyst::Model/;
 use Moose;
 
-use Catalyst::Model::Xapian::Result;
+#use Catalyst::Model::Xapian::Result;
 use Encode qw/from_to/;
 use Search::Xapian qw/:all/;
 use Storable;
