@@ -24,6 +24,7 @@ WriteMakefile(
     'Catalyst::Plugin::StackTrace' => '0.10',
     'Catalyst::Authentication::Store::DBIx::Class' => '0.1082',
     'Catalyst::Model::Xapian' => '0.04',
+    'Catalyst::Model::Adaptor' => '0.03',
     'Catalyst::View::TT' => '0.29',
     'Catalyst::View::JSON' => '0.25',
     'Data::Dump' => '1.14',
