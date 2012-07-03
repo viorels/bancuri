@@ -4,12 +4,12 @@ use Moose;
 
 #use Catalyst::Model::Xapian::Result;
 use Encode qw/from_to/;
-use Search::Xapian qw/:all/;
+#use Search::Xapian qw/:all/;
 use Storable;
 use NEXT;
 use Time::HiRes qw/gettimeofday tv_interval/;
-use Search::Tools;
-use Search::Tools::UTF8;
+#use Search::Tools;
+#use Search::Tools::UTF8;
 
 our $VERSION='0.03';
 
