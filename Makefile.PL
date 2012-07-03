@@ -9,7 +9,7 @@ WriteMakefile(
   AUTHOR       => 'Viorel Stirbu <viorels@gmail.com>',
   EXE_FILES    => ['bancuri.pl'],
   PREREQ_PM    => {
-    'Catalyst' => '5.85', # 5.80005
+    'Catalyst' => '5.80005', # 5.80005
     'Catalyst::Log::Log4perl' => '1.03',
     'Catalyst' => '5.80005',
     'Catalyst::Plugin::ConfigLoader' => '0.23',
@@ -23,6 +23,7 @@ WriteMakefile(
     'Catalyst::Plugin::Scheduler' => '0.09',
     'Catalyst::Plugin::Static::Simple' => '0.21',
     'Catalyst::Plugin::StackTrace' => '0.10',
+    'Catalyst::Authentication::Store::DBIx::Class' => '0.1082',
     'Catalyst::Model::Xapian' => '0.04',
     'Data::Dump' => '1.14',
     'Data::SpreadPagination' => '0.1.2',
