@@ -11,7 +11,6 @@ WriteMakefile(
   PREREQ_PM    => {
     'Catalyst' => '5.80005', # 5.80005
     'Catalyst::Log::Log4perl' => '1.03',
-    'Catalyst' => '5.80005',
     'Catalyst::Plugin::ConfigLoader' => '0.23',
     'Catalyst::Plugin::Session' => '0.24',
     'Catalyst::Plugin::Session::State::Cookie' => '0.11',
@@ -25,6 +24,7 @@ WriteMakefile(
     'Catalyst::Plugin::StackTrace' => '0.10',
     'Catalyst::Authentication::Store::DBIx::Class' => '0.1082',
     'Catalyst::Model::Xapian' => '0.04',
+    'Catalyst::View::TT' => '0.29',
     'Data::Dump' => '1.14',
     'Data::SpreadPagination' => '0.1.2',
     'DateTime' => '0.50',
