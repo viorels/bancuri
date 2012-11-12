@@ -4,7 +4,7 @@ Model::DB:
     connect_info:
         - dbi:Pg:dbname=bancuri;host=localhost
         - bancuri
-        - zeque2Oh
+        - XXXXXXXX
         - AutoCommit: 1
           RaiseError: 1
           pg_enable_utf8: 1

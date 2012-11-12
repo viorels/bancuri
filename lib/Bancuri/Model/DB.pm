@@ -8,7 +8,7 @@ __PACKAGE__->config(
     connect_info => [
         'dbi:Pg:dbname=bancuri;host=localhost',
         'bancuri',
-        'zeque2Oh',
+        'XXXXXXXX',
         {
             AutoCommit        => 1,
             RaiseError        => 1,
